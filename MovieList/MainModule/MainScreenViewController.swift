@@ -8,15 +8,19 @@
 import UIKit
 
 protocol MainScreenViewProtocol: AnyObject {
-    func displayMovies(_ movies: [Movie])
+    func displayMovies(_ movies: [AnyMedia], for page: Int)
     func displayError(_ message: String)
     
-    func didAddMovieToFavorites(movie: Movie)
-    func didRemoveMovieFromFavorites(movie: Movie)
+    func didAddMovieToFavorites(movie: AnyMedia)
+    func didRemoveMovieFromFavorites(movie: AnyMedia)
     func isFavorite(movie: Movie) -> Bool
 }
-enum Section {
-    case main
+enum Section: String, Hashable {
+    case movies = "Movies"
+    case tvshows = "TV Shows"
+    case popularMovies = "Popular Movies"
+    case popularShows = "Popular Shows"
+    case favorites = "Favorites"
 }
 
 enum SortingOption: String, CaseIterable {
@@ -29,7 +33,6 @@ enum SearchScope: Int {
     case movies
     case series
     case actors
-    case directors
     
     var displayTitle: String {
         switch self {
@@ -39,8 +42,14 @@ enum SearchScope: Int {
             return "Series"
         case .actors:
             return "Actors"
-        case .directors:
-            return "Directors"
+        }
+    }
+    
+    var urlAppendix: String {
+        switch self {
+        case .movies: return "movies"
+        case .series: return "tv"
+        case .actors: return "person"
         }
     }
     
@@ -48,7 +57,7 @@ enum SearchScope: Int {
         switch self {
         case .movies: return Movie.self
         case .series: return TVShow.self
-        case .actors, .directors: return Person.self
+        case .actors: return Person.self
         }
     }
 }
@@ -57,8 +66,10 @@ class MainScreenViewController: UIViewController {
     var presenter: MainScreenPresenterProtocol?
     var tableView: UITableView!
     var searchController: UISearchController!
-    var movies: [Movie] = []
-    private var dataSource: UITableViewDiffableDataSource<Section, Movie>?
+    var media: [AnyMedia] = []
+    
+    private var dataSource: MainScreenDiffableDataSource?
+    var isLoading = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -122,29 +133,29 @@ class MainScreenViewController: UIViewController {
     
     //refactor this
     func sortResults(_ action: UIAction) {
+        
         switch action.identifier {
         case .init(.init("rating asc")):
-            self.movies.sort { $0.voteAverage ?? 0.0 < $1.voteAverage ?? 0.0  }
+            self.media.sort { $0.voteAverage < $1.voteAverage }
         case .init("rating desc"):
-            self.movies.sort { $0.voteAverage ?? 0.0  > $1.voteAverage ?? 0.0  }
+            self.media.sort { $0.voteAverage > $1.voteAverage }
         case .init("title asc") :
-            self.movies.sort { $0.title ?? "" > $1.title ?? "" }
+            self.media.sort { $0.title > $1.title }
         case .init("title desc") :
-            self.movies.sort { $0.title ?? "" < $1.title ?? "" }
+            self.media.sort { $0.title < $1.title }
         case .init("relevance asc"):
-            self.movies.sort { $0.popularity ?? 0.0 < $1.popularity ?? 0.0 }
+            self.media.sort { $0.popularity < $1.popularity  }
         case .init("relevance desc"):
-            self.movies.sort { $0.popularity ?? 0.0  > $1.popularity ?? 0.0  }
+            self.media.sort { $0.popularity > $1.popularity   }
         case .init("date asc"):
-            self.movies.sort { $0.releaseDate ?? "" < $1.releaseDate ?? "" }
+            self.media.sort { $0.releaseDate < $1.releaseDate }
         case .init("date desc"):
-            self.movies.sort { $0.releaseDate ?? "" > $1.releaseDate ?? "" }
+            self.media.sort { $0.releaseDate > $1.releaseDate  }
         default:
             break
         }
         
-        updateSnapshot(with: self.movies)
-        
+        updateSnapshot(with: self.media)
     }
     
     var demoMenu: UIMenu {
@@ -155,20 +166,17 @@ class MainScreenViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sort", image: UIImage(systemName: "line.3.horizontal.decrease.circle"), primaryAction: nil, menu: demoMenu)
     }
 
-    
     private func loadInitialData() {
-        
-        //pop data
         presenter?.viewDidLoad()
-        
-//        searchController.searchBar.text = "Matrix"
-//        updateSearchResults(for: searchController)
     }
-    //
-    func updateSnapshot(with movies: [Movie], completion: (() -> Void)? = nil) {
-        var currentSnapshot = NSDiffableDataSourceSnapshot<Section, Movie>()
-        currentSnapshot.appendSections([.main])
-        currentSnapshot.appendItems(movies, toSection: .main)
+    
+    func updateSnapshot(with media: [AnyMedia], completion: (() -> Void)? = nil) {
+        var currentSnapshot = NSDiffableDataSourceSnapshot<Section, AnyMedia>()
+        
+        let sections = presenter?.getSections() ?? []
+        
+        currentSnapshot.appendSections(sections)
+        currentSnapshot.appendItems(media, toSection: sections.first)
         
         dataSource?.defaultRowAnimation = .fade
         
@@ -190,15 +198,13 @@ class MainScreenViewController: UIViewController {
     }
     
     private func setupDataSource() {
-        dataSource = UITableViewDiffableDataSource<Section, Movie>(tableView: tableView) { tableView, indexPath, movie in
+        dataSource = MainScreenDiffableDataSource(tableView: tableView) { tableView, indexPath, media in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: MainScreenTableViewCell.reuseIdentifier, for: indexPath) as? MainScreenTableViewCell else {
                 fatalError("Failed to dequeue MainScreenTableViewCell")
             }
-            cell.setup(with: movie)
+            cell.setup(with: media)
             return cell
-        }
-        //        dataSource?.defaultRowAnimation = .bottom
-        
+        }        
     }
     
     private func setupSearchController() {
@@ -207,8 +213,7 @@ class MainScreenViewController: UIViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.scopeButtonTitles = [SearchScope.movies.displayTitle,
                                                         SearchScope.series.displayTitle,
-                                                        SearchScope.actors.displayTitle,
-                                                        SearchScope.directors.displayTitle]
+                                                        SearchScope.actors.displayTitle]
         searchController.searchBar.showsScopeBar = true
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.placeholder = "Search Movies"
@@ -226,19 +231,23 @@ extension MainScreenViewController: MainScreenViewProtocol {
         false
     }
     
-    func didAddMovieToFavorites(movie: Movie) {
+    func didAddMovieToFavorites(movie: AnyMedia) {
         
     }
     
-    func didRemoveMovieFromFavorites(movie: Movie) {
+    func didRemoveMovieFromFavorites(movie: AnyMedia) {
         
     }
     
-    func displayMovies(_ movies: [Movie]) {
-        self.movies = movies
-        self.movies.sort { $0.voteAverage ?? 0.0  > $1.voteAverage ?? 0.0  }
+    func displayMovies(_ media: [AnyMedia], for page: Int) {
+        if page == 1 {
+            self.media = media
+        } else {
+            self.media = self.media + media
+        }
+        self.media.sort { $0.popularity > $1.popularity }
         
-        updateSnapshot(with: self.movies)
+        updateSnapshot(with: self.media)
     }
     
     func displayError(_ message: String) {
@@ -248,15 +257,9 @@ extension MainScreenViewController: MainScreenViewProtocol {
 
 extension MainScreenViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // Return the number of movies to display in the table view
-        return movies.count
+        return media.count
     }
     
-    //    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    //        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! MainScreenTableViewCell
-    //        cell.setup(with: self.movies[indexPath.row])
-    //        return cell
-    //    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Notify the presenter that a movie was selected
@@ -270,9 +273,10 @@ extension MainScreenViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard let presenter = self.presenter else { return nil }
-        let movie = movies[indexPath.row]
+        let movie = media[indexPath.row]
         let isFavorite = presenter.isFavorite(movie: movie)
-        let favoriteAction = UIContextualAction(style: .normal, title: isFavorite ? "Unfavorite" : "Favorite") { (_, _, completionHandler) in
+      
+        let favoriteAction = UIContextualAction(style: .normal, title: isFavorite ? "Unfavorite" : "Favorite") { (action, view, completionHandler) in
             
             presenter.handleFavoriteAction(for: movie)
             completionHandler(true)
@@ -280,6 +284,20 @@ extension MainScreenViewController: UITableViewDelegate {
         favoriteAction.backgroundColor = isFavorite ? .systemTeal : .systemPurple
         let configuration = UISwipeActionsConfiguration(actions: [favoriteAction])
         return configuration
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let height = scrollView.frame.size.height
+        
+        if offsetY > (contentHeight - height)/2 && !(presenter?.isLoadingPage() ?? true) {
+            presenter?.viewShouldFetchNewPage()
+        }
     }
 }
 
@@ -293,6 +311,15 @@ extension MainScreenViewController: UISearchResultsUpdating {
 extension MainScreenViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
         let scope = SearchScope(rawValue: selectedScope) ?? .movies
+        searchBar.placeholder = "Search \(scope.displayTitle.capitalized)"
         presenter?.viewDidChangeSearchScope(scope)
+    }
+}
+
+class MainScreenDiffableDataSource: UITableViewDiffableDataSource<Section, AnyMedia> {
+    
+    // Set Title
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return snapshot().sectionIdentifiers[section].rawValue
     }
 }

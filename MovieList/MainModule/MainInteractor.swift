@@ -10,13 +10,13 @@ import AnyCodable
 
 
 protocol MainScreenInteractorProtocol: AnyObject {
-    func searchMovies(with query: String, scope: SearchScope)
+    func searchMedia(with query: String, scope: SearchScope, page: Int)
    
-    func saveFavorite(with movie: Movie)
-    func removeFavorite(with movie: Movie)
-    func isMovieInFavorites(movie: Movie) -> Bool
+    func saveFavorite(with movie: AnyMedia)
+    func removeFavorite(with movie: AnyMedia)
+    func isMovieInFavorites(movie: AnyMedia) -> Bool
     
-    func getPopularMovies()
+    func getPopularMedia(currentScope: SearchScope, page: Int)
     
     func retrieveFavorites() -> [Movie]
 }
@@ -33,108 +33,97 @@ class MainScreenInteractor: MainScreenInteractorProtocol {
         self.presenter = presenter
     }
     
-    //have to refactor networking
-    func getPopularMovies() {
+    func getPopularMedia(currentScope: SearchScope, page: Int) {
         
-        networkingService.getPopularMovies1 { result in
+        networkingService.getPopularMedia(scope: currentScope, page: page) { result in
             switch result {
             case .success(let data):
                 
                 do {
-                    let popularMoviesResponse = try JSONDecoder().decode(Response<Movie>.self, from: data)
-                    let popularMovies = popularMoviesResponse.results
-                    print("popular movies are: \n")
-                    popularMovies.forEach { print("movie: \($0)\n")}
-                    self.presenter?.didReceiveMovies(popularMovies)
+                    switch currentScope {
+                    case .movies:
+                        let popularMoviesResponse = try JSONDecoder().decode(Response<Movie>.self, from: data)
+                        self.presenter?.didReceiveMovies(popularMoviesResponse.results.map { AnyMedia($0) }, with: page)
+                    case .series:
+                        let popularSeriesResponse = try JSONDecoder().decode(Response<TVShow>.self, from: data)
+                        self.presenter?.didReceiveMovies(popularSeriesResponse.results.map { AnyMedia($0) }, with: page)
+                    default: break
+                    }
                 } catch let error {
-                    print("the error decoding popular movies was \(error)")
+                    print("error decoding, error: \(error)")
                 }
-                
             case .failure(let error):
                 break
             }
         }
         
-//        networkingService.getPopularMovies { [weak self] movies, error in
-//            guard let self, error == nil else { return }
-//            if let movies = movies {
-//                self.presenter?.didReceiveMovies(movies)
-//            } else if let error = error {
-//
-//            }
-//        }
     }
     //ver esto
-    func search(with query: String, scope: SearchScope) {
+    func searchMedia(with query: String, scope: SearchScope, page: Int) {
         networkingService.searchMedia(query: query,
-                                      scope: scope) { (result: Result<Data, APIError>) in
-            
-            print("\n\n\n resultType is: \(scope.resultType)")
+                                      scope: scope,
+                                      page: page) { result in
             switch result {
-            case .success(let response):
-                switch scope.resultType {
-                case is Movie.Type:
-                    
-                    do {
-                        let movieResponse = try JSONDecoder().decode(Response<Movie>.self, from: response)
-                        let movieList = movieResponse.results
-                        self.presenter?.didReceiveMovies(movieList)
-                    } catch let error {
-                        print("There was an error decoding movies, error: \(error)")
+            case .success(let data):
+                do {
+                    switch scope {
+                    case .movies:
+                        let moviesResponse = try JSONDecoder().decode(Response<Movie>.self, from: data)
+                        self.presenter?.didReceiveMovies(moviesResponse.results.map { AnyMedia($0) }, with: page)
+                    case .series:
+                        let seriesResponse = try JSONDecoder().decode(Response<TVShow>.self, from: data)
+                        self.presenter?.didReceiveMovies(seriesResponse.results.map { AnyMedia($0) }, with: page)
+                    default:
+                        break
                     }
-                    
-                    
-                case is TVShow.Type:
-                    do {
-                        let showResponse = try JSONDecoder().decode(Response<TVShow>.self, from: response)
-                        let showList = showResponse.results
-//                        self.presenter?.didReceiveMovies(showList)
-                    } catch let error {
-                        print("There was an error decoding tv shows, error: \(error)")
-                    }
-                    
-                    
-                case is Person.Type:
-                    break
-                    
-                default:
-                    break
+                } catch let error {
+                    print("error searching for shows \(error)")
                 }
             case .failure(let error):
-                // Handle the error
                 print(error)
             }
         }
     }
     
-    func searchMovies(with query: String, scope: SearchScope) {
-//        networkingService.searchMovies(with: query, scope: scope) { [weak self] movies, error in
-//            guard let self else { return }
-//            if let movies = movies {
-//                self.presenter?.didReceiveMovies(movies)
-//            } else if let error = error {
-//                self.presenter?.didEncounterError(error)
-//            }
-//        }
-        
-        search(with: query, scope: scope)
-    }
+
 }
 
 extension MainScreenInteractor {
-    func saveFavorite(with movie: Movie) {
-        favoritesRepository?.saveFavoriteMovie(movie)
+    
+    //continue from here, check if this works , try to keep this logic to save
+    //because makiny AnyMedia conform to Codeble is sustantially harder for retrieving objects
+    func saveFavorite(with movie: AnyMedia) {
+        if let film = movie.getBaseType() as? Movie {
+            favoritesRepository?.saveFavoriteMovie(film)
+        }
+        if let show = movie.getBaseType() as? TVShow {
+            favoritesRepository?.saveFavoriteShow(show)
+        }
     }
     
-    func removeFavorite(with movie: Movie) {
-        favoritesRepository?.removeFavoriteMovie(movie)
+    func removeFavorite(with movie: AnyMedia) {
+        if let film = movie.getBaseType() as? Movie {
+            favoritesRepository?.removeFavoriteMovie(film)
+        }
+        if let show = movie.getBaseType() as? TVShow {
+            favoritesRepository?.removeFavoriteShow(show)
+        }
     }
+    
     func retrieveFavorites() -> [Movie] {
         favoritesRepository?.getFavoriteMovies() ?? []
     }
 
-    func isMovieInFavorites(movie: Movie) -> Bool {
-        return favoritesRepository?.isMovieInFavorites(movie) ?? false
+    func isMovieInFavorites(movie: AnyMedia) -> Bool {
+        
+        if let film = movie.getBaseType() as? Movie {
+            return favoritesRepository?.isMovieInFavorites(film) ?? false
+        }
+        if let show = movie.getBaseType() as? TVShow {
+            return favoritesRepository?.isTvShowInFavorites(show) ?? false
+        }
+        
+        return false
     }
 
 }

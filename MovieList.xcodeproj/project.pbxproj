@@ -42,7 +42,6 @@
 		FA170A262A059FAC00E1B1ED /* FavoritesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A242A059FAC00E1B1ED /* FavoritesRepository.swift */; };
 		FA170A282A05A26E00E1B1ED /* FavoritesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A272A05A26E00E1B1ED /* FavoritesTableViewCell.swift */; };
 		FA170A292A05A26E00E1B1ED /* FavoritesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A272A05A26E00E1B1ED /* FavoritesTableViewCell.swift */; };
-		FA9AEC2A2A0C276F00C74F7A /* AnyCodable in Frameworks */ = {isa = PBXBuildFile; productRef = FA9AEC292A0C276F00C74F7A /* AnyCodable */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,7 +94,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA9AEC2A2A0C276F00C74F7A /* AnyCodable in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,7 +210,6 @@
 			);
 			name = MovieList;
 			packageProductDependencies = (
-				FA9AEC292A0C276F00C74F7A /* AnyCodable */,
 			);
 			productName = MovieList;
 			productReference = FA1709CB2A02E8A700E1B1ED /* MovieList.app */;
@@ -287,7 +284,6 @@
 			);
 			mainGroup = FA1709C22A02E8A700E1B1ED;
 			packageReferences = (
-				FA9AEC282A0C276F00C74F7A /* XCRemoteSwiftPackageReference "AnyCodable" */,
 			);
 			productRefGroup = FA1709CC2A02E8A700E1B1ED /* Products */;
 			projectDirPath = "";
@@ -694,25 +690,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		FA9AEC282A0C276F00C74F7A /* XCRemoteSwiftPackageReference "AnyCodable" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Flight-School/AnyCodable";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.6.7;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		FA9AEC292A0C276F00C74F7A /* AnyCodable */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FA9AEC282A0C276F00C74F7A /* XCRemoteSwiftPackageReference "AnyCodable" */;
-			productName = AnyCodable;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FA1709C32A02E8A700E1B1ED /* Project object */;
 }

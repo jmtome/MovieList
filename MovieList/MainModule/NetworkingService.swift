@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import AnyCodable
 
 enum APIError: Error {
     case networkError(Error)
@@ -14,41 +13,49 @@ enum APIError: Error {
     case invalidResponse
     case decodingError(Error)
     case invalidURL
-}
-protocol NetworkingService {
-    func searchMovies(with query: String, scope: SearchScope, completion: @escaping ([Movie]?, Error?) -> Void)
-    func getPopularMovies(completion: @escaping ([Movie]?, Error?) -> Void)
-    
-//    func searchMedia<T: Codable>(query: String,
-//                                 scope: SearchScope,
-//                                 completion: @escaping (Result<Response<T>, APIError>) -> Void)
-    func searchMedia(query: String,
-                                 scope: SearchScope,
-                                 completion: @escaping (Result<Data, APIError>) -> Void)
-    
-    func getPopularMovies1(completion: @escaping (Result<Data, APIError>) -> Void)
+    case invalidData
 }
 
+struct ApiDict {
+    static let apiKey = "005addb42a085a8f891a55d28223162d"
+    
+    static let baseURL = "https://api.themoviedb.org/3"
+    static let imgBaseURL = "https://image.tmdb.org/t/p/w500/"
+    
+    static let popularShowsURL = "\(baseURL)/tv/popular?api_key=\(apiKey)"
+    static let popularMoviesURL = "\(baseURL)/movie/popular?api_key=\(apiKey)"
+    
+}
+
+protocol NetworkingService {
+    func searchMedia(query: String,
+                     scope: SearchScope,
+                     page: Int,
+                     completion: @escaping (Result<Data, APIError>) -> Void)
+    
+    func getPopularMedia(scope: SearchScope, page: Int, completion: @escaping (Result<Data, APIError>) -> Void)
+}
+
+//ver lo de page para el metodo searchMEdia
 class TMDBNetworkingService: NetworkingService {
     private let apiKey = "005addb42a085a8f891a55d28223162d"
-    private let baseURL = "https://api.themoviedb.org/3"
+    private let baseURL = "https://api.themoviedb.org/3/"
     private let imgBase = "https://image.tmdb.org/t/p/w500/"
-    private lazy var popMovsUrlString = "\(baseURL)/movie/popular?api_key=\(apiKey)"
-
+    private var page = 1
+    
+    private lazy var popMovsUrlString = "\(baseURL)movie/popular?api_key=\(apiKey)&page="
+    private lazy var popShowsUrlString = "\(baseURL)tv/popular?api_key=\(apiKey)&page="
+    
     private let decoder = JSONDecoder()
-    // /movie/popular?api_key=YOUR_API_KEY_HERE
-
-    init() {
-//        decoder.keyDecodingStrategy = .convertFromSnakeCase
-    }
-    
-    //  https://api.themoviedb.org/3/search/movie?api_key=005addb42a085a8f891a55d28223162d&language=en-US&page=1&include_adult=false
-    
-    func getPopularMovies1(completion: @escaping (Result<Data, APIError>) -> Void) {
-        guard let url = URL(string: popMovsUrlString) else {
+        
+    func getPopularMedia(scope: SearchScope = .movies, page: Int, completion: @escaping (Result<Data, APIError>) -> Void) {
+        self.page = page
+        guard let url = URL(string: scope == .movies ? "\(popMovsUrlString)\(page)" : "\(popShowsUrlString)\(page)") else {
             completion(.failure(.invalidURL))
             return
         }
+        
+        print("url is: \(url.absoluteString)")
         
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
@@ -59,138 +66,32 @@ class TMDBNetworkingService: NetworkingService {
                 completion(.failure(.invalidResponse))
                 return
             }
-            
             completion(.success(data))
         }
         task.resume()
     }
-    
-    func getPopularMovies(completion: @escaping ([Movie]?, Error?) -> Void) {
-//        let popMovsUrlString = "\(baseURL)/movie/popular?api_key=\(apiKey)"
-        guard let url = URL(string: popMovsUrlString) else {
-            completion(nil, NetworkingError.invalidURL)
-            return
-        }
-        
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data else {
-                if let error = error {
-                    completion(nil, error)
-                } else {
-                    completion(nil, NetworkingError.noData)
-                }
-                return
-            }
-            
-            do {
-                let response = try self.decoder.decode(SearchResponse.self, from: data)
-                let movies = response.results
-                completion(movies, nil)
-            } catch {
-                completion(nil, NetworkingError.invalidResponse)
-            }
-        }
-        
-        task.resume()
-    }
-    
-    func searchMovies(with query: String, scope: SearchScope, completion: @escaping ([Movie]?, Error?) -> Void) {
-        guard let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
-            completion(nil, NetworkingError.invalidQuery)
-            return
-        }
-        
-        let urlString = "\(baseURL)/search/movie?api_key=\(apiKey)&query=\(encodedQuery)"
-        guard let url = URL(string: urlString) else {
-            completion(nil, NetworkingError.invalidURL)
-            return
-        }
-                
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                completion(nil, error)
-                return
-            }
-            
-            guard let data = data else {
-                completion(nil, NetworkingError.noData)
-                return
-            }
-            
-            do {
-//                let decoder = JSONDecoder()
-//                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let response = try self.decoder.decode(SearchResponse.self, from: data)
-                let movies = response.results
-//                movies.forEach { print("Release date: \($0.releaseDate)") }
-                completion(movies, nil)
-            } catch {
-                completion(nil, NetworkingError.invalidResponse)
-            }
-        }
-        
-        task.resume()
-        
-    }
-    
-    func fetchImage(fromURL url: URL, completion: @escaping (Result<Data, Error>) -> Void) {
-          URLSession.shared.dataTask(with: url) { data, response, error in
-              if let error = error {
-                  completion(.failure(error))
-                  return
-              }
-              
-              guard let data = data else {
-                  completion(.failure(NetworkingError.invalidData))
-                  return
-              }
-              
-              completion(.success(data))
-          }.resume()
-      }
 }
-
-enum NetworkingError: Error {
-    case invalidQuery
-    case invalidURL
-    case noData
-    case invalidResponse
-    case invalidData
-}
-
-struct SearchResponse: Codable {
-    let page: Int
-    let totalResults: Int
-    let totalPages: Int
-    let results: [Movie]
-}
-
-
-
 extension TMDBNetworkingService {
-
-//
-//    func searchMedia<T: Codable>(query: String,
-//                                 scope: SearchScope,
-//                                 completion: @escaping (Result<Response<T>, APIError>) -> Void) {
-    
     func searchMedia(query: String,
-                                 scope: SearchScope,
-                                 completion: @escaping (Result<Data, APIError>) -> Void) {
+                     scope: SearchScope,
+                     page: Int,
+                     completion: @escaping (Result<Data, APIError>) -> Void) {
         let apiKey = "005addb42a085a8f891a55d28223162d"
         let searchQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        let searchURL: String
+        var searchURL: String = ApiDict.baseURL + "search/"
         
-        let resultType: Codable.Type = scope.resultType
+        
+        
+//        var queryURL: String = ApiDict.baseURL + "search/" + "\(scope.urlAppendix)?" + "api_key\(ApiDict.apiKey)" + "&" + "query=\(search)"
+        
+        
         switch scope {
         case .movies:
-            searchURL = "https://api.themoviedb.org/3/search/movie?api_key=\(apiKey)&query=\(searchQuery)"
+            searchURL = "https://api.themoviedb.org/3/search/movie?api_key=\(apiKey)&query=\(searchQuery)&page=\(page)"
         case .series:
-            searchURL = "https://api.themoviedb.org/3/search/tv?api_key=\(apiKey)&query=\(searchQuery)"
+            searchURL = "https://api.themoviedb.org/3/search/tv?api_key=\(apiKey)&query=\(searchQuery)&page=\(page)"
         case .actors:
-            searchURL = "https://api.themoviedb.org/3/search/person?api_key=\(apiKey)&query=\(searchQuery)"
-        case .directors:
-            searchURL = "https://api.themoviedb.org/3/search/person?api_key=\(apiKey)&query=\(searchQuery)&department=Directing"
+            searchURL = "https://api.themoviedb.org/3/search/person?api_key=\(apiKey)&query=\(searchQuery)&page=\(page)"
         }
         
         guard let url = URL(string: searchURL) else {
@@ -210,50 +111,25 @@ extension TMDBNetworkingService {
             }
             
             completion(.success(data))
-//            do {
-//                let result = try self.decoder.decode(Response<Movie>.self, from: data)
-//                let movieList = result.results
-//                completion(.success(movieList))
-//            } catch {
-//                completion(.failure(.decodingError(error)))
-//            }
-            
-//            do {
-//                let searchResult = try JSONDecoder().decode(Response<T>.self, from: data)
-////                let mediaList = searchResult.results.map { Media(from: $0) }
-////                let mediaList: [Media] = []
-//                completion(.success(searchResult))
-//            } catch let error {
-//                completion(.failure(.decodingError(error)))
-//            }
         }.resume()
     }
+}
 
-    /*
-     let decoder = JSONDecoder()
-
-     // Decode PersonResponse
-     let personResponse = try decoder.decode(Response<PersonResponse>.self, from: json)
-
-     // Decode MovieResponse
-     let movieResponse = try decoder.decode(Response<MovieResponse>.self, from: json)
-
-     // Decode TVShowResponse
-     let tvShowResponse = try decoder.decode(Response<TVShowResponse>.self, from: json)
-     */
-
-    
-    struct SearchResult: Codable {
-        let results: [SearchResultItem]
+// I think this may belong here, but right now im calling it on the cell, (not good, breaks viper)
+extension TMDBNetworkingService {
+    func fetchImage(fromURL url: URL, completion: @escaping (Result<Data, APIError>) -> Void) {
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                completion(.failure(APIError.networkError(error)))
+                return
+            }
+            
+            guard let data = data else {
+                completion(.failure(APIError.invalidData))
+                return
+            }
+            
+            completion(.success(data))
+        }.resume()
     }
-
-    struct SearchResultItem: Codable {
-        let title: String?
-        let name: String?
-        let releaseDate: String?
-        let firstAirDate: String?
-        let popularity: Double
-        let voteAverage: Double?
-    }
-    
 }

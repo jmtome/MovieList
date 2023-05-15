@@ -23,6 +23,7 @@ class MainScreenTableViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .preferredFont(forTextStyle: .title2)
+        label.numberOfLines = 1
         return label
     }()
     
@@ -37,6 +38,7 @@ class MainScreenTableViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 14)
+        label.numberOfLines = 1
         label.textColor = .gray
         return label
     }()
@@ -45,6 +47,7 @@ class MainScreenTableViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 14)
+        label.numberOfLines = 1
         label.textColor = .gray
         return label
     }()
@@ -53,7 +56,7 @@ class MainScreenTableViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 14)
-        label.numberOfLines = 10
+        label.numberOfLines = 4
         return label
     }()
     
@@ -64,12 +67,23 @@ class MainScreenTableViewCell: UITableViewCell {
         setupViews()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        titleLabel.text = ""
+        posterImageView.image = UIImage(systemName: "popcorn")
+        directorLabel.text = ""
+        dateLabel.text = ""
+        descriptionLabel.text = ""
+    }
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupViews()
     }
     
     // MARK: - Setup
+    
     
     private func setupViews() {
         // Add subviews
@@ -90,7 +104,6 @@ class MainScreenTableViewCell: UITableViewCell {
             titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
             titleLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 8),
             titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
-//            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -8),
 
             posterImageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
             posterImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
@@ -115,12 +128,12 @@ class MainScreenTableViewCell: UITableViewCell {
     
 
     
-    func setup(with movie: Movie) {
+    func setup(with movie: AnyMedia) {
         titleLabel.text = movie.title
         descriptionLabel.text = movie.overview
         
 
-        directorLabel.text = "Rating: \(getStarRating(from: movie.voteAverage ?? 0))"
+        directorLabel.text = "Rating: \(getStarRating(from: movie.voteAverage ))"
         dateLabel.text = "Date Released: \(movie.releaseDate)"
         
         // Load the image from the provided URL or set the placeholder image
@@ -129,7 +142,6 @@ class MainScreenTableViewCell: UITableViewCell {
         } else {
             posterImageView.image = UIImage(systemName: "popcorn")
         }
-    
     }
     
     func getStarRating(from value: Double) -> String {

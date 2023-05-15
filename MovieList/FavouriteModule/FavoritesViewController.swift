@@ -8,7 +8,7 @@
 import UIKit
 
 protocol FavoritesViewProtocol: AnyObject {
-    func displayFavorites(_ favorites: [Movie])
+    func displayFavoriteMedia(_ favorites: [AnyMedia])
     func displayError(_ message: String)
     
     func didRemoveMovieFromFavorites(movie: Movie)
@@ -20,9 +20,13 @@ class FavoritesViewController: UIViewController, FavoritesViewProtocol {
     
     var presenter: FavoritesPresenterProtocol?
     var tableView: UITableView!
-    private var dataSource: UITableViewDiffableDataSource<Section, Movie>?
+    var searchController: UISearchController!
 
-    var favoriteMovies: [Movie] = []
+    
+    private var dataSource: FavoritesDiffableDataSource?
+//    private var dataSource: UITableViewDiffableDataSource<Section, AnyMedia>?
+
+    var favoriteMovies: [AnyMedia] = []
     init(presenter: FavoritesPresenterProtocol) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
@@ -36,25 +40,41 @@ class FavoritesViewController: UIViewController, FavoritesViewProtocol {
         super.viewDidLoad()
         setupTableView()
         setupDataSource()
-        navigationItem.title = "Favorite Movies"
+        setupSearchController()
+        navigationItem.title = "Favorite Media"
         navigationController?.navigationBar.prefersLargeTitles = true
         
     }
     private func setupDataSource() {
-        dataSource = UITableViewDiffableDataSource<Section, Movie>(tableView: tableView) { tableView, indexPath, movie in
+        dataSource = FavoritesDiffableDataSource(tableView: tableView) { tableView, indexPath, media in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: MainScreenTableViewCell.reuseIdentifier, for: indexPath) as? MainScreenTableViewCell else {
                 fatalError("Failed to dequeue MainScreenTableViewCell")
             }
-            cell.setup(with: movie)
+            
+            cell.setup(with: media)
             return cell
         }
-        //        dataSource?.defaultRowAnimation = .bottom
-        
     }
+    
+    func updateSnapshot(with media: [AnyMedia], completion: (()-> Void)? = nil) {
+        var currentSnapshot = NSDiffableDataSourceSnapshot<Section, AnyMedia>()
+        currentSnapshot.appendSections([.favorites])
+        
+        currentSnapshot.appendItems(media, toSection: .favorites)
+        dataSource?.defaultRowAnimation = .fade
+        
+        DispatchQueue.main.async {
+            self.dataSource?.apply(currentSnapshot, animatingDifferences: false, completion: completion)
+        }
+    }
+    
+
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        presenter?.getFavoriteMovies()
+        searchController.searchBar.selectedScopeButtonIndex = 0
+        presenter?.viewDidChangeSearchScope(.movies)
     }
     
     private func setupTableView() {
@@ -66,32 +86,37 @@ class FavoritesViewController: UIViewController, FavoritesViewProtocol {
         view.addSubview(tableView)
     }
     
+    private func setupSearchController() {
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.scopeButtonTitles = [SearchScope.movies.displayTitle,
+                                                        SearchScope.series.displayTitle]
+        searchController.searchBar.showsScopeBar = true
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchBar.placeholder = "Search Movies"
+        searchController.searchBar.delegate = self
+
+        navigationItem.hidesSearchBarWhenScrolling = false
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+        
+    }
+    
+    
     // MARK: - FavoritesViewProtocol
     
-    func displayFavorites(_ favorites: [Movie]) {
+    func displayFavoriteMedia(_ favorites: [AnyMedia]) {
         // Update the table view with the favorite movies
+        
         self.favoriteMovies = favorites
-        self.favoriteMovies.sort { $0.voteAverage ?? 0.0 > $1.voteAverage ?? 0.0}
+        self.favoriteMovies.sort { $0.voteAverage > $1.voteAverage }
         
+        updateSnapshot(with: self.favoriteMovies)
         
-        updateSnapshot(with: self.favoriteMovies) {
-            DispatchQueue.main.async { [weak self] in
-//                self?.tableView.performBatchUpdates(nil, completion: nil)
-            }
-        }
-        
-        self.tableView.reloadData()
     }
     
-    func updateSnapshot(with movies: [Movie], completion: (() -> Void)?) {
-        var currentSnapshot = NSDiffableDataSourceSnapshot<Section, Movie>()
-        currentSnapshot.appendSections([.main])
-        currentSnapshot.appendItems(movies, toSection: .main)
-        
-        dataSource?.defaultRowAnimation = .fade
-        
-        dataSource?.apply(currentSnapshot, animatingDifferences: false, completion: completion)
-    }
+ 
     
     func displayError(_ message: String) {
         // Display an error message to the user
@@ -103,18 +128,26 @@ class FavoritesViewController: UIViewController, FavoritesViewProtocol {
     
 }
 
+extension FavoritesViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let query = searchController.searchBar.text else { return }
+        presenter?.viewDidChangeSearchQuery(query)
+    }
+}
+
+extension FavoritesViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        let scope = SearchScope(rawValue: selectedScope) ?? .movies
+        searchBar.placeholder = "Search \(scope.displayTitle.capitalized)"
+        presenter?.viewDidChangeSearchScope(scope)
+    }
+}
+
 extension FavoritesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Return the number of favorite movies to display in the table view
         return self.favoriteMovies.count
     }
-
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: MainScreenTableViewCell.reuseIdentifier, for: indexPath) as! MainScreenTableViewCell
-//        // Configure the cell with the favorite movie
-//        cell.setup(with: self.favoriteMovies[indexPath.row])
-//        return cell
-//    }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard let presenter = self.presenter else { return nil }
@@ -123,6 +156,7 @@ extension FavoritesViewController: UITableViewDelegate {
         let favoriteAction = UIContextualAction(style: .normal, title: "Unfavorite") { (_, _, completionHandler) in
             
             presenter.removeFavoriteMovie(movie)
+            self.searchController.searchBar.text = ""
             completionHandler(true)
         }
         favoriteAction.backgroundColor = .systemTeal
@@ -133,4 +167,70 @@ extension FavoritesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Notify the presenter that a favorite movie was selected
     }
+    
+   
 }
+
+class FavoritesDiffableDataSource: UITableViewDiffableDataSource<Section, AnyMedia> {
+    
+    // Set Title
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return snapshot().sectionIdentifiers[section].rawValue
+    }
+}
+
+
+
+//    func updateSnapshot2(with media: [AnyMedia], completion: (() -> Void)? = nil) {
+//        var currentSnapshot = NSDiffableDataSourceSnapshot<Section, AnyMedia>()
+//        currentSnapshot.appendSections([.movies, .tvshows])
+//
+//        let movies = media.filter { $0.mediaType() == Movie.self }
+//        let series = media.filter { $0.mediaType() == TVShow.self }
+//
+//        print("nmovies are:\n")
+//        movies.forEach { print("movie is \($0)") }
+//
+//        print("\nseries are:\n")
+//        series.forEach { print("serie is \($0)") }
+//
+//
+//        currentSnapshot.appendItems(movies, toSection: .movies)
+//        currentSnapshot.appendItems(series, toSection: .tvshows)
+//
+//        dataSource?.defaultRowAnimation = .fade
+//
+//        DispatchQueue.main.async {
+//            self.dataSource?.apply(currentSnapshot, animatingDifferences: false, completion: completion)
+//        }
+//    }
+
+
+    /*
+     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+         guard let presenter = self.presenter else { return nil }
+         
+         let movies = favoriteMovies.filter { $0.mediaType() == Movie.self }
+         let series = favoriteMovies.filter { $0.mediaType() == TVShow.self }
+         var movie: AnyMedia = AnyMedia(Movie())
+         
+         switch indexPath.section {
+         case 0:
+             movie = movies[indexPath.row]
+         case 1:
+             movie = series[indexPath.row]
+         default :break
+         }
+         
+         favoriteMovies.forEach { print("media title: \($0.title), array position: \(indexPath.row)\n") }
+         
+         let favoriteAction = UIContextualAction(style: .normal, title: "Unfavorite") { (_, _, completionHandler) in
+             
+             presenter.removeFavoriteMovie(movie)
+             completionHandler(true)
+         }
+         favoriteAction.backgroundColor = .systemTeal
+         let configuration = UISwipeActionsConfiguration(actions: [favoriteAction])
+         return configuration
+     }
+     */
