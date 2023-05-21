@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import AnyCodable
-
 
 protocol MainScreenInteractorProtocol: AnyObject {
     func searchMedia(with query: String, scope: SearchScope, page: Int)
@@ -17,6 +15,7 @@ protocol MainScreenInteractorProtocol: AnyObject {
     func isMovieInFavorites(movie: AnyMedia) -> Bool
     
     func getPopularMedia(currentScope: SearchScope, page: Int)
+//    func getPopularMedia(currentScope: SearchScope, page: Int) async throws
     
     func retrieveFavorites() -> [Movie]
 }
@@ -33,59 +32,63 @@ class MainScreenInteractor: MainScreenInteractorProtocol {
         self.presenter = presenter
     }
     
-    func getPopularMedia(currentScope: SearchScope, page: Int) {
-        
-        networkingService.getPopularMedia(scope: currentScope, page: page) { result in
-            switch result {
-            case .success(let data):
+    func fetchMediaImages() {
+        Task {
+            do {
+                let data = try await networkingService.getImagesForMedia(id: 603, scope: .movies)
+                let response = try JSONDecoder().decode(ImagesResponse.self, from: data)
+                let mediaImages = response.backdrops
                 
-                do {
-                    switch currentScope {
-                    case .movies:
-                        let popularMoviesResponse = try JSONDecoder().decode(Response<Movie>.self, from: data)
-                        self.presenter?.didReceiveMovies(popularMoviesResponse.results.map { AnyMedia($0) }, with: page)
-                    case .series:
-                        let popularSeriesResponse = try JSONDecoder().decode(Response<TVShow>.self, from: data)
-                        self.presenter?.didReceiveMovies(popularSeriesResponse.results.map { AnyMedia($0) }, with: page)
-                    default: break
-                    }
-                } catch let error {
-                    print("error decoding, error: \(error)")
-                }
-            case .failure(let error):
-                break
-            }
-        }
-        
-    }
-    //ver esto
-    func searchMedia(with query: String, scope: SearchScope, page: Int) {
-        networkingService.searchMedia(query: query,
-                                      scope: scope,
-                                      page: page) { result in
-            switch result {
-            case .success(let data):
-                do {
-                    switch scope {
-                    case .movies:
-                        let moviesResponse = try JSONDecoder().decode(Response<Movie>.self, from: data)
-                        self.presenter?.didReceiveMovies(moviesResponse.results.map { AnyMedia($0) }, with: page)
-                    case .series:
-                        let seriesResponse = try JSONDecoder().decode(Response<TVShow>.self, from: data)
-                        self.presenter?.didReceiveMovies(seriesResponse.results.map { AnyMedia($0) }, with: page)
-                    default:
-                        break
-                    }
-                } catch let error {
-                    print("error searching for shows \(error)")
-                }
-            case .failure(let error):
-                print(error)
+//                self.presenter?.didFetchMediaImages(imageDataArray)
+                
+            } catch {
+                
             }
         }
     }
     
+    func getPopularMedia(currentScope: SearchScope, page: Int) {
+        Task {
+            do {
+                let data = try await networkingService.getPopularMedia(scope: currentScope, page: page)
+                
+                switch currentScope {
+                case .movies:
+                    let popularMoviesResponse = try JSONDecoder().decode(Response<Movie>.self, from: data)
+                    self.presenter?.didReceiveMovies(popularMoviesResponse.results.map { AnyMedia($0) }, with: page)
+                case .series:
+                    let popularSeriesResponse = try JSONDecoder().decode(Response<TVShow>.self, from: data)
+                    self.presenter?.didReceiveMovies(popularSeriesResponse.results.map { AnyMedia($0) }, with: page)
+                default:
+                    break
+                }
+            } catch let error {
+                print("error decoding, error: \(error)")
+                throw error
+            }
+        }
+    }
 
+    func searchMedia(with query: String, scope: SearchScope, page: Int) {
+        Task {
+            do {
+                let data = try await networkingService.searchMedia(query: query, scope: scope, page: page)
+                
+                switch scope {
+                case .movies:
+                    let moviesResponse = try JSONDecoder().decode(Response<Movie>.self, from: data)
+                    presenter?.didReceiveMovies(moviesResponse.results.map { AnyMedia($0) }, with: page)
+                case .series:
+                    let seriesResponse = try JSONDecoder().decode(Response<TVShow>.self, from: data)
+                    presenter?.didReceiveMovies(seriesResponse.results.map { AnyMedia($0) }, with: page)
+                default:
+                    break
+                }
+            } catch let error {
+                print("error searching for shows \(error)")
+            }
+        }
+    }
 }
 
 extension MainScreenInteractor {

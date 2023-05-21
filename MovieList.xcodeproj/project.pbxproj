@@ -42,6 +42,26 @@
 		FA170A262A059FAC00E1B1ED /* FavoritesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A242A059FAC00E1B1ED /* FavoritesRepository.swift */; };
 		FA170A282A05A26E00E1B1ED /* FavoritesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A272A05A26E00E1B1ED /* FavoritesTableViewCell.swift */; };
 		FA170A292A05A26E00E1B1ED /* FavoritesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A272A05A26E00E1B1ED /* FavoritesTableViewCell.swift */; };
+		FAB7F1852A12FEA40015C55D /* MediaDetailBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1842A12FEA40015C55D /* MediaDetailBuilder.swift */; };
+		FAB7F1862A12FEA40015C55D /* MediaDetailBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1842A12FEA40015C55D /* MediaDetailBuilder.swift */; };
+		FAB7F1882A12FEAD0015C55D /* MediaDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1872A12FEAD0015C55D /* MediaDetailViewController.swift */; };
+		FAB7F1892A12FEAD0015C55D /* MediaDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1872A12FEAD0015C55D /* MediaDetailViewController.swift */; };
+		FAB7F18B2A12FEB60015C55D /* MediaDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F18A2A12FEB60015C55D /* MediaDetailPresenter.swift */; };
+		FAB7F18C2A12FEB60015C55D /* MediaDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F18A2A12FEB60015C55D /* MediaDetailPresenter.swift */; };
+		FAB7F18E2A12FEBD0015C55D /* MediaDetailInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F18D2A12FEBD0015C55D /* MediaDetailInteractor.swift */; };
+		FAB7F18F2A12FEBD0015C55D /* MediaDetailInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F18D2A12FEBD0015C55D /* MediaDetailInteractor.swift */; };
+		FAB7F1912A12FEC40015C55D /* MediaDetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1902A12FEC40015C55D /* MediaDetailRouter.swift */; };
+		FAB7F1922A12FEC40015C55D /* MediaDetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1902A12FEC40015C55D /* MediaDetailRouter.swift */; };
+		FAB7F1942A13FBA50015C55D /* CarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1932A13FBA50015C55D /* CarouselView.swift */; };
+		FAB7F1952A13FBA50015C55D /* CarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1932A13FBA50015C55D /* CarouselView.swift */; };
+		FAB7F1A42A141FBA0015C55D /* CarouselCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1A32A141FBA0015C55D /* CarouselCell.swift */; };
+		FAB7F1A52A141FBA0015C55D /* CarouselCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1A32A141FBA0015C55D /* CarouselCell.swift */; };
+		FAB7F1AA2A1551D30015C55D /* Carousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1A92A1551D20015C55D /* Carousel.swift */; };
+		FAB7F1AB2A1551D30015C55D /* Carousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1A92A1551D20015C55D /* Carousel.swift */; };
+		FAB7F1AD2A1562A70015C55D /* UIKit+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1AC2A1562A70015C55D /* UIKit+Extension.swift */; };
+		FAB7F1AE2A1562A70015C55D /* UIKit+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1AC2A1562A70015C55D /* UIKit+Extension.swift */; };
+		FAB7F1B12A1566460015C55D /* MediaInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1B02A1566460015C55D /* MediaInfoView.swift */; };
+		FAB7F1B22A1566460015C55D /* MediaInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1B02A1566460015C55D /* MediaInfoView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +107,16 @@
 		FA170A212A058C0600E1B1ED /* FavoritesInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesInteractor.swift; sourceTree = "<group>"; };
 		FA170A242A059FAC00E1B1ED /* FavoritesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesRepository.swift; sourceTree = "<group>"; };
 		FA170A272A05A26E00E1B1ED /* FavoritesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesTableViewCell.swift; sourceTree = "<group>"; };
+		FAB7F1842A12FEA40015C55D /* MediaDetailBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailBuilder.swift; sourceTree = "<group>"; };
+		FAB7F1872A12FEAD0015C55D /* MediaDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailViewController.swift; sourceTree = "<group>"; };
+		FAB7F18A2A12FEB60015C55D /* MediaDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailPresenter.swift; sourceTree = "<group>"; };
+		FAB7F18D2A12FEBD0015C55D /* MediaDetailInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailInteractor.swift; sourceTree = "<group>"; };
+		FAB7F1902A12FEC40015C55D /* MediaDetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailRouter.swift; sourceTree = "<group>"; };
+		FAB7F1932A13FBA50015C55D /* CarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselView.swift; sourceTree = "<group>"; };
+		FAB7F1A32A141FBA0015C55D /* CarouselCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselCell.swift; sourceTree = "<group>"; };
+		FAB7F1A92A1551D20015C55D /* Carousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Carousel.swift; sourceTree = "<group>"; };
+		FAB7F1AC2A1562A70015C55D /* UIKit+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Extension.swift"; sourceTree = "<group>"; };
+		FAB7F1B02A1566460015C55D /* MediaInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaInfoView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +167,7 @@
 		FA1709CD2A02E8A700E1B1ED /* MovieList */ = {
 			isa = PBXGroup;
 			children = (
+				FAB7F1832A12FE8C0015C55D /* MediaDetailModule */,
 				FA170A172A05798F00E1B1ED /* FavouriteModule */,
 				FA1709FE2A03078C00E1B1ED /* MainModule */,
 				FA1709CE2A02E8A700E1B1ED /* AppDelegate.swift */,
@@ -144,6 +175,7 @@
 				FA1709D72A02E8AD00E1B1ED /* Assets.xcassets */,
 				FA1709D92A02E8AD00E1B1ED /* LaunchScreen.storyboard */,
 				FA1709DC2A02E8AD00E1B1ED /* Info.plist */,
+				FAB7F1AC2A1562A70015C55D /* UIKit+Extension.swift */,
 			);
 			path = MovieList;
 			sourceTree = "<group>";
@@ -191,6 +223,30 @@
 				FA170A272A05A26E00E1B1ED /* FavoritesTableViewCell.swift */,
 			);
 			path = FavouriteModule;
+			sourceTree = "<group>";
+		};
+		FAB7F1832A12FE8C0015C55D /* MediaDetailModule */ = {
+			isa = PBXGroup;
+			children = (
+				FAB7F1AF2A1563ED0015C55D /* Views */,
+				FAB7F1842A12FEA40015C55D /* MediaDetailBuilder.swift */,
+				FAB7F1872A12FEAD0015C55D /* MediaDetailViewController.swift */,
+				FAB7F18A2A12FEB60015C55D /* MediaDetailPresenter.swift */,
+				FAB7F18D2A12FEBD0015C55D /* MediaDetailInteractor.swift */,
+				FAB7F1902A12FEC40015C55D /* MediaDetailRouter.swift */,
+				FAB7F1932A13FBA50015C55D /* CarouselView.swift */,
+			);
+			path = MediaDetailModule;
+			sourceTree = "<group>";
+		};
+		FAB7F1AF2A1563ED0015C55D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FAB7F1A32A141FBA0015C55D /* CarouselCell.swift */,
+				FAB7F1A92A1551D20015C55D /* Carousel.swift */,
+				FAB7F1B02A1566460015C55D /* MediaInfoView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -327,13 +383,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAB7F1912A12FEC40015C55D /* MediaDetailRouter.swift in Sources */,
+				FAB7F18B2A12FEB60015C55D /* MediaDetailPresenter.swift in Sources */,
+				FAB7F1AA2A1551D30015C55D /* Carousel.swift in Sources */,
 				FA170A152A03131100E1B1ED /* MainScreenTableViewCell.swift in Sources */,
+				FAB7F1AD2A1562A70015C55D /* UIKit+Extension.swift in Sources */,
 				FA170A122A030F2900E1B1ED /* NetworkingService.swift in Sources */,
+				FAB7F1852A12FEA40015C55D /* MediaDetailBuilder.swift in Sources */,
+				FAB7F1B12A1566460015C55D /* MediaInfoView.swift in Sources */,
+				FAB7F18E2A12FEBD0015C55D /* MediaDetailInteractor.swift in Sources */,
 				FA170A222A058C0600E1B1ED /* FavoritesInteractor.swift in Sources */,
 				FA170A1F2A058B5900E1B1ED /* FavoritesPresenter.swift in Sources */,
+				FAB7F1882A12FEAD0015C55D /* MediaDetailViewController.swift in Sources */,
+				FAB7F1A42A141FBA0015C55D /* CarouselCell.swift in Sources */,
 				FA170A252A059FAC00E1B1ED /* FavoritesRepository.swift in Sources */,
 				FA170A032A0307DA00E1B1ED /* MainScreenViewController.swift in Sources */,
 				FA170A0C2A03082C00E1B1ED /* MainRouter.swift in Sources */,
+				FAB7F1942A13FBA50015C55D /* CarouselView.swift in Sources */,
 				FA170A0F2A030B7000E1B1ED /* Movie.swift in Sources */,
 				FA1709CF2A02E8A700E1B1ED /* AppDelegate.swift in Sources */,
 				FA170A002A0307A400E1B1ED /* MainModule.swift in Sources */,
@@ -352,15 +418,25 @@
 			files = (
 				FA170A102A030B7000E1B1ED /* Movie.swift in Sources */,
 				FA170A0A2A03081B00E1B1ED /* MainPresenter.swift in Sources */,
+				FAB7F1B22A1566460015C55D /* MediaInfoView.swift in Sources */,
 				FA170A202A058B5900E1B1ED /* FavoritesPresenter.swift in Sources */,
 				FA170A132A030F2900E1B1ED /* NetworkingService.swift in Sources */,
+				FAB7F1892A12FEAD0015C55D /* MediaDetailViewController.swift in Sources */,
 				FA170A1A2A058B1300E1B1ED /* FavoritesBuilder.swift in Sources */,
+				FAB7F1AE2A1562A70015C55D /* UIKit+Extension.swift in Sources */,
+				FAB7F1952A13FBA50015C55D /* CarouselView.swift in Sources */,
+				FAB7F18C2A12FEB60015C55D /* MediaDetailPresenter.swift in Sources */,
 				FA170A012A0307A400E1B1ED /* MainModule.swift in Sources */,
+				FAB7F1AB2A1551D30015C55D /* Carousel.swift in Sources */,
 				FA1709E62A02E8AD00E1B1ED /* MovieListTests.swift in Sources */,
 				FA170A262A059FAC00E1B1ED /* FavoritesRepository.swift in Sources */,
+				FAB7F1862A12FEA40015C55D /* MediaDetailBuilder.swift in Sources */,
+				FAB7F1922A12FEC40015C55D /* MediaDetailRouter.swift in Sources */,
+				FAB7F18F2A12FEBD0015C55D /* MediaDetailInteractor.swift in Sources */,
 				FA170A1D2A058B3900E1B1ED /* FavoritesViewController.swift in Sources */,
 				FA170A162A03131100E1B1ED /* MainScreenTableViewCell.swift in Sources */,
 				FA170A292A05A26E00E1B1ED /* FavoritesTableViewCell.swift in Sources */,
+				FAB7F1A52A141FBA0015C55D /* CarouselCell.swift in Sources */,
 				FA170A232A058C0700E1B1ED /* FavoritesInteractor.swift in Sources */,
 				FA170A042A0307DA00E1B1ED /* MainScreenViewController.swift in Sources */,
 				FA170A072A03080A00E1B1ED /* MainInteractor.swift in Sources */,

@@ -22,8 +22,8 @@ class MainScreenTableViewCell: UITableViewCell {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .preferredFont(forTextStyle: .title2)
-        label.numberOfLines = 1
+        label.font = .preferredFont(forTextStyle: .title3)
+        label.numberOfLines = 2
         return label
     }()
     
@@ -34,10 +34,10 @@ class MainScreenTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    private let directorLabel: UILabel = {
+    private let ratingLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.font = .preferredFont(forTextStyle: .subheadline)
         label.numberOfLines = 1
         label.textColor = .gray
         return label
@@ -46,7 +46,7 @@ class MainScreenTableViewCell: UITableViewCell {
     private let dateLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.font = .preferredFont(forTextStyle: .subheadline)
         label.numberOfLines = 1
         label.textColor = .gray
         return label
@@ -55,8 +55,9 @@ class MainScreenTableViewCell: UITableViewCell {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.numberOfLines = 4
+        label.font = .preferredFont(forTextStyle: .caption1)
+        label.numberOfLines = 0
+        label.lineBreakMode = .byTruncatingTail // Truncate text if it exceeds the maximum number of lines
         return label
     }()
     
@@ -72,7 +73,7 @@ class MainScreenTableViewCell: UITableViewCell {
         
         titleLabel.text = ""
         posterImageView.image = UIImage(systemName: "popcorn")
-        directorLabel.text = ""
+        ratingLabel.text = ""
         dateLabel.text = ""
         descriptionLabel.text = ""
     }
@@ -90,7 +91,7 @@ class MainScreenTableViewCell: UITableViewCell {
         contentView.addSubview(containerView)
         containerView.addSubview(titleLabel)
         containerView.addSubview(posterImageView)
-        containerView.addSubview(directorLabel)
+        containerView.addSubview(ratingLabel)
         containerView.addSubview(dateLabel)
         containerView.addSubview(descriptionLabel)
         
@@ -109,36 +110,51 @@ class MainScreenTableViewCell: UITableViewCell {
             posterImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
             posterImageView.widthAnchor.constraint(equalToConstant: 80),
             posterImageView.heightAnchor.constraint(equalToConstant: 120),
+            posterImageView.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor, constant: -8),
 
-            directorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            directorLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 8),
-            directorLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
+            ratingLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            ratingLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 8),
+            ratingLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
             
-            dateLabel.topAnchor.constraint(equalTo: directorLabel.bottomAnchor, constant: 4),
+            dateLabel.topAnchor.constraint(equalTo: ratingLabel.bottomAnchor, constant: 4),
             dateLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 8),
             dateLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
 
             descriptionLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 4),
             descriptionLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 8),
             descriptionLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
-            descriptionLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8)
+            descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor, constant: -8),
+            
         ])
         
+        containerView.backgroundColor = .systemFill
+        containerView.layer.cornerRadius = 10
+        containerView.layer.masksToBounds = true
+        
+        posterImageView.layer.cornerRadius = 10
+        posterImageView.layer.masksToBounds = true
     }
     
-
+    func setup(with media: MediaViewModel) {
+        titleLabel.text = media.title
+        descriptionLabel.text = media.description
+        ratingLabel.text = media.getStarRating()
+        dateLabel.text = media.dateAired
+        
+        posterImageView.loadImage(from: media.mainPosterURLString, placeholder: UIImage(systemName: "popcorn"))
+    }
     
     func setup(with movie: AnyMedia) {
         titleLabel.text = movie.title
         descriptionLabel.text = movie.overview
         
 
-        directorLabel.text = "Rating: \(getStarRating(from: movie.voteAverage ))"
+        ratingLabel.text = "Rating: \(getStarRating(from: movie.voteAverage ))"
         dateLabel.text = "Date Released: \(movie.releaseDate)"
         
         // Load the image from the provided URL or set the placeholder image
         if let fullPosterPath = movie.fullPosterPath, let imageURL = URL(string: fullPosterPath) {
-            posterImageView.loadImage(from: imageURL, placeholder: UIImage(systemName: "popcorn"))
+            posterImageView.loadImage(from: imageURL.absoluteString, placeholder: UIImage(systemName: "popcorn"))
         } else {
             posterImageView.image = UIImage(systemName: "popcorn")
         }
@@ -174,51 +190,4 @@ class MainScreenTableViewCell: UITableViewCell {
 
 
 
-
-extension UIImageView {
-    func loadImage(from url: URL, placeholder: UIImage? = nil) {
-        self.image = placeholder
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            if let retrImg = ImageCache.checkImage(url.absoluteString) {
-                self.image = retrImg
-            } else {
-                
-                let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-                    // Handle the response here
-                    guard let data = data, error == nil else { return }
-                    
-                    if let image = UIImage(data: data) {
-                        DispatchQueue.main.async {
-                            self.image = image
-                        }
-                        ImageCache.saveImage(image, for: url.absoluteString)
-                    }
-                }
-                task.resume()
-            }
-        }
-    }
-}
-
-
-final class ImageCache {
-    static let cache = NSCache<NSString, UIImage>()
-    
-    static func checkImage(_ imageString: String) -> UIImage? {
-        let cacheKey = NSString(string: imageString)
-        if let image = cache.object(forKey: cacheKey) {
-            return image
-        } else {
-            return nil
-        }
-    }
-    
-    static func saveImage(_ image: UIImage, for imageString: String) {
-        let cacheKey = NSString(string: imageString)
-        cache.setObject(image, forKey: cacheKey)
-    }
-    
-    
-}
 

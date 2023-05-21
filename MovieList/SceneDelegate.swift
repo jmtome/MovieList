@@ -21,8 +21,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Create favorites resource
         let favoritesRepo = FavoritesRepository()
         
+        // Create network resource
+        let networkingResource = TMDBNetworkingService()
+        
         // Create the main view controller
-        let mainScreenViewController = MainScreenBuilder.build(favoritesRepository: favoritesRepo)
+        let mainScreenViewController = MainScreenBuilder.build(favoritesRepository: favoritesRepo, networkRepository: networkingResource)
         let mainScreenNavigationController = UINavigationController(rootViewController: mainScreenViewController)
         
         // Create tab bar items

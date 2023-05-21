@@ -20,11 +20,11 @@
 import UIKit
 
 class MainScreenBuilder {
-    static func build(favoritesRepository: FavoritesRepository? = nil) -> UIViewController {
+    static func build(favoritesRepository: FavoritesRepository? = nil, networkRepository: NetworkingService) -> UIViewController {
         let viewController = MainScreenViewController()
         let presenter = MainScreenPresenter(view: viewController,
-                                            router: MainScreenRouter())
-        let interactor = MainScreenInteractor(networkingService: TMDBNetworkingService(), presenter: presenter)
+                                            router: MainScreenRouter(viewController))
+        let interactor = MainScreenInteractor(networkingService: networkRepository, presenter: presenter)
         interactor.favoritesRepository = favoritesRepository
         
         presenter.interactor = interactor

@@ -94,7 +94,7 @@ class FavoritesViewController: UIViewController, FavoritesViewProtocol {
                                                         SearchScope.series.displayTitle]
         searchController.searchBar.showsScopeBar = true
         searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchBar.placeholder = "Search Movies"
+        searchController.searchBar.placeholder = "Search Favorite Movies"
         searchController.searchBar.delegate = self
 
         navigationItem.hidesSearchBarWhenScrolling = false
@@ -138,7 +138,7 @@ extension FavoritesViewController: UISearchResultsUpdating {
 extension FavoritesViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
         let scope = SearchScope(rawValue: selectedScope) ?? .movies
-        searchBar.placeholder = "Search \(scope.displayTitle.capitalized)"
+        searchBar.placeholder = "Search Favorite \(scope.displayTitle.capitalized)"
         presenter?.viewDidChangeSearchScope(scope)
     }
 }

@@ -45,6 +45,19 @@ enum SearchScope: Int {
         }
     }
     
+    init(_ media: AnyMedia) {
+        if let film = media.getBaseType() as? Movie {
+            self = .movies
+        }
+        else if let show = media.getBaseType() as? TVShow {
+            self = .series
+        }
+        else {
+            self = .movies
+        }
+        
+    }
+    
     var urlAppendix: String {
         switch self {
         case .movies: return "movies"
@@ -82,7 +95,7 @@ class MainScreenViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         setupFilterMenu()
     }
-
+    
     
     var menuItems: [UIAction] {
         return [
@@ -165,7 +178,7 @@ class MainScreenViewController: UIViewController {
     func setupFilterMenu() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sort", image: UIImage(systemName: "line.3.horizontal.decrease.circle"), primaryAction: nil, menu: demoMenu)
     }
-
+    
     private func loadInitialData() {
         presenter?.viewDidLoad()
     }
@@ -193,7 +206,8 @@ class MainScreenViewController: UIViewController {
         tableView.dataSource = dataSource
         tableView.register(MainScreenTableViewCell.self, forCellReuseIdentifier: MainScreenTableViewCell.reuseIdentifier)
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 50 // Set an estimated row height for better performance
+        tableView.estimatedRowHeight = UITableView.automaticDimension // Set an estimated row height for better performance
+        
         tableView.keyboardDismissMode = .onDrag
     }
     
@@ -204,7 +218,7 @@ class MainScreenViewController: UIViewController {
             }
             cell.setup(with: media)
             return cell
-        }        
+        }
     }
     
     private func setupSearchController() {
@@ -212,13 +226,12 @@ class MainScreenViewController: UIViewController {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.scopeButtonTitles = [SearchScope.movies.displayTitle,
-                                                        SearchScope.series.displayTitle,
-                                                        SearchScope.actors.displayTitle]
+                                                        SearchScope.series.displayTitle]
         searchController.searchBar.showsScopeBar = true
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.placeholder = "Search Movies"
         searchController.searchBar.delegate = self
-
+        
         navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.searchController = searchController
         definesPresentationContext = true
@@ -264,25 +277,39 @@ extension MainScreenViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Notify the presenter that a movie was selected
         
-    }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let minimumRowHeight: CGFloat = 150 // Set your desired minimum row height here
+        tableView.deselectRow(at: indexPath, animated: true)
+        presenter?.didSelectMedia(self.media[indexPath.row])
         
-        return max(tableView.rowHeight, minimumRowHeight)
     }
+    //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    //        let minimumRowHeight: CGFloat = 200 // Set your desired minimum row height here
+    ////
+    //        return max(UITableView.automaticDimension,200)
+    //    }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard let presenter = self.presenter else { return nil }
         let movie = media[indexPath.row]
         let isFavorite = presenter.isFavorite(movie: movie)
-      
-        let favoriteAction = UIContextualAction(style: .normal, title: isFavorite ? "Unfavorite" : "Favorite") { (action, view, completionHandler) in
+        
+        var actions = [UIContextualAction]()
+        
+        let favoriteAction = UIContextualAction(style: .normal, title: nil ) { (action, view, completionHandler) in
             
             presenter.handleFavoriteAction(for: movie)
             completionHandler(true)
         }
-        favoriteAction.backgroundColor = isFavorite ? .systemTeal : .systemPurple
-        let configuration = UISwipeActionsConfiguration(actions: [favoriteAction])
+        
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 17.0, weight: .bold, scale: .large)
+        favoriteAction.image = UIImage(systemName: isFavorite ? "star" : "star.fill", withConfiguration: largeConfig)?.withTintColor(.white, renderingMode: .alwaysTemplate).addBackgroundCircle(isFavorite ? .systemRed : .systemPurple)
+        favoriteAction.backgroundColor = .systemBackground
+        
+        favoriteAction.title =  isFavorite ? "Unfavorite" : "Favorite"
+        
+        actions.append(favoriteAction)
+        
+//        favoriteAction.backgroundColor = isFavorite ? .systemTeal : .systemPurple
+        let configuration = UISwipeActionsConfiguration(actions: actions)
         return configuration
     }
     
@@ -321,5 +348,36 @@ class MainScreenDiffableDataSource: UITableViewDiffableDataSource<Section, AnyMe
     // Set Title
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return snapshot().sectionIdentifiers[section].rawValue
+    }
+}
+extension UIImage {
+
+    func addBackgroundCircle(_ color: UIColor?) -> UIImage? {
+
+        let circleDiameter = max(size.width * 2, size.height * 2)
+        let circleRadius = circleDiameter * 0.5
+        let circleSize = CGSize(width: circleDiameter, height: circleDiameter)
+        let circleFrame = CGRect(x: 0, y: 0, width: circleSize.width, height: circleSize.height)
+        let imageFrame = CGRect(x: circleRadius - (size.width * 0.5), y: circleRadius - (size.height * 0.5), width: size.width, height: size.height)
+
+        let view = UIView(frame: circleFrame)
+        view.backgroundColor = color ?? .systemRed
+        view.layer.cornerRadius = circleDiameter * 0.5
+
+        UIGraphicsBeginImageContextWithOptions(circleSize, false, UIScreen.main.scale)
+
+        let renderer = UIGraphicsImageRenderer(size: circleSize)
+        let circleImage = renderer.image { ctx in
+            view.drawHierarchy(in: circleFrame, afterScreenUpdates: true)
+        }
+
+        circleImage.draw(in: circleFrame, blendMode: .normal, alpha: 1.0)
+        draw(in: imageFrame, blendMode: .normal, alpha: 1.0)
+
+        let image: UIImage? = UIGraphicsGetImageFromCurrentImageContext()
+
+        UIGraphicsEndImageContext()
+
+        return image
     }
 }

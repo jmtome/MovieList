@@ -8,15 +8,21 @@
 import UIKit
 
 protocol MainScreenRouterProtocol: AnyObject {
-    func navigateToDetailScreen(with movie: Movie)
+    func navigateToDetailScreen(with media: AnyMedia)
 }
 
 class MainScreenRouter: MainScreenRouterProtocol {
     weak var viewController: UIViewController?
     
-    func navigateToDetailScreen(with movie: Movie) {
-//        let detailBuilder = DetailScreenBuilder()
-//        let detailViewController = detailBuilder.build(with: movie)
-//        viewController?.navigationController?.pushViewController(detailViewController, animated: true)
+    init(_ vc: UIViewController) {
+        self.viewController = vc
+    }
+    
+    func navigateToDetailScreen(with media: AnyMedia) {
+        
+        let detailVC = MediaDetailBuilder.build(with: media)
+        viewController?.navigationController?.pushViewController(detailVC, animated: true)
+        
+        
     }
 }

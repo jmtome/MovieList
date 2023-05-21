@@ -10,7 +10,7 @@ import Foundation
 protocol MainScreenPresenterProtocol: AnyObject {
     func didReceiveMovies(_ movies: [AnyMedia], with page: Int)
     func didEncounterError(_ error: Error)
-    func didSelectMovie(_ movie: Movie)
+    func didSelectMedia(_ media: AnyMedia)
     
     func handleFavoriteAction(for movie: AnyMedia)
     func isFavorite(movie: AnyMedia) -> Bool
@@ -26,8 +26,6 @@ protocol MainScreenPresenterProtocol: AnyObject {
 }
 
 class MainScreenPresenter: MainScreenPresenterProtocol {
-    
-  
     
     private var currentQuery: String = ""
     private var currentScope: SearchScope = .movies
@@ -71,14 +69,7 @@ class MainScreenPresenter: MainScreenPresenterProtocol {
         interactor?.searchMedia(with: currentQuery, scope: currentScope, page: currentPage)
     }
     
-//    func loadSearch(for query: String, scope: SearchScope, page: Int) {
-//        currentQuery = query
-//        currentScope = scope
-//        currentPage = page
-//        guard !currentQuery.isEmpty else { interactor?.getPopularMedia(currentScope: currentScope, page: currentPage) ; return  }
-//        interactor?.searchMedia(with: currentQuery, scope: currentScope, page: currentPage)
-//    }
-    
+
     func viewDidChangeSearchQuery(_ query: String) {
         currentQuery = query
         currentPage = 1
@@ -98,6 +89,8 @@ class MainScreenPresenter: MainScreenPresenterProtocol {
         interactor?.searchMedia(with: currentQuery, scope: currentScope, page: currentPage)
     }
     
+    
+    
     func didReceiveMovies(_ movies: [AnyMedia], with page: Int) {
         self.isLoading = false
         view?.displayMovies(movies, for: page)
@@ -108,8 +101,8 @@ class MainScreenPresenter: MainScreenPresenterProtocol {
         view?.displayError(error.localizedDescription)
     }
     
-    func didSelectMovie(_ movie: Movie) {
-        router?.navigateToDetailScreen(with: movie)
+    func didSelectMedia(_ media: AnyMedia) {
+        router?.navigateToDetailScreen(with: media)
     }
     
     func handleFavoriteAction(for movie: AnyMedia) {

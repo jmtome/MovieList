@@ -8,8 +8,84 @@
 import Foundation
 import UIKit
 
+struct MediaViewModel {
+    let title: String
+    let description: String
+    let mainPosterURLString: String?
+    
+    let dateAired: String
+    let language: String
+    
+    let rating: Double
+    let popularity: Double
+    let voteCount: Int
+    
+    let backdrops: [MediaImage]? = nil
+    let posters: [MediaImage]? = nil
+}
+
+extension MediaViewModel {
+    init(tvshow: TVShow) {
+        title = tvshow.name ?? tvshow.originalName ?? "No Title"
+        description = tvshow.overview ?? "No Overview for this show"
+        mainPosterURLString = tvshow.fullPosterPath
+        
+        dateAired = tvshow.releaseDate ?? "No Release Date"
+        language = tvshow.originalLanguage ?? "No Language"
+       
+        rating = tvshow.voteAverage ?? 0.0
+        popularity = tvshow.popularity ?? 0.0
+        voteCount = tvshow.voteCount ?? 0
+    }
+}
+extension MediaViewModel {
+    init(movie: Movie) {
+        title = movie.title ?? movie.originalTitle ?? "No Title"
+        description = movie.overview ?? "No Overview for this movie"
+        mainPosterURLString = movie.fullPosterPath
+        
+        dateAired = movie.releaseDate ?? movie.firstAirDate ?? "No Release Date"
+        language = movie.originalLanguage ?? "No Language"
+        
+        rating = movie.voteAverage ?? 0.0
+        popularity = movie.popularity ?? 0.0
+        voteCount = movie.voteCount ?? 0
+    }
+}
+
+extension MediaViewModel {
+    func getStarRating() -> String {
+//    func getStarRating(from value: Double) -> String {
+        let fullStar = "★"
+        let halfStar = "½"
+        let emptyStar = "☆"
+        
+        // Ensure the value is within the range of 0 to 10.0
+        let clampedValue = max(0, min(self.rating, 10.0))
+        
+        // Calculate the number of full stars
+        let fullStars = Int(clampedValue / 2)
+        
+        // Check if there's a half star
+        let hasHalfStar = (clampedValue - Double(fullStars * 2)) >= 1.0
+        
+        // Create the star rating string
+        var starRating = String(repeating: fullStar, count: fullStars)
+        
+        if hasHalfStar {
+            starRating += halfStar
+        }
+        
+        let remainingStars = 5 - starRating.count
+        starRating += String(repeating: emptyStar, count: remainingStars)
+        
+        return starRating
+    }
+}
+
+
 struct AnyMedia: Hashable {
-    private let _base: any Media
+    private var _base: any Media
     
     init<T: Media>(_ base: T) {
         _base = base
@@ -29,11 +105,21 @@ struct AnyMedia: Hashable {
 
     var overview: String {
         guard let overview = _base.overview, !overview.isEmpty else {
-            return "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel dolor risus. Sed interdum, nisi quis ornare luctus, eros urna pellentesque elit, quis venenatis dolor odio eu lectus. Etiam nec felis orci. "
+//            return "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel dolor risus. Sed interdum, nisi quis ornare luctus, eros urna pellentesque elit, quis venenatis dolor odio eu lectus. Etiam nec felis orci. "
+            return "No Description"
         }
         return overview
     }
 
+    var mediaImages: [MediaImage] {
+        get {
+            _base.mediaImages ?? []
+        }
+        set(newValue){
+            _base.mediaImages = newValue
+        }
+    }
+    
     var voteAverage: Double {
         _base.voteAverage ?? 0.0
     }
@@ -73,45 +159,6 @@ struct AnyMedia: Hashable {
         return lhs._base.uuid == rhs._base.uuid
     }
 }
-//
-//extension AnyMedia {
-//    // MARK: - Codable
-//
-////    enum CodingKeys: String, CodingKey {
-////
-////
-////
-////    }
-//
-//
-//    init(from decoder: Decoder) throws {
-//
-//        let container = try decoder.singleValueContainer()
-//
-//        if let tvShow = try? container.decode(TVShow.self),
-//           let name = tvShow.name, !name.isEmpty {
-//            _base = tvShow
-//        } else if let movie = try? container.decode(Movie.self) {
-//            _base = movie
-//        } else {
-//            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid data")
-//        }
-//    }
-//
-//    func encode(to encoder: Encoder) throws {
-//        var container = encoder.singleValueContainer()
-//        if let movie = _base as? Movie {
-//            try container.encode(movie)
-//        } else if let tvShow = _base as? TVShow {
-//            try container.encode(tvShow)
-//        } else {
-//            throw EncodingError.invalidValue(_base, EncodingError.Context(codingPath: container.codingPath, debugDescription: "Invalid data"))
-//        }
-//    }
-//}
-
-
-
 
 
 
@@ -130,6 +177,7 @@ protocol Media: Codable, Hashable {
     var title: String? { get }
     var releaseDate: String? { get }
     var uuid: String { get }
+    var mediaImages: [MediaImage]? { get set }
 }
 
 
@@ -172,6 +220,7 @@ struct Movie: Media, Codable, Hashable  {
     var firstAirDate: String? = nil
     var originCountry: [String]? = nil
     var popularity: Double? = nil
+    var mediaImages: [MediaImage]? = nil
  
     var fullPosterPath: String? {
         guard let posterPath = posterPath else {
@@ -238,6 +287,8 @@ struct TVShow: Media, Codable, Hashable {
     let name: String?
     let voteAverage: Double?
     let voteCount: Int?
+    var mediaImages: [MediaImage]? = nil
+
     
     var fullPosterPath: String? {
         guard let posterPath = posterPath else {
@@ -368,3 +419,36 @@ extension Response {
 //        case totalResults = "total_results"
 //    }
 //}
+
+
+struct MediaImage: Codable, Hashable {
+    let aspectRatio: Double
+    let height: Int
+    let iso639_1: String?
+    let filePath: String
+    let voteAverage: Double
+    let voteCount: Int
+    let width: Int
+
+    var fullImagePath: String {
+//        guard let posterPath = posterPath else {
+//            return nil
+//        }
+        return "https://image.tmdb.org/t/p/w500/\(filePath)"
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case aspectRatio = "aspect_ratio"
+        case height
+        case iso639_1
+        case filePath = "file_path"
+        case voteAverage = "vote_average"
+        case voteCount = "vote_count"
+        case width
+    }
+}
+
+struct ImagesResponse: Codable {
+    let backdrops: [MediaImage]
+    let posters: [MediaImage]
+}
