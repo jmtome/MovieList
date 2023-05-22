@@ -8,7 +8,7 @@
 import UIKit
 
 protocol MainScreenRouterProtocol: AnyObject {
-    func navigateToDetailScreen(with media: AnyMedia)
+    func navigateToDetailScreen(with media: MediaViewModel)
 }
 
 class MainScreenRouter: MainScreenRouterProtocol {
@@ -18,11 +18,10 @@ class MainScreenRouter: MainScreenRouterProtocol {
         self.viewController = vc
     }
     
-    func navigateToDetailScreen(with media: AnyMedia) {
+    func navigateToDetailScreen(with media: MediaViewModel) {
         
         let detailVC = MediaDetailBuilder.build(with: media)
         viewController?.navigationController?.pushViewController(detailVC, animated: true)
-        
         
     }
 }

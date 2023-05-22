@@ -19,7 +19,7 @@ protocol MediaDetailPresenterProtocol: AnyObject {
     
     func didFinishFetchingMediaImages(_ mediaImages: [MediaImage])
     
-    var media: AnyMedia { get set }
+    var media: MediaViewModel { get set }
 }
 
 class MediaDetailPresenter: MediaDetailPresenterProtocol {
@@ -27,7 +27,7 @@ class MediaDetailPresenter: MediaDetailPresenterProtocol {
     var interactor: MediaDetailInteractorProtocol?
     var router: MediaDetailRouterProtocol?
     
-    var media: AnyMedia
+    var media: MediaViewModel
     
     func viewDidLoad() {
 //        interactor?.fetchMediaDetail()
@@ -37,15 +37,15 @@ class MediaDetailPresenter: MediaDetailPresenterProtocol {
         
     }
     
-    init(view: MediaDetailViewProtocol, router: MediaDetailRouterProtocol, media: AnyMedia) {
+    init(view: MediaDetailViewProtocol, router: MediaDetailRouterProtocol, media: MediaViewModel) {
         self.view = view
         self.router = router
         self.media = media
     }
  
     func didFinishFetchingMediaImages(_ mediaImages: [MediaImage]) {
-        self.media.mediaImages = mediaImages
-        view?.viewDidFinishLoading(with: self.media)
+//        self.media.mediaImages = mediaImages
+//        view?.viewDidFinishLoading(with: self.media)
     }
     
     func didFetchMediaDetail(_ mediaDetail: MediaDetail) {

@@ -8,7 +8,7 @@
 import UIKit
 
 class MediaDetailBuilder {
-    static func build(with media: AnyMedia) -> UIViewController {
+    static func build(with media: MediaViewModel) -> UIViewController {
         let viewController = MediaDetailViewController()
         let presenter = MediaDetailPresenter(view: viewController,
                                              router: MediaDetailRouter(),

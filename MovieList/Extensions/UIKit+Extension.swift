@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SafariServices
 
 extension UIImageView {
     func loadImage(from url: String?, placeholder: UIImage? = nil) {
@@ -35,27 +36,6 @@ extension UIImageView {
             }
         }
     }
-}
-
-
-final class ImageCache {
-    static let cache = NSCache<NSString, UIImage>()
-    
-    static func checkImage(_ imageString: String) -> UIImage? {
-        let cacheKey = NSString(string: imageString)
-        if let image = cache.object(forKey: cacheKey) {
-            return image
-        } else {
-            return nil
-        }
-    }
-    
-    static func saveImage(_ image: UIImage, for imageString: String) {
-        let cacheKey = NSString(string: imageString)
-        cache.setObject(image, forKey: cacheKey)
-    }
-    
-    
 }
 
 extension UICollectionView {
@@ -108,5 +88,80 @@ extension DispatchQueue {
         } else {
             main.async(execute: work)
         }
+    }
+}
+
+extension UIImage {
+
+    func addBackgroundCircle(_ color: UIColor?) -> UIImage? {
+
+        let circleDiameter = max(size.width * 2, size.height * 2)
+        let circleRadius = circleDiameter * 0.5
+        let circleSize = CGSize(width: circleDiameter, height: circleDiameter)
+        let circleFrame = CGRect(x: 0, y: 0, width: circleSize.width, height: circleSize.height)
+        let imageFrame = CGRect(x: circleRadius - (size.width * 0.5), y: circleRadius - (size.height * 0.5), width: size.width, height: size.height)
+
+        let view = UIView(frame: circleFrame)
+        view.backgroundColor = color ?? .systemRed
+        view.layer.cornerRadius = circleDiameter * 0.5
+
+        UIGraphicsBeginImageContextWithOptions(circleSize, false, UIScreen.main.scale)
+
+        let renderer = UIGraphicsImageRenderer(size: circleSize)
+        let circleImage = renderer.image { ctx in
+            view.drawHierarchy(in: circleFrame, afterScreenUpdates: true)
+        }
+
+        circleImage.draw(in: circleFrame, blendMode: .normal, alpha: 1.0)
+        draw(in: imageFrame, blendMode: .normal, alpha: 1.0)
+
+        let image: UIImage? = UIGraphicsGetImageFromCurrentImageContext()
+
+        UIGraphicsEndImageContext()
+
+        return image
+    }
+}
+
+extension UIView {
+    
+    func pinToEdges(of superview: UIView) {
+        translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            topAnchor.constraint(equalTo: superview.topAnchor),
+            leadingAnchor.constraint(equalTo: superview.leadingAnchor),
+            trailingAnchor.constraint(equalTo: superview.trailingAnchor),
+            bottomAnchor.constraint(equalTo: superview.bottomAnchor)
+        ])
+    }
+    
+    func addSubviews(_ views: UIView...) {
+        for view in views { addSubview(view) }
+    }
+}
+
+extension UIViewController {
+    
+    func presentMLAlert(title: String, message: String, buttonTitle: String) {
+        let alertVC = MLAlertView(title: title, message: message, buttonTitle: buttonTitle)
+        alertVC.modalPresentationStyle  = .overFullScreen
+        alertVC.modalTransitionStyle    = .crossDissolve
+        showDetailViewController(alertVC, sender: self)
+    }
+    
+    func presentDefaultError() {
+        let alertVC = MLAlertView(title: "Something Went Wrong",
+                                message: "We were unable to complete your task at this time. Please try again.",
+                                buttonTitle: "Ok")
+        alertVC.modalPresentationStyle  = .overFullScreen
+        alertVC.modalTransitionStyle    = .crossDissolve
+        showDetailViewController(alertVC, sender: self)
+    }
+    
+    
+    func presentSafariVC(with url: URL) {
+        let safariVC = SFSafariViewController(url: url)
+        safariVC.preferredControlTintColor = .systemGreen
+        showDetailViewController(safariVC, sender: self)
     }
 }

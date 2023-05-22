@@ -8,10 +8,18 @@
 import Foundation
 import UIKit
 
-struct MediaViewModel {
+enum MediaType: Codable {
+    case movie
+    case tvshow
+}
+
+struct MediaViewModel: Codable, Hashable {
+    let id: Int
     let title: String
     let description: String
     let mainPosterURLString: String?
+    
+    let type: MediaType
     
     let dateAired: String
     let language: String
@@ -19,16 +27,20 @@ struct MediaViewModel {
     let rating: Double
     let popularity: Double
     let voteCount: Int
+    let voteAverage: Double
     
-    let backdrops: [MediaImage]? = nil
-    let posters: [MediaImage]? = nil
+    var backdrops: [MediaImage]
+    var posters: [MediaImage]
 }
 
 extension MediaViewModel {
     init(tvshow: TVShow) {
+        id = tvshow.id ?? 0
         title = tvshow.name ?? tvshow.originalName ?? "No Title"
         description = tvshow.overview ?? "No Overview for this show"
         mainPosterURLString = tvshow.fullPosterPath
+        
+        type = .tvshow
         
         dateAired = tvshow.releaseDate ?? "No Release Date"
         language = tvshow.originalLanguage ?? "No Language"
@@ -36,13 +48,20 @@ extension MediaViewModel {
         rating = tvshow.voteAverage ?? 0.0
         popularity = tvshow.popularity ?? 0.0
         voteCount = tvshow.voteCount ?? 0
+        voteAverage = tvshow.voteAverage ?? 0.0
+        
+        backdrops = []
+        posters = []
     }
 }
 extension MediaViewModel {
     init(movie: Movie) {
+        id = movie.id ?? 0
         title = movie.title ?? movie.originalTitle ?? "No Title"
         description = movie.overview ?? "No Overview for this movie"
         mainPosterURLString = movie.fullPosterPath
+        
+        type = .movie
         
         dateAired = movie.releaseDate ?? movie.firstAirDate ?? "No Release Date"
         language = movie.originalLanguage ?? "No Language"
@@ -50,6 +69,10 @@ extension MediaViewModel {
         rating = movie.voteAverage ?? 0.0
         popularity = movie.popularity ?? 0.0
         voteCount = movie.voteCount ?? 0
+        voteAverage = movie.voteAverage ?? 0.0
+        
+        backdrops = []
+        posters = []
     }
 }
 
@@ -451,4 +474,47 @@ struct MediaImage: Codable, Hashable {
 struct ImagesResponse: Codable {
     let backdrops: [MediaImage]
     let posters: [MediaImage]
+}
+
+
+enum Section: String, Hashable {
+    case movies = "Movies"
+    case tvshows = "TV Shows"
+    case popularMovies = "Popular Movies"
+    case popularShows = "Popular Shows"
+    case favorites = "Favorites"
+}
+
+
+enum SearchScope: Int {
+    case movies
+    case series
+    case actors
+    
+    var displayTitle: String {
+        switch self {
+        case .movies:
+            return "Movies"
+        case .series:
+            return "Series"
+        case .actors:
+            return "Actors"
+        }
+    }
+    
+    var urlAppendix: String {
+        switch self {
+        case .movies: return "movies"
+        case .series: return "tv"
+        case .actors: return "person"
+        }
+    }
+    
+    var resultType: Codable.Type {
+        switch self {
+        case .movies: return Movie.self
+        case .series: return TVShow.self
+        case .actors: return Person.self
+        }
+    }
 }

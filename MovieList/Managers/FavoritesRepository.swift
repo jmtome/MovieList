@@ -19,6 +19,12 @@ protocol FavoritesRepositoryProtocol {
     
     func isMovieInFavorites(_ movie: Movie) -> Bool
     func isTvShowInFavorites(_ tvshow: TVShow) -> Bool
+
+    /////
+    func isMediaInFavorites(media: MediaViewModel) -> Bool
+    func saveFavorite(media: MediaViewModel)
+    func removeFavorite(media: MediaViewModel)
+    func getFavoriteMedia(for type: MediaType) -> [MediaViewModel]
 }
 
 class FavoritesRepository: FavoritesRepositoryProtocol {
@@ -86,6 +92,39 @@ class FavoritesRepository: FavoritesRepositoryProtocol {
     func isTvShowInFavorites(_ tvshow: TVShow) -> Bool {
         let favoriteMovies = getFavoriteShows()
         return favoriteMovies.contains(where: { $0.id == tvshow.id })
+    }
+    ////////////
+ 
+}
+
+extension FavoritesRepository {
+    func isMediaInFavorites(media: MediaViewModel) -> Bool {
+        getFavoriteMedia(for: media.type).contains { $0.id == media.id }
+    }
+    
+    func saveFavorite(media: MediaViewModel) {
+        var favoriteMedia = getFavoriteMedia(for: media.type)
+        favoriteMedia.append(media)
+        
+        let encodedMedia = try? JSONEncoder().encode(favoriteMedia)
+        userDefaults.set(encodedMedia, forKey: media.type == .movie ? favoriteMoviesKey : favoriteShowsKey)
+    }
+
+    func removeFavorite(media: MediaViewModel) {
+        var favoriteMedia = getFavoriteMedia(for: media.type)
+        favoriteMedia.removeAll { $0.id == media.id }
+        
+        let encodedMedia = try? JSONEncoder().encode(favoriteMedia)
+        userDefaults.set(encodedMedia, forKey: media.type == .movie ? favoriteMoviesKey : favoriteShowsKey)
+    }
+    
+    func getFavoriteMedia(for type: MediaType) -> [MediaViewModel] {
+        guard let encodedMedia = userDefaults.data(forKey: type == .movie ? favoriteMoviesKey : favoriteShowsKey) else {
+            return []
+        }
+        
+        let favoriteMedia = try? JSONDecoder().decode([MediaViewModel].self, from: encodedMedia)
+        return favoriteMedia ?? []
     }
 }
 

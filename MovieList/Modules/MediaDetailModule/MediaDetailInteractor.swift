@@ -38,28 +38,29 @@ extension MediaDetailInteractor: MediaDetailInteractorProtocol {
         guard let media = presenter?.media, media.id > 0 else { return }
         
         print(media)
-        
-        Task {
-            do {
-                let data = try await networkingService.getImagesForMedia(id: media.id, scope: SearchScope(media))
-                let response = try JSONDecoder().decode(ImagesResponse.self, from: data)
-//                let urlStrings = response.backdrops.map { $0.fullImagePath }
-//                let imageDataArray = try await fetchImages(fromURLs: urlStrings)
-                
-                print("\n\n\n backdrop images are \(response.backdrops)")
-                
-                let mediaImages = response.backdrops + response.posters
-                
-                self.presenter?.didFinishFetchingMediaImages(mediaImages)
-//                self.presenter?.didFetchMediaImages(imageDataArray)
-                
-            } catch let error {
-                print("there was an error: \(error)")
-                self.presenter?.didFetchMediaImages([])
-            }
-        }
+        //commented today
+//        Task {
+//            do {
+//                let data = try await networkingService.getImagesForMedia(id: media.id, scope: SearchScope(media))
+//                let response = try JSONDecoder().decode(ImagesResponse.self, from: data)
+////                let urlStrings = response.backdrops.map { $0.fullImagePath }
+////                let imageDataArray = try await fetchImages(fromURLs: urlStrings)
+//
+//                print("\n\n\n backdrop images are \(response.backdrops)")
+//
+//                let mediaImages = response.backdrops + response.posters
+//
+//                self.presenter?.didFinishFetchingMediaImages(mediaImages)
+////                self.presenter?.didFetchMediaImages(imageDataArray)
+//
+//            } catch let error {
+//                print("there was an error: \(error)")
+//                self.presenter?.didFetchMediaImages([])
+//            }
+//        }
     }
 //
+    //commented some other day
 //    func fetchImages(fromURLs urls: [String]) async throws -> [Data] {
 //        var imageDataArray: [Data] = []
 //
