@@ -78,6 +78,20 @@ class MainScreenTableViewCell: UITableViewCell {
         descriptionLabel.text = ""
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if let button = actionButton {
+            button.setTitleColor(.secondaryLabel, for: .normal)
+        }
+    }
+    
+    override func layoutIfNeeded() {
+        super.layoutIfNeeded()
+        if let button = actionButton {
+            button.setTitleColor(.secondaryLabel, for: .normal)
+        }
+    }
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupViews()
@@ -149,7 +163,7 @@ class MainScreenTableViewCell: UITableViewCell {
         descriptionLabel.text = movie.overview
         
 
-        ratingLabel.text = "Rating: \(getStarRating(from: movie.voteAverage ))"
+        ratingLabel.text = "Rating: \(movie.voteAverage.getStarRating())"
         dateLabel.text = "Date Released: \(movie.releaseDate)"
         
         // Load the image from the provided URL or set the placeholder image
@@ -160,33 +174,9 @@ class MainScreenTableViewCell: UITableViewCell {
         }
     }
     
-    func getStarRating(from value: Double) -> String {
-        let fullStar = "★"
-        let halfStar = "½"
-        let emptyStar = "☆"
-        
-        // Ensure the value is within the range of 0 to 10.0
-        let clampedValue = max(0, min(value, 10.0))
-        
-        // Calculate the number of full stars
-        let fullStars = Int(clampedValue / 2)
-        
-        // Check if there's a half star
-        let hasHalfStar = (clampedValue - Double(fullStars * 2)) >= 1.0
-        
-        // Create the star rating string
-        var starRating = String(repeating: fullStar, count: fullStars)
-        
-        if hasHalfStar {
-            starRating += halfStar
-        }
-        
-        let remainingStars = 5 - starRating.count
-        starRating += String(repeating: emptyStar, count: remainingStars)
-        
-        return starRating
-    }
+    
 }
+
 
 
 

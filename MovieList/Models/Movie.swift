@@ -13,6 +13,35 @@ enum MediaType: Codable {
     case tvshow
 }
 
+enum SortingOption: CaseIterable {
+    case relevance
+    case date
+    case rating
+    case title
+    
+    var title: String {
+        switch self {
+        case .relevance: return "Popularity"
+        case .date: return "Date"
+        case .rating: return "Rating"
+        case .title: return "Name"
+        }
+    }
+    
+    var identifier: String {
+        return "\(self)"
+    }
+
+    var image: UIImage {
+        switch self {
+        case .relevance: return UIImage(systemName: "arrow.up")!
+        case .date: return UIImage(systemName: "arrow.up")!
+        case .rating: return UIImage(systemName: "arrow.up")!
+        case .title: return UIImage(systemName: "arrow.up")!
+        }
+    }
+}
+
 struct MediaViewModel: Codable, Hashable {
     let id: Int
     let title: String
@@ -78,31 +107,7 @@ extension MediaViewModel {
 
 extension MediaViewModel {
     func getStarRating() -> String {
-//    func getStarRating(from value: Double) -> String {
-        let fullStar = "★"
-        let halfStar = "½"
-        let emptyStar = "☆"
-        
-        // Ensure the value is within the range of 0 to 10.0
-        let clampedValue = max(0, min(self.rating, 10.0))
-        
-        // Calculate the number of full stars
-        let fullStars = Int(clampedValue / 2)
-        
-        // Check if there's a half star
-        let hasHalfStar = (clampedValue - Double(fullStars * 2)) >= 1.0
-        
-        // Create the star rating string
-        var starRating = String(repeating: fullStar, count: fullStars)
-        
-        if hasHalfStar {
-            starRating += halfStar
-        }
-        
-        let remainingStars = 5 - starRating.count
-        starRating += String(repeating: emptyStar, count: remainingStars)
-        
-        return starRating
+        self.rating.getStarRating()
     }
 }
 

@@ -51,119 +51,8 @@ class MainScreenViewController: UIViewController {
     }
 }
 
-//MARK: - Presenter Output Protocol Conformance
-//Called by Presenter, Instantiated by MainScreenViewController
-extension MainScreenViewController: MainScreenPresenterOutputProtocol {
-    func showAlertFavoritedMedia() {
-        presentMLAlert(title: "Favorites", message: "Media has been added to Favorites", buttonTitle: "Dismiss")
-    }
-    
-    func showAlertUnfavoritedMedia() {
-        presentMLAlert(title: "Favorites", message: "Media has been removed from Favorites", buttonTitle: "Dismiss")
-    }
-    
-    func showError(_ error: Error) {
-        presentDefaultError()
-    }
-    
-    func updateUIList() {
-        updateSnapshot()
-    }
-}
 
-//MARK: - UITableViewDelegate Conformance
-extension MainScreenViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return presenter.mediaCount
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        presenter.didSelectCell(at: indexPath.row)
-    }
-
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let isFavorite = presenter.isFavorite(at: indexPath.row)
-        var actions = [UIContextualAction]()
-        
-        let favoriteAction = UIContextualAction(style: .normal, title: nil ) { [weak self] (action, view, completionHandler) in
-            self?.presenter.handleFavoriteAction(at: indexPath.row)
-            completionHandler(true)
-        }
-        
-        let largeConfig = UIImage.SymbolConfiguration(pointSize: 17.0, weight: .bold, scale: .large)
-        favoriteAction.image = UIImage(systemName: isFavorite ? "star" : "star.fill", withConfiguration: largeConfig)?.withTintColor(.white, renderingMode: .alwaysTemplate).addBackgroundCircle(isFavorite ? .systemTeal : .systemPurple)
-        favoriteAction.backgroundColor = .systemBackground
-        
-        favoriteAction.title =  isFavorite ? "Unfavorite" : "Favorite"
-        
-        actions.append(favoriteAction)
-        
-        let configuration = UISwipeActionsConfiguration(actions: actions)
-        return configuration
-    }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        let offsetY = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        let height = scrollView.frame.size.height
-        
-        if offsetY > (contentHeight - height)/2 && !presenter.isLoadingPage() {
-            presenter.viewShouldFetchNewPage()
-        }
-    }
-}
-
-//MARK: - UISearchResultsUpdating Conformance
-extension MainScreenViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        guard let query = searchController.searchBar.text else { return }
-        presenter.viewDidChangeSearchQuery(query)
-    }
-}
-
-//MARK: - UISearchBarDelegate Conformance
-extension MainScreenViewController: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        let scope = SearchScope(rawValue: selectedScope) ?? .movies
-        searchBar.placeholder = "Search \(scope.displayTitle.capitalized)"
-        presenter.viewDidChangeSearchScope(scope)
-    }
-}
-
-
-enum SortingOption: CaseIterable {
-    case relevance
-    case date
-    case rating
-    case title
-    
-    var title: String {
-        switch self {
-        case .relevance: return "Popularity"
-        case .date: return "Date"
-        case .rating: return "Rating"
-        case .title: return "Name"
-        }
-    }
-    
-    var identifier: String {
-        return "\(self)"
-    }
-
-    var image: UIImage {
-        switch self {
-        case .relevance: return UIImage(systemName: "arrow.up")!
-        case .date: return UIImage(systemName: "arrow.up")!
-        case .rating: return UIImage(systemName: "arrow.up")!
-        case .title: return UIImage(systemName: "arrow.up")!
-        }
-    }
-    
-}
-
-
-//MARK: - Private UI Methods
+//MARK: - Private UI Configuration Methods
 extension MainScreenViewController {
     private func setupTableView() {
         tableView = UITableView(frame: view.bounds, style: .plain)
@@ -215,3 +104,95 @@ extension MainScreenViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sort", image: UIImage(systemName: "ellipsis.circle"), primaryAction: nil, menu: demoMenu)
     }
 }
+
+
+//MARK: - Conformance to Delegates and Protocols
+
+//MARK: - Presenter Output Protocol Conformance
+//Called by Presenter, Instantiated by MainScreenViewController
+extension MainScreenViewController: MainScreenPresenterOutputProtocol {
+    func showAlertFavoritedMedia() {
+        presentMLAlert(title: "Favorites", message: "Media has been added to Favorites", buttonTitle: "Dismiss")
+    }
+    
+    func showAlertUnfavoritedMedia() {
+        presentMLAlert(title: "Favorites", message: "Media has been removed from Favorites", buttonTitle: "Dismiss")
+    }
+    
+    func showError(_ error: Error) {
+        presentDefaultError()
+    }
+    
+    func updateUIList() {
+        updateSnapshot()
+    }
+}
+
+//MARK: - UITableViewDelegate Conformance
+extension MainScreenViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return presenter.mediaCount
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        presenter.didSelectCell(at: indexPath.row)
+    }
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let isFavorite = presenter.isFavorite(at: indexPath.row)
+        var actions = [UIContextualAction]()
+        
+        let favoriteAction = UIContextualAction(style: .normal, title: "My title" ) { [weak self] (action, view, completionHandler) in
+            self?.presenter.handleFavoriteAction(at: indexPath.row)
+            completionHandler(true)
+        }
+        
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 17.0, weight: .bold, scale: .large)
+        
+        let image = UIImage(systemName: isFavorite ? "star" : "star.fill", withConfiguration: largeConfig)?
+            .withTintColor(.white, renderingMode: .alwaysTemplate)
+            .addBackgroundCircle(isFavorite ? .systemRed : .systemGreen)
+        
+        
+        favoriteAction.image = image
+        
+  
+        favoriteAction.backgroundColor = .systemBackground
+        
+        favoriteAction.title =  isFavorite ? "Unfavorite" : "Favorite"
+        
+        actions.append(favoriteAction)
+        
+        let configuration = UISwipeActionsConfiguration(actions: actions)
+        return configuration
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let height = scrollView.frame.size.height
+        
+        if offsetY > (contentHeight - height)/2 && !presenter.isLoadingPage() {
+            presenter.viewShouldFetchNewPage()
+        }
+    }
+}
+
+//MARK: - UISearchResultsUpdating Conformance
+extension MainScreenViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let query = searchController.searchBar.text else { return }
+        presenter.viewDidChangeSearchQuery(query)
+    }
+}
+
+//MARK: - UISearchBarDelegate Conformance
+extension MainScreenViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        let scope = SearchScope(rawValue: selectedScope) ?? .movies
+        searchBar.placeholder = "Search \(scope.displayTitle.capitalized)"
+        presenter.viewDidChangeSearchScope(scope)
+    }
+}
+
