@@ -42,8 +42,9 @@ enum SortingOption: CaseIterable {
     }
 }
 
-struct MediaViewModel: Codable, Hashable {
+struct MediaViewModel: Identifiable, Codable, Hashable {
     let id: Int
+    let uuid: String
     let title: String
     let description: String
     let mainPosterURLString: String?
@@ -65,6 +66,7 @@ struct MediaViewModel: Codable, Hashable {
 extension MediaViewModel {
     init(tvshow: TVShow) {
         id = tvshow.id ?? 0
+        uuid = tvshow.uuid
         title = tvshow.name ?? tvshow.originalName ?? "No Title"
         description = tvshow.overview ?? "No Overview for this show"
         mainPosterURLString = tvshow.fullPosterPath
@@ -86,6 +88,7 @@ extension MediaViewModel {
 extension MediaViewModel {
     init(movie: Movie) {
         id = movie.id ?? 0
+        uuid = movie.uuid
         title = movie.title ?? movie.originalTitle ?? "No Title"
         description = movie.overview ?? "No Overview for this movie"
         mainPosterURLString = movie.fullPosterPath
@@ -299,6 +302,7 @@ struct Movie: Media, Codable, Hashable  {
 struct TVShow: Media, Codable, Hashable {
     var uuid: String = UUID().uuidString
     
+    var mediaType: String?
     let adult: Bool?
     let backdropPath: String?
     let genreIds: [Int]?
@@ -325,7 +329,8 @@ struct TVShow: Media, Codable, Hashable {
         return "https://image.tmdb.org/t/p/w500/\(posterPath)"
     }
     
-    init(adult: Bool? = nil, backdropPath: String? = nil, genreIds: [Int]? = nil, id: Int? = nil, originalLanguage: String? = nil, originalName: String? = nil, overview: String? = nil, popularity: Double? = nil, posterPath: String? = nil, releaseDate: String? = nil, name: String? = nil, voteAverage: Double? = nil, voteCount: Int? = nil) {
+    init(mediaType: String? = nil,adult: Bool? = nil, backdropPath: String? = nil, genreIds: [Int]? = nil, id: Int? = nil, originalLanguage: String? = nil, originalName: String? = nil, overview: String? = nil, popularity: Double? = nil, posterPath: String? = nil, releaseDate: String? = nil, name: String? = nil, voteAverage: Double? = nil, voteCount: Int? = nil) {
+        self.mediaType = mediaType
         self.adult = adult
         self.backdropPath = backdropPath
         self.genreIds = genreIds
@@ -346,6 +351,7 @@ struct TVShow: Media, Codable, Hashable {
     }
     
     enum CodingKeys: String, CodingKey {
+        case mediaType = "media_type"
         case adult
         case backdropPath = "backdrop_path"
         case genreIds = "genre_ids"
@@ -385,68 +391,9 @@ extension Response {
                 return nil
             }
             return Response<T>(page: movieResponse.page, results: movieResponse.results as! [T], totalPages: movieResponse.totalPages, totalResults: movieResponse.totalResults)
-        default: return nil
         }
     }
 }
-
-
-
-
-
-/*
- let decoder = JSONDecoder()
-
- // Decode PersonResponse
- let personResponse = try decoder.decode(Response<PersonResponse>.self, from: json)
-
- // Decode MovieResponse
- let movieResponse = try decoder.decode(Response<MovieResponse>.self, from: json)
-
- // Decode TVShowResponse
- let tvShowResponse = try decoder.decode(Response<TVShowResponse>.self, from: json)
- */
-
-
-//struct PersonResponse: Codable {
-//    let page: Int
-//    let results: [Person]
-//    let totalPages: Int
-//    let totalResults: Int
-//
-//    enum CodingKeys: String, CodingKey {
-//        case page, results, totalPages = "total_pages", totalResults = "total_results"
-//    }
-//}
-//
-//
-//struct MovieResponse: Codable {
-//    let page: Int
-//    let results: [Movie]
-//    let totalPages: Int
-//    let totalResults: Int
-//
-//    enum CodingKeys: String, CodingKey {
-//        case page
-//        case results
-//        case totalPages = "total_pages"
-//        case totalResults = "total_results"
-//    }
-//}
-//
-//struct TVShowResponse: Codable {
-//    let page: Int
-//    let results: [TVShowResult]
-//    let totalPages: Int
-//    let totalResults: Int
-//
-//    enum CodingKeys: String, CodingKey {
-//        case page
-//        case results
-//        case totalPages = "total_pages"
-//        case totalResults = "total_results"
-//    }
-//}
 
 
 struct MediaImage: Codable, Hashable {
@@ -459,9 +406,6 @@ struct MediaImage: Codable, Hashable {
     let width: Int
 
     var fullImagePath: String {
-//        guard let posterPath = posterPath else {
-//            return nil
-//        }
         return "https://image.tmdb.org/t/p/w500/\(filePath)"
     }
     
@@ -487,14 +431,14 @@ enum Section: String, Hashable {
     case tvshows = "TV Shows"
     case popularMovies = "Popular Movies"
     case popularShows = "Popular Shows"
-    case favorites = "Favorites"
+    case favoritesMovies = "Favorite Movies"
+    case favoriteShows = "Favorite Shows"
 }
 
 
 enum SearchScope: Int {
     case movies
     case series
-    case actors
     
     var displayTitle: String {
         switch self {
@@ -502,8 +446,6 @@ enum SearchScope: Int {
             return "Movies"
         case .series:
             return "Series"
-        case .actors:
-            return "Actors"
         }
     }
     
@@ -511,7 +453,6 @@ enum SearchScope: Int {
         switch self {
         case .movies: return "movies"
         case .series: return "tv"
-        case .actors: return "person"
         }
     }
     
@@ -519,7 +460,6 @@ enum SearchScope: Int {
         switch self {
         case .movies: return Movie.self
         case .series: return TVShow.self
-        case .actors: return Person.self
         }
     }
 }

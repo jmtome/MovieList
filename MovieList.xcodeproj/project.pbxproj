@@ -30,18 +30,9 @@
 		FA170A132A030F2900E1B1ED /* NetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A112A030F2900E1B1ED /* NetworkingService.swift */; };
 		FA170A152A03131100E1B1ED /* MainScreenTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A142A03131100E1B1ED /* MainScreenTableViewCell.swift */; };
 		FA170A162A03131100E1B1ED /* MainScreenTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A142A03131100E1B1ED /* MainScreenTableViewCell.swift */; };
-		FA170A192A058B1300E1B1ED /* FavoritesBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A182A058B1300E1B1ED /* FavoritesBuilder.swift */; };
-		FA170A1A2A058B1300E1B1ED /* FavoritesBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A182A058B1300E1B1ED /* FavoritesBuilder.swift */; };
-		FA170A1C2A058B3900E1B1ED /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A1B2A058B3900E1B1ED /* FavoritesViewController.swift */; };
-		FA170A1D2A058B3900E1B1ED /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A1B2A058B3900E1B1ED /* FavoritesViewController.swift */; };
-		FA170A1F2A058B5900E1B1ED /* FavoritesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A1E2A058B5900E1B1ED /* FavoritesPresenter.swift */; };
-		FA170A202A058B5900E1B1ED /* FavoritesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A1E2A058B5900E1B1ED /* FavoritesPresenter.swift */; };
-		FA170A222A058C0600E1B1ED /* FavoritesInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A212A058C0600E1B1ED /* FavoritesInteractor.swift */; };
-		FA170A232A058C0700E1B1ED /* FavoritesInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A212A058C0600E1B1ED /* FavoritesInteractor.swift */; };
 		FA170A252A059FAC00E1B1ED /* FavoritesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A242A059FAC00E1B1ED /* FavoritesRepository.swift */; };
 		FA170A262A059FAC00E1B1ED /* FavoritesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A242A059FAC00E1B1ED /* FavoritesRepository.swift */; };
-		FA170A282A05A26E00E1B1ED /* FavoritesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A272A05A26E00E1B1ED /* FavoritesTableViewCell.swift */; };
-		FA170A292A05A26E00E1B1ED /* FavoritesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA170A272A05A26E00E1B1ED /* FavoritesTableViewCell.swift */; };
+		FA8F24442A1DA4A80096A69E /* Networking+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8F24432A1DA4A80096A69E /* Networking+Helpers.swift */; };
 		FAB2DFE82A1C1747006EC398 /* MLAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2DFE72A1C1747006EC398 /* MLAlertView.swift */; };
 		FAB2DFE92A1C1747006EC398 /* MLAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2DFE72A1C1747006EC398 /* MLAlertView.swift */; };
 		FAB2DFEB2A1C175F006EC398 /* MLAlertContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2DFEA2A1C175F006EC398 /* MLAlertContainerView.swift */; };
@@ -90,6 +81,12 @@
 		FAB7F1AE2A1562A70015C55D /* DispatchQueue+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1AC2A1562A70015C55D /* DispatchQueue+Extension.swift */; };
 		FAB7F1B12A1566460015C55D /* MediaInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1B02A1566460015C55D /* MediaInfoView.swift */; };
 		FAB7F1B22A1566460015C55D /* MediaInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7F1B02A1566460015C55D /* MediaInfoView.swift */; };
+		FAF8AF862A1D368D0086B926 /* FavoritesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2E01E2A1D2920006EC398 /* FavoritesPresenter.swift */; };
+		FAF8AF872A1D36960086B926 /* FavoritesBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2E0182A1D2114006EC398 /* FavoritesBuilder.swift */; };
+		FAF8AF882A1D36960086B926 /* FavoritesBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2E0182A1D2114006EC398 /* FavoritesBuilder.swift */; };
+		FAF8AF892A1D369C0086B926 /* FavoritesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2E01E2A1D2920006EC398 /* FavoritesPresenter.swift */; };
+		FAF8AF8A2A1D369E0086B926 /* FavoritesInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2E01B2A1D2531006EC398 /* FavoritesInteractor.swift */; };
+		FAF8AF8B2A1D369F0086B926 /* FavoritesInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2E01B2A1D2531006EC398 /* FavoritesInteractor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,12 +126,8 @@
 		FA170A0E2A030B7000E1B1ED /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		FA170A112A030F2900E1B1ED /* NetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingService.swift; sourceTree = "<group>"; };
 		FA170A142A03131100E1B1ED /* MainScreenTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenTableViewCell.swift; sourceTree = "<group>"; };
-		FA170A182A058B1300E1B1ED /* FavoritesBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesBuilder.swift; sourceTree = "<group>"; };
-		FA170A1B2A058B3900E1B1ED /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
-		FA170A1E2A058B5900E1B1ED /* FavoritesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesPresenter.swift; sourceTree = "<group>"; };
-		FA170A212A058C0600E1B1ED /* FavoritesInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesInteractor.swift; sourceTree = "<group>"; };
 		FA170A242A059FAC00E1B1ED /* FavoritesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesRepository.swift; sourceTree = "<group>"; };
-		FA170A272A05A26E00E1B1ED /* FavoritesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesTableViewCell.swift; sourceTree = "<group>"; };
+		FA8F24432A1DA4A80096A69E /* Networking+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+Helpers.swift"; sourceTree = "<group>"; };
 		FAB2DFE72A1C1747006EC398 /* MLAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLAlertView.swift; sourceTree = "<group>"; };
 		FAB2DFEA2A1C175F006EC398 /* MLAlertContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLAlertContainerView.swift; sourceTree = "<group>"; };
 		FAB2DFED2A1C1792006EC398 /* MLTitleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLTitleLabel.swift; sourceTree = "<group>"; };
@@ -149,6 +142,9 @@
 		FAB2E00E2A1C1F9E006EC398 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		FAB2E0112A1C2013006EC398 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		FAB2E0142A1C292D006EC398 /* UITableViewCell+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extension.swift"; sourceTree = "<group>"; };
+		FAB2E0182A1D2114006EC398 /* FavoritesBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesBuilder.swift; sourceTree = "<group>"; };
+		FAB2E01B2A1D2531006EC398 /* FavoritesInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesInteractor.swift; sourceTree = "<group>"; };
+		FAB2E01E2A1D2920006EC398 /* FavoritesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesPresenter.swift; sourceTree = "<group>"; };
 		FAB7F1842A12FEA40015C55D /* MediaDetailBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailBuilder.swift; sourceTree = "<group>"; };
 		FAB7F1872A12FEAD0015C55D /* MediaDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailViewController.swift; sourceTree = "<group>"; };
 		FAB7F18A2A12FEB60015C55D /* MediaDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailPresenter.swift; sourceTree = "<group>"; };
@@ -251,18 +247,6 @@
 			path = MainModule;
 			sourceTree = "<group>";
 		};
-		FA170A172A05798F00E1B1ED /* FavouriteModule */ = {
-			isa = PBXGroup;
-			children = (
-				FA170A182A058B1300E1B1ED /* FavoritesBuilder.swift */,
-				FA170A1B2A058B3900E1B1ED /* FavoritesViewController.swift */,
-				FA170A1E2A058B5900E1B1ED /* FavoritesPresenter.swift */,
-				FA170A212A058C0600E1B1ED /* FavoritesInteractor.swift */,
-				FA170A272A05A26E00E1B1ED /* FavoritesTableViewCell.swift */,
-			);
-			path = FavouriteModule;
-			sourceTree = "<group>";
-		};
 		FAB2DFE62A1C1720006EC398 /* MLAlertController */ = {
 			isa = PBXGroup;
 			children = (
@@ -281,6 +265,7 @@
 				FAB2DFF62A1C18C1006EC398 /* ImageCache.swift */,
 				FA170A242A059FAC00E1B1ED /* FavoritesRepository.swift */,
 				FA170A112A030F2900E1B1ED /* NetworkingService.swift */,
+				FA8F24432A1DA4A80096A69E /* Networking+Helpers.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -288,9 +273,9 @@
 		FAB2DFFA2A1C1950006EC398 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				FAB2E0172A1D20D3006EC398 /* FavoritesModule */,
 				FA1709FE2A03078C00E1B1ED /* MainModule */,
 				FAB7F1832A12FE8C0015C55D /* MediaDetailModule */,
-				FA170A172A05798F00E1B1ED /* FavouriteModule */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -335,6 +320,16 @@
 				FA170A0E2A030B7000E1B1ED /* Movie.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		FAB2E0172A1D20D3006EC398 /* FavoritesModule */ = {
+			isa = PBXGroup;
+			children = (
+				FAB2E0182A1D2114006EC398 /* FavoritesBuilder.swift */,
+				FAB2E01E2A1D2920006EC398 /* FavoritesPresenter.swift */,
+				FAB2E01B2A1D2531006EC398 /* FavoritesInteractor.swift */,
+			);
+			path = FavoritesModule;
 			sourceTree = "<group>";
 		};
 		FAB7F1832A12FE8C0015C55D /* MediaDetailModule */ = {
@@ -510,8 +505,8 @@
 				FAB7F1B12A1566460015C55D /* MediaInfoView.swift in Sources */,
 				FAB2E0002A1C1A14006EC398 /* MainScreenDiffableDataSource.swift in Sources */,
 				FAB7F18E2A12FEBD0015C55D /* MediaDetailInteractor.swift in Sources */,
-				FA170A222A058C0600E1B1ED /* FavoritesInteractor.swift in Sources */,
-				FA170A1F2A058B5900E1B1ED /* FavoritesPresenter.swift in Sources */,
+				FAF8AF872A1D36960086B926 /* FavoritesBuilder.swift in Sources */,
+				FAF8AF8A2A1D369E0086B926 /* FavoritesInteractor.swift in Sources */,
 				FAB2DFF12A1C17A8006EC398 /* MLBodyLabel.swift in Sources */,
 				FAB7F1882A12FEAD0015C55D /* MediaDetailViewController.swift in Sources */,
 				FAB7F1A42A141FBA0015C55D /* CarouselCell.swift in Sources */,
@@ -519,10 +514,12 @@
 				FA170A032A0307DA00E1B1ED /* MainScreenViewController.swift in Sources */,
 				FA170A0C2A03082C00E1B1ED /* MainRouter.swift in Sources */,
 				FAB2E00C2A1C1F6D006EC398 /* UIViewController+Extension.swift in Sources */,
+				FAF8AF862A1D368D0086B926 /* FavoritesPresenter.swift in Sources */,
 				FAB7F1942A13FBA50015C55D /* CarouselView.swift in Sources */,
 				FA170A0F2A030B7000E1B1ED /* Movie.swift in Sources */,
 				FAB2DFEE2A1C1792006EC398 /* MLTitleLabel.swift in Sources */,
 				FA1709CF2A02E8A700E1B1ED /* AppDelegate.swift in Sources */,
+				FA8F24442A1DA4A80096A69E /* Networking+Helpers.swift in Sources */,
 				FAB2E0122A1C2013006EC398 /* UIView+Extension.swift in Sources */,
 				FA170A002A0307A400E1B1ED /* MainScreenBuilder.swift in Sources */,
 				FA1709D12A02E8A700E1B1ED /* SceneDelegate.swift in Sources */,
@@ -530,11 +527,8 @@
 				FAB2DFEB2A1C175F006EC398 /* MLAlertContainerView.swift in Sources */,
 				FA170A062A03080A00E1B1ED /* MainInteractor.swift in Sources */,
 				FAB2E0062A1C1F1C006EC398 /* UIImageView+Extension.swift in Sources */,
-				FA170A282A05A26E00E1B1ED /* FavoritesTableViewCell.swift in Sources */,
-				FA170A1C2A058B3900E1B1ED /* FavoritesViewController.swift in Sources */,
 				FAB2E00F2A1C1F9E006EC398 /* UIImage+Extension.swift in Sources */,
 				FAB2DFF42A1C17B9006EC398 /* MLButton.swift in Sources */,
-				FA170A192A058B1300E1B1ED /* FavoritesBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -545,14 +539,13 @@
 				FAB2E00D2A1C1F6D006EC398 /* UIViewController+Extension.swift in Sources */,
 				FA170A102A030B7000E1B1ED /* Movie.swift in Sources */,
 				FAB2E00A2A1C1F4A006EC398 /* UICollectionView+Extension.swift in Sources */,
+				FAF8AF882A1D36960086B926 /* FavoritesBuilder.swift in Sources */,
 				FAB2E0042A1C1DD1006EC398 /* Double+Extension.swift in Sources */,
 				FA170A0A2A03081B00E1B1ED /* MainPresenter.swift in Sources */,
 				FAB2E0012A1C1A14006EC398 /* MainScreenDiffableDataSource.swift in Sources */,
 				FAB7F1B22A1566460015C55D /* MediaInfoView.swift in Sources */,
-				FA170A202A058B5900E1B1ED /* FavoritesPresenter.swift in Sources */,
 				FA170A132A030F2900E1B1ED /* NetworkingService.swift in Sources */,
 				FAB7F1892A12FEAD0015C55D /* MediaDetailViewController.swift in Sources */,
-				FA170A1A2A058B1300E1B1ED /* FavoritesBuilder.swift in Sources */,
 				FAB2DFEC2A1C175F006EC398 /* MLAlertContainerView.swift in Sources */,
 				FAB2E0132A1C2013006EC398 /* UIView+Extension.swift in Sources */,
 				FAB7F1AE2A1562A70015C55D /* DispatchQueue+Extension.swift in Sources */,
@@ -565,16 +558,15 @@
 				FAB2DFF22A1C17A8006EC398 /* MLBodyLabel.swift in Sources */,
 				FA170A262A059FAC00E1B1ED /* FavoritesRepository.swift in Sources */,
 				FAB7F1862A12FEA40015C55D /* MediaDetailBuilder.swift in Sources */,
+				FAF8AF892A1D369C0086B926 /* FavoritesPresenter.swift in Sources */,
 				FAB7F1922A12FEC40015C55D /* MediaDetailRouter.swift in Sources */,
 				FAB7F18F2A12FEBD0015C55D /* MediaDetailInteractor.swift in Sources */,
-				FA170A1D2A058B3900E1B1ED /* FavoritesViewController.swift in Sources */,
 				FAB2DFF52A1C17B9006EC398 /* MLButton.swift in Sources */,
 				FA170A162A03131100E1B1ED /* MainScreenTableViewCell.swift in Sources */,
+				FAF8AF8B2A1D369F0086B926 /* FavoritesInteractor.swift in Sources */,
 				FAB2DFEF2A1C1792006EC398 /* MLTitleLabel.swift in Sources */,
-				FA170A292A05A26E00E1B1ED /* FavoritesTableViewCell.swift in Sources */,
 				FAB2DFF82A1C18C1006EC398 /* ImageCache.swift in Sources */,
 				FAB7F1A52A141FBA0015C55D /* CarouselCell.swift in Sources */,
-				FA170A232A058C0700E1B1ED /* FavoritesInteractor.swift in Sources */,
 				FAB2E0102A1C1F9E006EC398 /* UIImage+Extension.swift in Sources */,
 				FAB2DFE92A1C1747006EC398 /* MLAlertView.swift in Sources */,
 				FA170A042A0307DA00E1B1ED /* MainScreenViewController.swift in Sources */,

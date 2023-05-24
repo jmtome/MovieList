@@ -11,7 +11,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     
-    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
@@ -34,11 +33,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         
         // Create the favorites view controller
-        let favoritesViewController = FavoritesBuilder.build(favoritesRepository: favoritesRepo)
+        let favoritesViewController = FavBuilder.build(favoritesRepository: favoritesRepo, networkRepository: networkingResource)
         let favoritesNavigationController = UINavigationController(rootViewController: favoritesViewController)
         
         // Set the tab bar items for each view controller
-        
         mainScreenViewController.tabBarItem = mainScreenItem
         favoritesViewController.tabBarItem = favoritesItem
         

@@ -20,7 +20,6 @@ protocol MainScreenInteractorOutputProtocol: AnyObject {
 // Called by Presenter, Implemented by Interactor
 protocol MainScreenInteractorProtocol: AnyObject {
     func searchMedia(with query: String, scope: SearchScope, page: Int)
-    func getPopularMedia(currentScope: SearchScope, page: Int)
 
     func isMovieInFavorites(media: MediaViewModel) -> Bool
     func handleFavoriteAction(with media: MediaViewModel)
@@ -42,6 +41,7 @@ class MainScreenInteractor {
 //MARK: - MainScreenInteractorProtocol (Input) Conformance
 // Called by Presenter, Implemented by Interactor
 extension MainScreenInteractor: MainScreenInteractorProtocol {
+    
     func searchMedia(with query: String, scope: SearchScope, page: Int) {
         Task {
             do {
@@ -54,45 +54,23 @@ extension MainScreenInteractor: MainScreenInteractorProtocol {
                 case .series:
                     let seriesResponse = try JSONDecoder().decode(Response<TVShow>.self, from: data)
                     output?.didReceiveMovies(seriesResponse.results.map { MediaViewModel(tvshow: $0) }, with: page)
-                default:
-                    break
                 }
             } catch let error {
-                print("error searching for shows \(error)")
+                print("error decoding popular media for scope: \(scope), page: \(page), error: \(error)")
             }
         }
     }
-    func getPopularMedia(currentScope: SearchScope, page: Int) {
-        Task {
-            do {
-                let data = try await networkingService.getPopularMedia(scope: currentScope, page: page)
-                
-                switch currentScope {
-                case .movies:
-                    let popularMoviesResponse = try JSONDecoder().decode(Response<Movie>.self, from: data)
-                    self.output?.didReceiveMovies(popularMoviesResponse.results.map { MediaViewModel(movie: $0) }, with: page)
-                case .series:
-                    let popularSeriesResponse = try JSONDecoder().decode(Response<TVShow>.self, from: data)
-                    self.output?.didReceiveMovies(popularSeriesResponse.results.map { MediaViewModel(tvshow: $0) }, with: page)
-                default:
-                    break
-                }
-            } catch let error {
-                print("error decoding popular media for scope: \(currentScope), page: \(page), error: \(error)")
-            }
-        }
-    }
-    
+        
     func isMovieInFavorites(media: MediaViewModel) -> Bool {
         favoritesRepository.isMediaInFavorites(media: media)
     }
     func handleFavoriteAction(with media: MediaViewModel) {
         if isMovieInFavorites(media: media) {
             favoritesRepository.removeFavorite(media: media)
-            output?.presentMediaAddedToFavorites()
+            output?.presentMediaRemovedFromFavorites()
         } else {
             favoritesRepository.saveFavorite(media: media)
-            output?.presentMediaRemovedFromFavorites()
+            output?.presentMediaAddedToFavorites()
         }
     }
 

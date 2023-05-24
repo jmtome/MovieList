@@ -10,6 +10,7 @@ import UIKit
 //MARK: - MainScreenViewController
 class MainScreenViewController: UIViewController {
     var presenter: MainScreenPresenterInputProtocol!
+    var loadingPresenter: MainScreenPresenterLoadingInputProtocol?
     
     var tableView: UITableView!
     private var dataSource: MainScreenDiffableDataSource?
@@ -21,6 +22,13 @@ class MainScreenViewController: UIViewController {
         
         setupUI()
         presenter.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+//        searchController.searchBar.selectedScopeButtonIndex = 0
+//        presenter?.viewDidChangeSearchScope(.movies)
+        presenter.viewWillAppear()
     }
     
     private func setupUI() {
@@ -84,7 +92,7 @@ extension MainScreenViewController {
                                                         SearchScope.series.displayTitle]
         searchController.searchBar.showsScopeBar = true
         searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchBar.placeholder = "Search Movies"
+        searchController.searchBar.placeholder = presenter.searchBarTitle
         searchController.searchBar.delegate = self
         
         navigationItem.hidesSearchBarWhenScrolling = false
@@ -120,7 +128,7 @@ extension MainScreenViewController: MainScreenPresenterOutputProtocol {
     }
     
     func showError(_ error: Error) {
-        presentDefaultError()
+        presentMLAlert(title: "Error", message: "There was an error:\n Raw Error: \(error)\n Localized Description Error: \(error.localizedDescription)", buttonTitle: "Dismiss")
     }
     
     func updateUIList() {
@@ -169,12 +177,13 @@ extension MainScreenViewController: UITableViewDelegate {
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        guard let loadingPresenter else { return }
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
         let height = scrollView.frame.size.height
         
-        if offsetY > (contentHeight - height)/2 && !presenter.isLoadingPage() {
-            presenter.viewShouldFetchNewPage()
+        if offsetY > (contentHeight - height)/2 && !loadingPresenter.isLoadingPage() {
+            loadingPresenter.viewShouldFetchNewPage()
         }
     }
 }
@@ -182,17 +191,21 @@ extension MainScreenViewController: UITableViewDelegate {
 //MARK: - UISearchResultsUpdating Conformance
 extension MainScreenViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let query = searchController.searchBar.text else { return }
-        presenter.viewDidChangeSearchQuery(query)
+        guard let query = searchController.searchBar.text,
+        let scope = SearchScope(rawValue: searchController.searchBar.selectedScopeButtonIndex) else { return }
+//        presenter.viewDidChangeSearchQuery(query)
+//        presenter.viewDidChangeSearchScope(scope)
+        presenter.updateSearchResults(with: query, scope: scope)
+        searchController.searchBar.placeholder = presenter.searchBarTitle
     }
 }
 
 //MARK: - UISearchBarDelegate Conformance
 extension MainScreenViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        let scope = SearchScope(rawValue: selectedScope) ?? .movies
-        searchBar.placeholder = "Search \(scope.displayTitle.capitalized)"
-        presenter.viewDidChangeSearchScope(scope)
+//        let scope = SearchScope(rawValue: selectedScope) ?? .movies
+//        presenter.viewDidChangeSearchScope(scope)
+//        searchBar.placeholder = presenter.searchBarTitle
     }
 }
 

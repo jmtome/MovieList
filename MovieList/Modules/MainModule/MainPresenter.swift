@@ -20,9 +20,11 @@ protocol MainScreenPresenterOutputProtocol: AnyObject {
 //Called by MainScreenViewController, Implemented by Presenter
 protocol MainScreenPresenterInputProtocol: AnyObject {
     var title: String { get }
+    var searchBarTitle: String { get }
     var mediaCount: Int { get }
     
     func viewDidLoad()
+    func viewWillAppear()
     
     func getMedia() -> [MediaViewModel]
     func getSections() -> [Section]
@@ -32,13 +34,14 @@ protocol MainScreenPresenterInputProtocol: AnyObject {
     func isFavorite(at index: Int) -> Bool
     func handleFavoriteAction(at index: Int)
     
-    func isLoadingPage() -> Bool
-    func viewShouldFetchNewPage()
-    
     func didSelectCell(at index: Int)
     
-    func viewDidChangeSearchScope(_ scope: SearchScope)
-    func viewDidChangeSearchQuery(_ query: String)
+    func updateSearchResults(with query: String, scope: SearchScope) 
+}
+
+protocol MainScreenPresenterLoadingInputProtocol: AnyObject {
+    func isLoadingPage() -> Bool
+    func viewShouldFetchNewPage()
 }
 
 //MARK: - MainScreenPresenter
@@ -54,8 +57,8 @@ class MainScreenPresenter {
     var interactor: MainScreenInteractorProtocol!
     var router: MainScreenRouterProtocol!
     
-    init(view: MainScreenPresenterOutputProtocol, router: MainScreenRouterProtocol) {
-        self.output = view
+    init(interactor: MainScreenInteractorProtocol, router: MainScreenRouterProtocol) {
+        self.interactor = interactor
         self.router = router
     }
     
@@ -72,13 +75,20 @@ extension MainScreenPresenter: MainScreenPresenterInputProtocol {
     var title: String {
         return "Search"
     }
+    
+    var searchBarTitle: String {
+        return "Search \(currentScope.displayTitle.capitalized)"
+    }
+    
     var mediaCount: Int {
         return viewModel.count
     }
     
     func viewDidLoad() {
-        interactor?.getPopularMedia(currentScope: currentScope, page: currentPage)
+        interactor.searchMedia(with: currentQuery, scope: currentScope, page: currentPage)
     }
+    
+    func viewWillAppear() {}
     
     func getMedia() -> [MediaViewModel] {
         return viewModel
@@ -89,14 +99,13 @@ extension MainScreenPresenter: MainScreenPresenterInputProtocol {
             return currentQuery.isEmpty ? [.popularMovies] : [.movies]
         case .series:
             return currentQuery.isEmpty ? [.popularShows] : [.tvshows]
-        default: return [.movies]
         }
     }
     
     func sortMedia(with option: SortingOption) {
         print("sort option is \(option)")
     }
-
+    
     func isFavorite(at index: Int) -> Bool {
         return interactor.isMovieInFavorites(media: viewModel[index])
     }
@@ -104,42 +113,35 @@ extension MainScreenPresenter: MainScreenPresenterInputProtocol {
         interactor.handleFavoriteAction(with: viewModel[index])
     }
     
-    func isLoadingPage() -> Bool {
-        self.isLoading
-    }
-    func viewShouldFetchNewPage() {
-        currentPage += 1
-        
-        self.isLoading = true
-        
-        guard !currentQuery.isEmpty else { interactor?.getPopularMedia(currentScope: currentScope, page: currentPage) ; return }
-        interactor?.searchMedia(with: currentQuery, scope: currentScope, page: currentPage)
-    }
-    
-    
     func didSelectCell(at index: Int) {
         let media = viewModel[index]
         router?.navigateToDetailScreen(with: media)
     }
     
-    func viewDidChangeSearchScope(_ scope: SearchScope) {
-        currentScope = scope
-        currentPage = 1
+    func updateSearchResults(with query: String, scope: SearchScope) {
+        guard !(query == currentQuery && scope == currentScope) else { return }
+        self.currentQuery = query
+        self.currentScope = scope
+        self.currentPage = 1
         
-        self.isLoading = true
-        
+        self.isLoading = true 
         interactor.searchMedia(with: currentQuery, scope: currentScope, page: currentPage)
     }
-    func viewDidChangeSearchQuery(_ query: String) {
-        currentQuery = query
-        currentPage = 1
+}
+
+//MARK: - MainScreenPresenterLoadingInputProtocol Conformance
+// Protocol that needs conformance only when retrieving data from the internet
+extension MainScreenPresenter: MainScreenPresenterLoadingInputProtocol {
+    func isLoadingPage() -> Bool {
+        self.isLoading
+    }
+    
+    func viewShouldFetchNewPage() {
+        currentPage += 1
         
         self.isLoading = true
-        
-        guard !currentQuery.isEmpty else { interactor.getPopularMedia(currentScope: currentScope, page: currentPage) ; return }
         interactor.searchMedia(with: currentQuery, scope: currentScope, page: currentPage)
     }
-     
 }
 
 //MARK: - MainScreenInteractorOutputProtocol Conformance
@@ -159,11 +161,10 @@ extension MainScreenPresenter: MainScreenInteractorOutputProtocol {
         } else {
             self.viewModel.append(contentsOf: movies)
         }
-        output?.updateUIList()
     }
     
     func didEncounterError(_ error: Error) {
         self.isLoading = false
-//        view?.displayError(error.localizedDescription)
+        output?.showError(error)
     }
 }

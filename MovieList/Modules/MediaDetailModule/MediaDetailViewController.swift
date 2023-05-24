@@ -103,7 +103,7 @@ extension MediaDetailViewController: MediaDetailViewProtocol {
     func viewDidFinishLoading(with media: AnyMedia) {
         DispatchQueue.main.async {
             self.title = media.title
-            self.carousel.updateDataSource(with: media.mediaImages)
+            self.carousel.updateDataSource(with: [])
         }
     }
     
