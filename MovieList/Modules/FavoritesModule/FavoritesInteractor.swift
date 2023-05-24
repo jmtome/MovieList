@@ -38,7 +38,7 @@ extension FavoritesScreenInteractor: FavoritesScreenInteractorInputProtocol {
         let filteredVM = favoriteMedia.filter { media in
             let titleWords = media.title.split(separator: " ")
             return titleWords.contains { word in
-                word.hasPrefix(query)
+                word.lowercased().hasPrefix(query.lowercased())
             }
         }
         

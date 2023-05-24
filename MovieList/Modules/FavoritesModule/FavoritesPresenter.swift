@@ -93,7 +93,6 @@ extension FavoritesScreenPresenter: MainScreenPresenterInputProtocol {
         
         interactor.getFavoriteMedia(for: currentMediaType, matching: currentQuery)
     }
-    
 }
 
 extension FavoritesScreenPresenter: FavoritesScreenInteractorOutputProtocol {

@@ -54,7 +54,7 @@ class MainScreenViewController: UIViewController {
         dataSource?.defaultRowAnimation = .fade
         
         DispatchQueue.mainAsyncIfNeeded {
-            self.dataSource?.apply(currentSnapshot, animatingDifferences: false)
+            self.dataSource?.apply(currentSnapshot, animatingDifferences: true)
         }
     }
 }
@@ -193,8 +193,7 @@ extension MainScreenViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let query = searchController.searchBar.text,
         let scope = SearchScope(rawValue: searchController.searchBar.selectedScopeButtonIndex) else { return }
-//        presenter.viewDidChangeSearchQuery(query)
-//        presenter.viewDidChangeSearchScope(scope)
+
         presenter.updateSearchResults(with: query, scope: scope)
         searchController.searchBar.placeholder = presenter.searchBarTitle
     }
@@ -203,9 +202,6 @@ extension MainScreenViewController: UISearchResultsUpdating {
 //MARK: - UISearchBarDelegate Conformance
 extension MainScreenViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-//        let scope = SearchScope(rawValue: selectedScope) ?? .movies
-//        presenter.viewDidChangeSearchScope(scope)
-//        searchBar.placeholder = presenter.searchBarTitle
     }
 }
 
