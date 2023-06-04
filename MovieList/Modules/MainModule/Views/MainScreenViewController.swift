@@ -9,6 +9,7 @@ import UIKit
 
 //MARK: - MainScreenViewController
 class MainScreenViewController: UIViewController {
+    //TODO: - Check if the presenter should be ! or ?
     var presenter: MainScreenPresenterInputProtocol!
     var loadingPresenter: MainScreenPresenterLoadingInputProtocol?
     
@@ -26,9 +27,15 @@ class MainScreenViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        searchController.searchBar.selectedScopeButtonIndex = 0
-//        presenter?.viewDidChangeSearchScope(.movies)
         presenter.viewWillAppear()
+        
+        let currentTab = tabBarController?.selectedViewController
+        print("view will appear current tab is : \(currentTab?.tabBarItem)")
+        
+        self.tabBarController?.delegate = self
+//        if presenter.mediaCount > 0 {
+//            self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .bottom, animated: true)
+//        }
     }
     
     private func setupUI() {
@@ -39,7 +46,9 @@ class MainScreenViewController: UIViewController {
         navigationItem.title = presenter.title
         navigationController?.navigationBar.prefersLargeTitles = false
         
+        
         setupFilterMenu()
+        
     }
     
     private func updateSnapshot() {
@@ -65,12 +74,19 @@ extension MainScreenViewController {
     private func setupTableView() {
         tableView = UITableView(frame: view.bounds, style: .plain)
         view.addSubview(tableView)
+        tabBarController?.delegate = self
+        
         tableView.delegate = self
         tableView.dataSource = dataSource
         tableView.register(MainScreenTableViewCell.self, forCellReuseIdentifier: MainScreenTableViewCell.reuseIdentifier)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = UITableView.automaticDimension
+
+        tableView.automaticallyAdjustsScrollIndicatorInsets = false
+        tableView.backgroundColor = .softDark
+        tableView.showsVerticalScrollIndicator = false
         
+        tableView.sectionHeaderTopPadding = 0
         tableView.keyboardDismissMode = .onDrag
     }
     
@@ -90,6 +106,8 @@ extension MainScreenViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.scopeButtonTitles = [SearchScope.movies.displayTitle,
                                                         SearchScope.series.displayTitle]
+
+        searchController.searchBar.barTintColor = UIColor.blue
         searchController.searchBar.showsScopeBar = true
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.placeholder = presenter.searchBarTitle
@@ -98,7 +116,10 @@ extension MainScreenViewController {
         navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.searchController = searchController
         definesPresentationContext = true
+        
     }
+    
+
     
     private func setupFilterMenu() {
         var menuActions: [UIAction] {
@@ -166,7 +187,7 @@ extension MainScreenViewController: UITableViewDelegate {
         favoriteAction.image = image
         
   
-        favoriteAction.backgroundColor = .systemBackground
+        favoriteAction.backgroundColor = .softDark
         
         favoriteAction.title =  isFavorite ? "Unfavorite" : "Favorite"
         
@@ -205,3 +226,21 @@ extension MainScreenViewController: UISearchBarDelegate {
     }
 }
 
+
+extension MainScreenViewController: UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        if let currentVC = tabBarController.selectedViewController,
+           let currentIndex = tabBarController.tabBar.items?.firstIndex(of: currentVC.tabBarItem),
+           let selectedIndex = tabBarController.viewControllers?.firstIndex(of: viewController)  {
+
+            print("previous tab index was :  \(currentIndex)")
+            print("new tab selected is :\(selectedIndex)\n")
+
+            if currentIndex == selectedIndex {
+                tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .bottom, animated: true)
+            }
+        }
+        return true
+    }
+    
+}

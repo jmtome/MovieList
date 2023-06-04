@@ -11,16 +11,17 @@ import UIKit
 class CarouselCell: UICollectionViewCell {
     var imageView: UIImageView!
     
-    let placeholder: UIImage = UIImage(systemName: "photo.fill.on.rectangle.fill")!
+    let tmdbLogo: UIImage = UIImage(named: "tmdbLogo_long")!
+    let placeholder: UIImage = UIImage(systemName: "photo")!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         // Configure the image view
         imageView = UIImageView(frame: contentView.bounds)
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
 //        imageView.clipsToBounds = true
-        imageView.image = UIImage(systemName: "person")
+        imageView.image = placeholder
         
         // Add the image view to the cell's content view
         contentView.addSubview(imageView)
@@ -33,26 +34,17 @@ class CarouselCell: UICollectionViewCell {
             imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
         
-//        imageView.layer.cornerRadius = 110
-//        imageView.layer.masksToBounds = true
-        
-        
-//        contentView.layer.cornerRadius = 40
-//        contentView.layer.masksToBounds = true
-//        contentView.layer.borderWidth = 2
-//        contentView.layer.borderColor = UIColor.black.cgColor
-
-        
     }
     
     func setup(_ media: MediaImage) {
-        guard let url = URL(string: media.fullImagePath) else {
-            imageView.image = placeholder
-            return
+        activityStartAnimating(activityColor: .white, backgroundColor: .softDark)
+        imageView.loadImage(from: media.fullImagePath, placeholder: tmdbLogo) {
+            DispatchQueue.mainAsyncIfNeeded {
+                self.activityStopAnimating()                
+            }
         }
-        imageView.loadImage(from: url.absoluteString, placeholder: placeholder)
         
-        contentView.layer.cornerRadius = 40
+//        contentView.layer.cornerRadius = 10
         contentView.clipsToBounds = true
     }
 

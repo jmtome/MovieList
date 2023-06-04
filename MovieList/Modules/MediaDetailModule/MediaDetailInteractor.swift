@@ -8,86 +8,84 @@
 import Foundation
 // MARK: - Interactor
 
-protocol MediaDetailInteractorProtocol: AnyObject {
-    func fetchMediaDetail()
-    func fetchMediaImages()
-    func fetchMediaVideos()
-    func fetchMediaActors()
+
+protocol MediaDetailInteractorOutputProtocol: AnyObject {
+    func didReceiveMediaDetails(_ media: MediaViewModel)
+    func didReceiveMediaCredits(_ credits: MediaCredits)
+    func didReceiveMediaImages(backdrops: [MediaImage], posters: [MediaImage])
+    func didReceiveError(_ error: Error)
 }
 
+// called by presenter, implemented by interactor
+protocol MediaDetailInteractorInputProtocol: AnyObject {
+    func fetchMediaImages(for mediaTypeId: MediaTypeID)
+    func fetchMediaCredits(for mediaTypeId: MediaTypeID)
+    func fetchMediaDetails(for mediaTypeId: MediaTypeID)
+}
+
+
 class MediaDetailInteractor {
-    weak var presenter: MediaDetailPresenterProtocol?
-    
-    // Implement the protocol methods and handle data fetching and processing
-    // Use appropriate services or APIs to fetch media details, images, videos, and actors
+    weak var output: MediaDetailInteractorOutputProtocol?
     
     private let networkingService: NetworkingService
     
-    init(networkingService: NetworkingService, presenter: MediaDetailPresenterProtocol) {
+    init(networkingService: NetworkingService) {
         self.networkingService = networkingService
-        self.presenter = presenter
     }
 }
 
-extension MediaDetailInteractor: MediaDetailInteractorProtocol {
-    func fetchMediaDetail() {
-      
+extension MediaDetailInteractor: MediaDetailInteractorInputProtocol {
+    func fetchMediaCredits(for mediaTypeId: MediaTypeID) {
+        Task {
+            var credits: MediaCredits
+            do {
+                let mediaCreditsData = try await networkingService.getMediaCredits(for: mediaTypeId)
+                credits = try JSONDecoder().decode(MediaCredits.self, from: mediaCreditsData)
+                output?.didReceiveMediaCredits(credits)
+            } catch let error {
+                print("there was an error fetching media credits for media id: \(mediaTypeId.id), with error: \(error)")
+            }
+        }
     }
     
-    func fetchMediaImages() {
-        guard let media = presenter?.media, media.id > 0 else { return }
+    func fetchMediaDetails(for mediaTypeId: MediaTypeID) {
         
-        print(media)
-        //commented today
-//        Task {
-//            do {
-//                let data = try await networkingService.getImagesForMedia(id: media.id, scope: SearchScope(media))
-//                let response = try JSONDecoder().decode(ImagesResponse.self, from: data)
-////                let urlStrings = response.backdrops.map { $0.fullImagePath }
-////                let imageDataArray = try await fetchImages(fromURLs: urlStrings)
-//
-//                print("\n\n\n backdrop images are \(response.backdrops)")
-//
-//                let mediaImages = response.backdrops + response.posters
-//
-//                self.presenter?.didFinishFetchingMediaImages(mediaImages)
-////                self.presenter?.didFetchMediaImages(imageDataArray)
-//
-//            } catch let error {
-//                print("there was an error: \(error)")
-//                self.presenter?.didFetchMediaImages([])
-//            }
-//        }
-    }
-//
-    //commented some other day
-//    func fetchImages(fromURLs urls: [String]) async throws -> [Data] {
-//        var imageDataArray: [Data] = []
-//
-//        for urlString in urls {
-//            guard let url = URL(string: urlString) else {
-//                throw APIError.invalidURL
-//            }
-//
-//            do {
-//                let imageData = try await networkingService.fetchImage(fromURL: url)
-//                imageDataArray.append(imageData)
-//            } catch {
-//                // Handle individual image fetch error if needed
-//            }
-//        }
-//
-//        return imageDataArray
-//    }
-    
-    
-    func fetchMediaVideos() {
-        
+        Task {
+            var viewModel: MediaViewModel
+            do {
+                let mediaDetailsData = try await networkingService.getMediaDetails(for: mediaTypeId)
+                switch mediaTypeId.type {
+                case .movie:
+                    let moviesDetailResponse = try JSONDecoder().decode(Movie.self, from: mediaDetailsData)
+                    viewModel = MediaViewModel(movie: moviesDetailResponse)
+                    output?.didReceiveMediaDetails(viewModel)
+                case .tvshow:
+                    let seriesDetailResponse = try JSONDecoder().decode(TVShow.self, from: mediaDetailsData)
+                    viewModel = MediaViewModel(tvshow: seriesDetailResponse)
+                    output?.didReceiveMediaDetails(viewModel)
+                }
+            } catch let error {
+                print("There was an error caught trying to fetch the MediaDetails for mediaTypeId: \(mediaTypeId)\n error: \(error)")
+                output?.didReceiveError(error)
+            }
+        }
     }
     
-    func fetchMediaActors() {
-        
+    func fetchMediaImages(for mediaTypeId: MediaTypeID) {
+        Task {
+            do {
+                let mediaImagesData = try await networkingService.getImagesForMedia(for: mediaTypeId)
+                let response = try JSONDecoder().decode(ImagesResponse.self, from: mediaImagesData)
+                
+                let backdrops = response.backdrops.sorted { (0.6 * Double($0.voteCount) + 0.4 * $0.voteAverage) > (0.6 * Double($1.voteCount) + 0.4 * $1.voteAverage) }
+                let posters = response.posters.sorted { (0.6 * Double($0.voteCount) + 0.4 * $0.voteAverage) > (0.6 * Double($1.voteCount) + 0.4 * $1.voteAverage) }
+                
+                output?.didReceiveMediaImages(backdrops: backdrops, posters: posters)
+            } catch let error {
+                print("There was an error caught trying to fetch the MediaImages for mediaTypeId: \(mediaTypeId)\n error: \(error)")
+                output?.didReceiveError(error)
+            }
+        }
     }
-    
     
 }

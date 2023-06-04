@@ -24,6 +24,7 @@ class MainScreenTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .preferredFont(forTextStyle: .title3)
         label.numberOfLines = 2
+        label.textColor = .label
         return label
     }()
     
@@ -56,8 +57,9 @@ class MainScreenTableViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .preferredFont(forTextStyle: .caption1)
-        label.numberOfLines = 0
-        label.lineBreakMode = .byTruncatingTail // Truncate text if it exceeds the maximum number of lines
+        label.numberOfLines = 3
+        label.lineBreakMode = .byTruncatingTail
+        label.textColor = .label
         return label
     }()
     
@@ -147,6 +149,8 @@ class MainScreenTableViewCell: UITableViewCell {
         
         posterImageView.layer.cornerRadius = 10
         posterImageView.layer.masksToBounds = true
+        
+        backgroundColor = .softDark
     }
     
     func setup(with media: MediaViewModel) {

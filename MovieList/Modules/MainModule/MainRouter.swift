@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 protocol MainScreenRouterProtocol: AnyObject {
     func navigateToDetailScreen(with media: MediaViewModel)
 }
@@ -20,8 +21,11 @@ class MainScreenRouter: MainScreenRouterProtocol {
     
     func navigateToDetailScreen(with media: MediaViewModel) {
         
-        let detailVC = MediaDetailBuilder.build(with: media)
-        viewController?.navigationController?.pushViewController(detailVC, animated: true)
+        let mediaTypeId = MediaTypeID(media.type, media.id)
+        
+        let detailVC = MediaDetailBuilder.build(with: mediaTypeId)
+        viewController?.navigationItem.backButtonTitle = ""
+        viewController?.show(detailVC, sender: self)
         
     }
 }

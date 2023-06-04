@@ -16,6 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: windowScene)
         self.window = window
+        window.overrideUserInterfaceStyle = .dark
         
         // Create favorites resource
         let favoritesRepo = FavoritesRepository()
@@ -41,11 +42,49 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         favoritesViewController.tabBarItem = favoritesItem
         
         // Create the tab bar controller
-        let tabBarController = UITabBarController()
+        
+        let tabBarController = MLTabBarController()
         tabBarController.viewControllers = [mainScreenNavigationController, favoritesNavigationController]
         
+        configureNavigationBarAppearance()
         window.rootViewController = tabBarController
         window.makeKeyAndVisible()
+    }
+    
+    func configureNavigationBarAppearance() {
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = .prussianBlue
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        
+        UINavigationBar.appearance().tintColor = .white
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().compactAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        
+    }
+
+    class MLTabBarController: UITabBarController {
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            configureTabBar()
+        }
+
+        private func configureTabBar() {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = .prussianBlue
+            tabBar.standardAppearance = appearance
+            tabBar.scrollEdgeAppearance = tabBar.standardAppearance
+            tabBar.tintColor = .systemTeal
+        }
+        
+//        override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+//            guard let indexOfNewTab = tabBar.items?.firstIndex(of: item) else { return }
+//            
+//            print("item is :\(item)")
+//        }
+        
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

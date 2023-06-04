@@ -9,70 +9,93 @@ import Foundation
 
 // MARK: - Presenter
 
-protocol MediaDetailPresenterProtocol: AnyObject {
-    func viewDidLoad()
-    func didFetchMediaDetail(_ mediaDetail: MediaDetail)
-    func didFetchMediaImages(_ mediaImages: [Data])
-    func didFetchMediaVideos(_ mediaVideos: [MediaVideo])
-    func didFetchMediaActors(_ mediaActors: [MediaActor])
-    func showError(_ error: Error)
-    
-    func didFinishFetchingMediaImages(_ mediaImages: [MediaImage])
-    
-    var media: MediaViewModel { get set }
+//Called by Presenter, Implemented by MediaDetailViewController
+protocol MediaDetailPresenterOutputProtocol: AnyObject {
+    func updateUI()
 }
 
-class MediaDetailPresenter: MediaDetailPresenterProtocol {
-    weak var view: MediaDetailViewProtocol?
-    var interactor: MediaDetailInteractorProtocol?
-    var router: MediaDetailRouterProtocol?
+protocol MediaDetailPresenterInputProtocol: AnyObject {
+    var title: String? { get }
+    func viewDidLoad()
     
-    var media: MediaViewModel
+    func getMediaImages() -> [MediaImage]
+    func getViewModel() -> MediaViewModel?
+}
+
+protocol MediaDetailRouterProtocol { }
+
+class MediaDetailPresenter {
+    weak var output: MediaDetailPresenterOutputProtocol?
+    
+    var interactor: MediaDetailInteractorInputProtocol
+    var router: MediaDetailRouterProtocol
+    
+    private var isLoading: Bool = false
+    
+    private let mediaTypeId: MediaTypeID
+    
+    private var viewModel: MediaViewModel? {
+        didSet {
+            output?.updateUI()
+        }
+    }
+    
+    init(interactor: MediaDetailInteractorInputProtocol, router: MediaDetailRouterProtocol, mediaTypeId: MediaTypeID) {
+        self.interactor = interactor
+        self.router = router
+        self.mediaTypeId = mediaTypeId
+    }
+}
+
+extension MediaDetailPresenter: MediaDetailPresenterInputProtocol {
+    func getViewModel() -> MediaViewModel? {
+        return viewModel
+    }
+    
+    var title: String? {
+        return viewModel?.title
+    }
     
     func viewDidLoad() {
-//        interactor?.fetchMediaDetail()
-        interactor?.fetchMediaImages()
-//        interactor?.fetchMediaVideos()
-//        interactor?.fetchMediaActors()
+        isLoading = true
         
+        interactor.fetchMediaDetails(for: self.mediaTypeId)
+//        interactor.fetchMediaCredits(for: self.mediaTypeId)
     }
     
-    init(view: MediaDetailViewProtocol, router: MediaDetailRouterProtocol, media: MediaViewModel) {
-        self.view = view
-        self.router = router
-        self.media = media
-    }
- 
-    func didFinishFetchingMediaImages(_ mediaImages: [MediaImage]) {
-//        self.media.mediaImages = mediaImages
-//        view?.viewDidFinishLoading(with: self.media)
-    }
-    
-    func didFetchMediaDetail(_ mediaDetail: MediaDetail) {
-        // Update the view with the media detail data
-        view?.displayMediaDetail(mediaDetail)
-    }
-    
-    func didFetchMediaImages(_ mediaImages: [Data]) {
-        // Update the view with the media images data
-        view?.displayMediaImages(mediaImages)
-    }
-    
-    func didFetchMediaVideos(_ mediaVideos: [MediaVideo]) {
-        // Update the view with the media videos data
-        view?.displayMediaVideos(mediaVideos)
-    }
-    
-    func didFetchMediaActors(_ mediaActors: [MediaActor]) {
-        // Update the view with the media actors data
-        view?.displayMediaActors(mediaActors)
-    }
-    
-    func showError(_ error: Error) {
-        // Display the error on the view
-        view?.displayError(error)
+    func getMediaImages() -> [MediaImage] {
+        guard let viewModel else { return [] }
+        let mediaImages = viewModel.backdrops.isEmpty ? viewModel.posters : viewModel.backdrops
+        return mediaImages
     }
 }
 
-// MARK: - View
-
+extension MediaDetailPresenter: MediaDetailInteractorOutputProtocol {
+    func didReceiveMediaDetails(_ media: MediaViewModel) {
+        isLoading = false
+        
+        self.viewModel = media
+        interactor.fetchMediaImages(for: (type: media.type, id: media.id))
+        interactor.fetchMediaCredits(for: (type: media.type, id: media.id))
+    }
+    
+    func didReceiveMediaImages(backdrops: [MediaImage], posters: [MediaImage]) {
+        isLoading = false
+        
+        viewModel?.backdrops.append(contentsOf: backdrops)
+        viewModel?.posters.append(contentsOf: posters)
+    }
+    
+    func didReceiveMediaCredits(_ credits: MediaCredits) {
+        isLoading = false
+        
+        viewModel?.credits = credits
+        //no se si tener todos los creditos sea lo mejor, al menos no como vienen, quiza toque hacer alguna interfaz/ adaptador/ metodo del vm
+    }
+    
+    
+    func didReceiveError(_ error: Error) {
+        isLoading = false
+    }
+    
+}

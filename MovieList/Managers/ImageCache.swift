@@ -24,3 +24,24 @@ final class ImageCache {
         cache.setObject(image, forKey: cacheKey)
     }
 }
+
+final class MediaEntryWrapper {
+    let value: MediaViewModel
+    let expirationDate: Date
+    
+    init(value: MediaViewModel, expirationDate: Date) {
+        self.value = value
+        self.expirationDate = expirationDate
+    }
+    
+}
+
+//final class Cache<Key: Hashable, Value> {
+//    private let wrapped = NSCache<WrappedKey, Entry>()
+//}
+//
+//final class PopularMediaCache {
+//    static let cache = NSCache<NSString, MediaEntryWrapper>()
+//    
+//    
+//}

@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIImageView {
-    func loadImage(from url: String?, placeholder: UIImage? = nil) {
+    func loadImage(from url: String?, placeholder: UIImage? = nil, completion: (() -> Void)? = nil) {
         guard let urlString = url,
               let url = URL(string: urlString) else {
             self.image = placeholder
@@ -18,8 +18,8 @@ extension UIImageView {
             guard let self = self else { return }
             if let retrImg = ImageCache.checkImage(url.absoluteString) {
                 self.image = retrImg
+                completion?()
             } else {
-                
                 let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                     // Handle the response here
                     guard let data = data, error == nil else { return }
@@ -30,6 +30,7 @@ extension UIImageView {
                         }
                         ImageCache.saveImage(image, for: url.absoluteString)
                     }
+                    completion?()
                 }
                 task.resume()
             }

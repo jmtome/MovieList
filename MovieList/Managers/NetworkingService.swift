@@ -8,9 +8,12 @@
 import Foundation
 
 protocol NetworkingService {
-    func getImagesForMedia(id: Int, scope: SearchScope) async throws -> Data
-    func fetchImage(fromURL url: URL) async throws -> Data
+    func fetchImage(from path: String) async throws -> Data
     func searchMedia(query: String, scope: SearchScope, page: Int) async throws -> Data
+    
+    func getMediaDetails(for mediaTypeId: MediaTypeID) async throws -> Data
+    func getMediaCredits(for mediaTypeId: MediaTypeID) async throws -> Data
+    func getImagesForMedia(for mediaTypeId: MediaTypeID) async throws -> Data
 }
 
 //ver lo de page para el metodo searchMEdia
@@ -18,26 +21,61 @@ class TMDBNetworkingService {
 
     private let imgBase = "https://image.tmdb.org/t/p/w500/"
     ///https://image.tmdb.org/t/p/w500/l4QHerTSbMI7qgvasqxP36pqjN6.jpg
+    ///https://image.tmdb.org/t/p/w500/khveUylm0fqlLGuUHLg74tKozdy.jpg
     private var page = 1
     
     //https://api.themoviedb.org/3/movie/603/images?api_key=005addb42a085a8f891a55d28223162d
             
-    func getImagesForMedia(id: Int, scope: SearchScope) async throws -> Data {
-        let urlString = scope == .movies ? "\(ApiDict.baseURL)movie/\(id)/images?api_key=\(ApiDict.apiKey)" : "\(ApiDict.baseURL)tv/\(id)/images?api_key=\(ApiDict.apiKey)"
+    func fetchImage(from path: String) async throws -> Data {
+        let imageEndpoint: MovieDBEndpoint = .imageWithPath(filePath: path)
         
-        guard let url = URL(string: urlString) else {
-            throw APIError.invalidURL
+        return try await makeNetworkCall(with: imageEndpoint)
+    }
+    
+    func getMediaDetails(for mediaTypeId: MediaTypeID) async throws -> Data {
+        let mediaDetailsEndpoint: MovieDBEndpoint
+        
+        switch mediaTypeId.type {
+        case .movie:
+            mediaDetailsEndpoint = .movieDetails(id: mediaTypeId.id)
+        case .tvshow:
+            mediaDetailsEndpoint = .tvShowDetails(id: mediaTypeId.id)
         }
         
-        print("images url is: \(url.absoluteString)")
+        return try await makeNetworkCall(with: mediaDetailsEndpoint)
+    }
+    
+    func getMediaCredits(for mediaTypeId: MediaTypeID) async throws -> Data {
+        let mediaCreditsEndpoint: MovieDBEndpoint
         
-        let imageData = try await fetchImage(fromURL: url)
-        return imageData
+        switch mediaTypeId.type {
+        case .movie:
+            mediaCreditsEndpoint = .movieCredits(id: mediaTypeId.id)
+        case .tvshow:
+            mediaCreditsEndpoint = .tvShowCredits(id: mediaTypeId.id)
+        }
+        
+        return try await makeNetworkCall(with: mediaCreditsEndpoint)
+    }
+    
+    func getImagesForMedia(for mediaTypeId: MediaTypeID) async throws -> Data {
+        let mediaImagesEndpoint: MovieDBEndpoint
+        
+        switch mediaTypeId.type {
+            
+        case .movie:
+            mediaImagesEndpoint = .movieImages(id: mediaTypeId.id)
+        case .tvshow:
+            mediaImagesEndpoint = .tvShowImages(id: mediaTypeId.id)
+        }
+        
+        return try await makeNetworkCall(with: mediaImagesEndpoint)
     }
 }
 
 //MARK: - Networking Service Conformance
 extension TMDBNetworkingService: NetworkingService {
+
     func searchMedia(query: String, scope: SearchScope, page: Int) async throws -> Data {
         guard !query.isEmpty else {
             return try await getTrendingMedia(page: page, searchScope: scope)

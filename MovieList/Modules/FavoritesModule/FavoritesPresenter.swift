@@ -83,7 +83,7 @@ extension FavoritesScreenPresenter: MainScreenPresenterInputProtocol {
     }
     
     func didSelectCell(at index: Int) {
-        
+        router.navigateToDetailScreen(with: viewModel[index])
     }
     
     func updateSearchResults(with query: String, scope: SearchScope) {
