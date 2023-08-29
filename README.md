@@ -1,6 +1,6 @@
 # MovieList
 
-### MovieList is a simple App made using VIPER and UIKit that allows the user to search for movies and tv shows using the free TMDB API.
+### MovieList is a simple iOS App made using Swift+UIKit and VIPER that allows the user to search for movies and tv shows using the free TMDB API.
 
 
 <p align="center">
