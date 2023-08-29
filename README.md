@@ -17,5 +17,7 @@
 - Refactor networking code
 - Migrate to SwiftUI
 
-
+<p align="center">
+  <img src="screenvideo720.gif" width="50%" height="50%" />
+</p>
 
