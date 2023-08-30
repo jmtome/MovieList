@@ -23,6 +23,9 @@ protocol MainScreenPresenterInputProtocol: AnyObject {
     var searchBarTitle: String { get }
     var mediaCount: Int { get }
     
+    var sortOption: SortingOption { get set }
+    var isAscending: Bool { get set }
+    
     func viewDidLoad()
     func viewWillAppear()
     
@@ -50,7 +53,11 @@ class MainScreenPresenter {
     private var currentScope: SearchScope = .movies
     private var currentPage: Int = 1
     private var isLoading: Bool = false
-    
+
+    // State variables related to the sorting of the table
+    private var _sortOption = SortingOption.relevance
+    private var _isAscending = false
+
     //output of the presenter, which in this case would be the view
     weak var output: MainScreenPresenterOutputProtocol?
     
@@ -84,6 +91,24 @@ extension MainScreenPresenter: MainScreenPresenterInputProtocol {
         return viewModel.count
     }
     
+    var sortOption: SortingOption {
+        get {
+            _sortOption
+        }
+        set {
+            _sortOption = newValue
+        }
+    }
+    
+    var isAscending: Bool {
+        get {
+            _isAscending
+        }
+        set {
+            _isAscending = newValue
+        }
+    }
+    
     func viewDidLoad() {
         interactor.searchMedia(with: currentQuery, scope: currentScope, page: currentPage)
     }
@@ -102,8 +127,18 @@ extension MainScreenPresenter: MainScreenPresenterInputProtocol {
         }
     }
     
+    //This code is duplicated in the FavoritesPresenter, see a way to refactor this
     func sortMedia(with option: SortingOption) {
-        print("sort option is \(option)")
+        switch sortOption {
+        case .relevance:
+            viewModel.sort { isAscending ? ($0.popularity > $1.popularity) : ($0.popularity < $1.popularity) }
+        case .date:
+            viewModel.sort { isAscending ? ($0.dateAired > $1.dateAired) : ($0.dateAired < $1.dateAired) }
+        case .rating:
+            viewModel.sort { isAscending ? ($0.rating > $1.rating) : ($0.rating < $1.rating) }
+        case .title:
+            viewModel.sort { $0.title.localizedCaseInsensitiveCompare($1.title) == (isAscending ? .orderedAscending : .orderedDescending) }
+        }
     }
     
     func isFavorite(at index: Int) -> Bool {

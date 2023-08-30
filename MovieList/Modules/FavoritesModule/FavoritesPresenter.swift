@@ -10,7 +10,11 @@ import Foundation
 
 final class FavoritesScreenPresenter {
     private var currentQuery: String = ""
-    
+
+    // State variables related to the sorting of the table
+    private var _sortOption = SortingOption.relevance
+    private var _isAscending = false
+
     //MARK: - Refactor this so that SearchScope and MediaType are only one type.
     private var currentScope: SearchScope = .movies {
         didSet {
@@ -49,6 +53,24 @@ extension FavoritesScreenPresenter: MainScreenPresenterInputProtocol {
         viewModel.count
     }
     
+    var sortOption: SortingOption {
+        get {
+            _sortOption
+        }
+        set {
+            _sortOption = newValue
+        }
+    }
+    
+    var isAscending: Bool {
+        get {
+            _isAscending
+        }
+        set {
+            _isAscending = newValue
+        }
+    }
+    
     func viewDidLoad() {
         interactor.getFavoriteMedia(for: currentMediaType)
     }
@@ -70,8 +92,18 @@ extension FavoritesScreenPresenter: MainScreenPresenterInputProtocol {
         }
     }
     
+    //This code is duplicated in the MainPresenter, see a way to refactor this
     func sortMedia(with option: SortingOption) {
-        
+        switch sortOption {
+        case .relevance:
+            viewModel.sort { isAscending ? ($0.popularity > $1.popularity) : ($0.popularity < $1.popularity) }
+        case .date:
+            viewModel.sort { isAscending ? ($0.dateAired > $1.dateAired) : ($0.dateAired < $1.dateAired) }
+        case .rating:
+            viewModel.sort { isAscending ? ($0.rating > $1.rating) : ($0.rating < $1.rating) }
+        case .title:
+            viewModel.sort { $0.title.localizedCaseInsensitiveCompare($1.title) == (isAscending ? .orderedAscending : .orderedDescending) }
+        }
     }
     
     func isFavorite(at index: Int) -> Bool {
