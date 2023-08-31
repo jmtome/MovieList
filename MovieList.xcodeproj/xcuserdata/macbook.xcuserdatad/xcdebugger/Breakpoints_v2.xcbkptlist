@@ -872,8 +872,8 @@
             filePath = "MovieList/Modules/MainModule/Views/MainScreenViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "239"
-            endingLineNumber = "239"
+            startingLineNumber = "238"
+            endingLineNumber = "238"
             landmarkName = "updateSearchResults(for:)"
             landmarkType = "7">
             <Locations>
@@ -1016,100 +1016,20 @@
                   endingLineNumber = "112"
                   offsetFromSymbolStart = "127">
                </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "D1EFBC00-7D4C-4204-829A-C71D4593EC00"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MovieList/Modules/MediaDetailModule/MediaDetailBuilder.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "18"
-            endingLineNumber = "18"
-            landmarkName = "build(with:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "CC3F6455-10D8-4914-B5A8-7C05DFCD6A04"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MovieList/Modules/MediaDetailModule/MediaDetailPresenter.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
-            landmarkName = "viewDidLoad()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "C5991548-984B-4819-B110-428554C23BA2"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MovieList/Modules/MediaDetailModule/Views/MediaDetailViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
-            landmarkName = "viewDidLoad()"
-            landmarkType = "7">
-            <Locations>
                <Location
-                  uuid = "C5991548-984B-4819-B110-428554C23BA2 - 1af101929cd8ec8c"
+                  uuid = "B380232E-C60E-4F76-97E1-802511CA8D16 - a8c71f38083e536e"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "MovieList.MediaDetailViewController.viewDidLoad() -&gt; ()"
+                  symbolName = "MovieList.FavoritesScreenPresenter.updateSearchResults(with: Swift.String, scope: MovieList.SearchScope) -&gt; ()"
                   moduleName = "MovieList"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/macbook/Documents/GitHub/MovieList/MovieList/Modules/MediaDetailModule/Views/MediaDetailViewController.swift"
+                  urlString = "file:///Users/macbook/Documents/GitHub/MovieList/MovieList/Modules/FavoritesModule/FavoritesPresenter.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "48"
-                  endingLineNumber = "48"
-                  offsetFromSymbolStart = "706">
-               </Location>
-               <Location
-                  uuid = "C5991548-984B-4819-B110-428554C23BA2 - 1af101929cd8eada"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MovieList.MediaDetailViewController.viewDidLoad() -&gt; ()"
-                  moduleName = "MovieList"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/macbook/Documents/GitHub/MovieList/MovieList/Modules/MediaDetailModule/Views/MediaDetailViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "34"
-                  endingLineNumber = "34"
-                  offsetFromSymbolStart = "706">
-               </Location>
-               <Location
-                  uuid = "C5991548-984B-4819-B110-428554C23BA2 - 1af101929cd8eaf9"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MovieList.MediaDetailViewController.viewDidLoad() -&gt; ()"
-                  moduleName = "MovieList"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/macbook/Documents/GitHub/MovieList/MovieList/Modules/MediaDetailModule/Views/MediaDetailViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "35"
-                  endingLineNumber = "35"
-                  offsetFromSymbolStart = "730">
+                  startingLineNumber = "122"
+                  endingLineNumber = "122"
+                  offsetFromSymbolStart = "127">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1301,6 +1221,21 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "135"
                   endingLineNumber = "135"
+                  offsetFromSymbolStart = "191">
+               </Location>
+               <Location
+                  uuid = "0487F0F7-3EC7-42CA-9F48-DFFB301264BD - 1434bf6a47929b99"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.UIAction) -&gt; () in closure #1 (MovieList.SortingOption) -&gt; __C.UIAction in menuActions.getter : Swift.Array&lt;__C.UIAction&gt;"
+                  moduleName = "MovieList"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macbook/Documents/GitHub/MovieList/MovieList/Modules/MainModule/Views/MainScreenViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "134"
+                  endingLineNumber = "134"
                   offsetFromSymbolStart = "191">
                </Location>
             </Locations>
