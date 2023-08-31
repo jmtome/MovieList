@@ -20,6 +20,9 @@ protocol MediaDetailPresenterInputProtocol: AnyObject {
     
     func getMediaImages() -> [MediaImage]
     func getViewModel() -> MediaViewModel?
+    
+    func isMovieInFavorites() -> Bool
+    func handleFavoriteAction()
 }
 
 protocol MediaDetailRouterProtocol { }
@@ -28,6 +31,8 @@ class MediaDetailPresenter {
     weak var output: MediaDetailPresenterOutputProtocol?
     
     var interactor: MediaDetailInteractorInputProtocol
+    private var favoritesInteractor: MediaDetailFavoritesInteractor
+    
     var router: MediaDetailRouterProtocol
     
     private var isLoading: Bool = false
@@ -44,10 +49,22 @@ class MediaDetailPresenter {
         self.interactor = interactor
         self.router = router
         self.mediaTypeId = mediaTypeId
+        self.favoritesInteractor = MediaDetailFavoritesInteractor(favoritesRepository: FavoritesRepository())
+        self.favoritesInteractor.output = self
     }
 }
 
 extension MediaDetailPresenter: MediaDetailPresenterInputProtocol {
+    func isMovieInFavorites() -> Bool {
+        guard let media = self.viewModel else { return false }
+        return favoritesInteractor.isMovieInFavorites(media: media)
+    }
+    
+    func handleFavoriteAction() {
+        guard let media = self.viewModel else { return }
+        favoritesInteractor.handleFavoriteAction(for: media)
+    }
+    
     func getViewModel() -> MediaViewModel? {
         return viewModel
     }
@@ -98,4 +115,14 @@ extension MediaDetailPresenter: MediaDetailInteractorOutputProtocol {
         isLoading = false
     }
     
+}
+
+extension MediaDetailPresenter: MediaDetailFavoriteOutputProtocol {
+    func presentMediaRemovedFromFavorites() {
+        output?.updateUI()
+    }
+    
+    func presentMediaAddedToFavorites() {
+        output?.updateUI()
+    }
 }
