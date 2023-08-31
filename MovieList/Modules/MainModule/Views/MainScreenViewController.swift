@@ -149,8 +149,7 @@ extension MainScreenViewController {
         }
         
         let demoMenu = UIMenu(title: "",options: [.displayInline], children: [
-            UIDeferredMenuElement.uncached { [weak self] completion in
-                guard let self else { return }
+            UIDeferredMenuElement.uncached { completion in
                 completion(menuActions)
             }
         ])
