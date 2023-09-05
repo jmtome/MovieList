@@ -1,5 +1,5 @@
 //
-//  Movie.swift
+//  MovieItem.swift
 //  MovieListFramework
 //
 //  Created by macbook on 05/09/2023.
@@ -7,7 +7,9 @@
 
 import Foundation
 
-struct Movie {
+typealias MediaItem = MovieItem
+
+struct MovieItem {
     let adult: Bool
     let backdrop_path: String?
     let genre_ids: [Int]
