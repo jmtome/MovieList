@@ -299,8 +299,7 @@
 			isa = PBXGroup;
 			children = (
 				FA3FA4482AA7D11600135863 /* MovieListFramework.h */,
-				FA3FA45B2AA7D1FD00135863 /* MovieItem.swift */,
-				FA3FA45D2AA7E70E00135863 /* MediaLoader.swift */,
+				FA3FA45F2AA7E9B000135863 /* MediaFeature */,
 			);
 			path = MovieListFramework;
 			sourceTree = "<group>";
@@ -311,6 +310,15 @@
 				FA3FA4522AA7D11700135863 /* MovieListFrameworkTests.swift */,
 			);
 			path = MovieListFrameworkTests;
+			sourceTree = "<group>";
+		};
+		FA3FA45F2AA7E9B000135863 /* MediaFeature */ = {
+			isa = PBXGroup;
+			children = (
+				FA3FA45B2AA7D1FD00135863 /* MovieItem.swift */,
+				FA3FA45D2AA7E70E00135863 /* MediaLoader.swift */,
+			);
+			path = MediaFeature;
 			sourceTree = "<group>";
 		};
 		FAB2DFE62A1C1720006EC398 /* Alerts */ = {
