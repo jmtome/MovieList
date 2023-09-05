@@ -220,7 +220,7 @@
 				FAB2DFFE2A1C19CE006EC398 /* Models */,
 				FAB2DFFA2A1C1950006EC398 /* Modules */,
 				FAB2DFF92A1C193E006EC398 /* Managers */,
-				FAB2DFE62A1C1720006EC398 /* MLAlertController */,
+				FAB2DFE62A1C1720006EC398 /* Alerts */,
 				FAB2DFFC2A1C197C006EC398 /* Extensions */,
 				FA1709D72A02E8AD00E1B1ED /* Assets.xcassets */,
 				FA1709D92A02E8AD00E1B1ED /* LaunchScreen.storyboard */,
@@ -258,16 +258,12 @@
 			path = MainModule;
 			sourceTree = "<group>";
 		};
-		FAB2DFE62A1C1720006EC398 /* MLAlertController */ = {
+		FAB2DFE62A1C1720006EC398 /* Alerts */ = {
 			isa = PBXGroup;
 			children = (
-				FAB2DFE72A1C1747006EC398 /* MLAlertView.swift */,
-				FAB2DFEA2A1C175F006EC398 /* MLAlertContainerView.swift */,
-				FAB2DFED2A1C1792006EC398 /* MLTitleLabel.swift */,
-				FAB2DFF02A1C17A8006EC398 /* MLBodyLabel.swift */,
-				FAB2DFF32A1C17B9006EC398 /* MLButton.swift */,
+				FAE81AA32AA13BC600EDEF62 /* MLModalAlert */,
 			);
-			path = MLAlertController;
+			path = Alerts;
 			sourceTree = "<group>";
 		};
 		FAB2DFF92A1C193E006EC398 /* Managers */ = {
@@ -369,6 +365,18 @@
 				FADCBCF92A1FE71400A74D85 /* UIKitPreview.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		FAE81AA32AA13BC600EDEF62 /* MLModalAlert */ = {
+			isa = PBXGroup;
+			children = (
+				FAB2DFE72A1C1747006EC398 /* MLAlertView.swift */,
+				FAB2DFEA2A1C175F006EC398 /* MLAlertContainerView.swift */,
+				FAB2DFED2A1C1792006EC398 /* MLTitleLabel.swift */,
+				FAB2DFF02A1C17A8006EC398 /* MLBodyLabel.swift */,
+				FAB2DFF32A1C17B9006EC398 /* MLButton.swift */,
+			);
+			path = MLModalAlert;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

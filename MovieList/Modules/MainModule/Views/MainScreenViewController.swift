@@ -164,11 +164,11 @@ extension MainScreenViewController {
 //Called by Presenter, Instantiated by MainScreenViewController
 extension MainScreenViewController: MainScreenPresenterOutputProtocol {
     func showAlertFavoritedMedia() {
-        presentMLAlert(title: "Favorites", message: "Media has been added to Favorites", buttonTitle: "Dismiss")
+        presentFavoriteAction(added: true)
     }
     
     func showAlertUnfavoritedMedia() {
-        presentMLAlert(title: "Favorites", message: "Media has been removed from Favorites", buttonTitle: "Dismiss")
+        presentFavoriteAction(added: false)
     }
     
     func showError(_ error: Error) {

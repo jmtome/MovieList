@@ -58,6 +58,7 @@ class MediaDetailViewController: UIViewController {
     }
     @objc func pressedFavorite() {
         presenter.handleFavoriteAction()
+        presentFavoriteAction(added: presenter.isMovieInFavorites())
     }
     
     override func viewWillAppear(_ animated: Bool) {
