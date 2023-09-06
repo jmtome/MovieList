@@ -37,6 +37,7 @@
 		FA3FA4542AA7D11700135863 /* MovieListFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = FA3FA4482AA7D11600135863 /* MovieListFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FA3FA45C2AA7D1FD00135863 /* MovieItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3FA45B2AA7D1FD00135863 /* MovieItem.swift */; };
 		FA3FA45E2AA7E70E00135863 /* MediaLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3FA45D2AA7E70E00135863 /* MediaLoader.swift */; };
+		FA3FA4612AA8029100135863 /* RemoteMediaLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3FA4602AA8029100135863 /* RemoteMediaLoaderTests.swift */; };
 		FA4E00D12A201192002798A8 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4E00D02A201192002798A8 /* Movie.swift */; };
 		FA4E00D22A201192002798A8 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4E00D02A201192002798A8 /* Movie.swift */; };
 		FA4E00D42A2011D5002798A8 /* TVShow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4E00D32A2011D4002798A8 /* TVShow.swift */; };
@@ -152,6 +153,7 @@
 		FA3FA4522AA7D11700135863 /* MovieListFrameworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieListFrameworkTests.swift; sourceTree = "<group>"; };
 		FA3FA45B2AA7D1FD00135863 /* MovieItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieItem.swift; sourceTree = "<group>"; };
 		FA3FA45D2AA7E70E00135863 /* MediaLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaLoader.swift; sourceTree = "<group>"; };
+		FA3FA4602AA8029100135863 /* RemoteMediaLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMediaLoaderTests.swift; sourceTree = "<group>"; };
 		FA4E00D02A201192002798A8 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		FA4E00D32A2011D4002798A8 /* TVShow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShow.swift; sourceTree = "<group>"; };
 		FA4F9B292A250063007CC544 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 			isa = PBXGroup;
 			children = (
 				FA3FA4522AA7D11700135863 /* MovieListFrameworkTests.swift */,
+				FA3FA4602AA8029100135863 /* RemoteMediaLoaderTests.swift */,
 			);
 			path = MovieListFrameworkTests;
 			sourceTree = "<group>";
@@ -762,6 +765,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA3FA4532AA7D11700135863 /* MovieListFrameworkTests.swift in Sources */,
+				FA3FA4612AA8029100135863 /* RemoteMediaLoaderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
