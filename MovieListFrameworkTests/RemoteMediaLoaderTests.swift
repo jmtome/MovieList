@@ -9,13 +9,15 @@ import XCTest
 
 class RemoteMediaLoader {
     let client: HTTPClient
+    let url: URL
     
-    init(client: HTTPClient) {
+    init(url: URL, client: HTTPClient) {
         self.client = client
+        self.url = url
     }
     
     func load() {
-        client.get(from: URL(string: "https://a-url.com")!)
+        client.get(from: url)
     }
 }
 
@@ -34,19 +36,21 @@ class HTTPClientSpy: HTTPClient {
 final class RemoteMediaLoaderTests: XCTestCase {
 
     func test_init_doesNotRequestDataFromURL() {
+        let url = URL(string: "https://a-url.com")!
         let client = HTTPClientSpy()
-        let sut = RemoteMediaLoader(client: client)
+        _ = RemoteMediaLoader(url: url, client: client)
     
         XCTAssertNil(client.requestedURL)
     }
     
     func test_load_requestDataFromURL() {
+        let url = URL(string: "https://a-given-url.com")!
         let client = HTTPClientSpy()
-        let sut = RemoteMediaLoader(client: client)
+        let sut = RemoteMediaLoader(url: url, client: client)
         
         sut.load()
          
-        XCTAssertNotNil(client.requestedURL)
+        XCTAssertEqual(client.requestedURL, url)
     }
 
 }
