@@ -36,18 +36,12 @@ final class RemoteMediaLoaderTests: XCTestCase {
     }
     
     func test_load_deliversErrorOnClientError() {
-        // Given
         let (sut, client) = makeSUT()
-                
-        // When
-        var capturedErrors = [RemoteMediaLoader.Error]()
-        sut.load { capturedErrors.append($0) }
-        
-        let clientError = NSError(domain: "Test", code: 0)
-        client.complete(with: clientError)
 
-        // Then
-        XCTAssertEqual(capturedErrors, [.connectivity])
+        expect(sut, toCompleteWithError: .connectivity) {
+            let clientError = NSError(domain: "Test", code: 0)
+            client.complete(with: clientError)
+        }
     }
     
     func test_load_delivers_ErrorOnNon200HTTPResponse() {
@@ -55,25 +49,19 @@ final class RemoteMediaLoaderTests: XCTestCase {
         let samples = [199, 201, 300, 400, 500]
         
         samples.enumerated().forEach { index, code in
-            var capturedErrors = [RemoteMediaLoader.Error]()
-            sut.load { capturedErrors.append($0) }
-            
-            client.complete(withStatusCode: code, at: index)
-            
-            XCTAssertEqual(capturedErrors, [.invalidData])
+            expect(sut, toCompleteWithError: .invalidData) {
+                client.complete(withStatusCode: code, at: index)
+            }
         }
     }
     
     func test_load_delivers_ErrorOn200HTTPResponseWithInvalidJSON() {
         let (sut, client) = makeSUT()
         
-        var capturedErrors = [RemoteMediaLoader.Error]()
-        sut.load { capturedErrors.append($0) }
-        
-        let invalidJSON = Data("invalid JSON".utf8)
-        client.complete(withStatusCode: 200, data: invalidJSON)
-        
-        XCTAssertEqual(capturedErrors, [.invalidData])
+        expect(sut, toCompleteWithError: .invalidData) {
+            let invalidJSON = Data("invalid JSON".utf8)
+            client.complete(withStatusCode: 200, data: invalidJSON)
+        }
     }
     
     //MARK: - Helpers
@@ -82,6 +70,18 @@ final class RemoteMediaLoaderTests: XCTestCase {
         let client = HTTPClientSpy()
         let sut = RemoteMediaLoader(url: url, client: client)
         return (sut, client)
+    }
+    
+    private func expect(_ sut: RemoteMediaLoader,
+                        toCompleteWithError error: RemoteMediaLoader.Error,
+                        when action: () -> Void,
+                        file: StaticString = #file, line: UInt = #line) {
+        var capturedErrors = [RemoteMediaLoader.Error]()
+        sut.load { capturedErrors.append($0) }
+        
+        action()
+        
+        XCTAssertEqual(capturedErrors, [error], file: file, line: line)
     }
 
     private class HTTPClientSpy: HTTPClient {
