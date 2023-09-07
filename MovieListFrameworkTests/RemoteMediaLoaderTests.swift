@@ -39,15 +39,13 @@ final class RemoteMediaLoaderTests: XCTestCase {
         // Given
         let (sut, client) = makeSUT()
         client.error = NSError(domain: "Test", code: 0)
-        var capturedError: RemoteMediaLoader.Error?
+        var capturedErrors = [RemoteMediaLoader.Error]()
         
         // When
-        sut.load { error in
-            capturedError = error
-        }
+        sut.load { capturedErrors.append($0) }
         
         // Then
-        XCTAssertEqual(capturedError, .connectivity)
+        XCTAssertEqual(capturedErrors, [.connectivity])
     }
     
     //MARK: - Helpers
