@@ -76,12 +76,12 @@ final class RemoteMediaLoaderTests: XCTestCase {
                         toCompleteWithError error: RemoteMediaLoader.Error,
                         when action: () -> Void,
                         file: StaticString = #file, line: UInt = #line) {
-        var capturedErrors = [RemoteMediaLoader.Error]()
-        sut.load { capturedErrors.append($0) }
+        var capturedResults = [RemoteMediaLoader.Result]()
+        sut.load { capturedResults.append($0) }
         
         action()
         
-        XCTAssertEqual(capturedErrors, [error], file: file, line: line)
+        XCTAssertEqual(capturedResults, [.failure(error)], file: file, line: line)
     }
 
     private class HTTPClientSpy: HTTPClient {

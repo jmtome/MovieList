@@ -7,9 +7,9 @@
 
 import Foundation
 
-typealias MediaItem = MovieItem
+public typealias MediaItem = MovieItem
 
-struct MovieItem {
+public struct MovieItem: Equatable {
     let adult: Bool
     let backdrop_path: String?
     let genre_ids: [Int]
