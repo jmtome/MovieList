@@ -30,16 +30,10 @@ public final class RemoteMediaLoader {
         client.get(from: url) { result in
             switch result {
             case .success(let data, let response):
-                do {
-                    let items = try MediaItemsMapper.map(data, response)
-                    completion(.success(items))
-                } catch {
-                    completion(.failure(.invalidData))
-                }
+                completion(MediaItemsMapper.map(data, response))
             case .failure:
                 completion(.failure(.connectivity))
             }
         }
     }
 }
-

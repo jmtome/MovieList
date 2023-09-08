@@ -10,8 +10,13 @@ import Foundation
 internal class MediaItemsMapper {
     private struct Root: Decodable {
         let results: [Item]
+        
+        var media: [MediaItem] {
+            return results.map { $0.item }
+        }
     }
-
+    
+    
     private struct Item: Decodable {
         let adult: Bool
         let backdrop_path: String?
@@ -28,7 +33,7 @@ internal class MediaItemsMapper {
         let video: Bool
         let vote_average: Double
         let vote_count: Int
-
+        
         var item: MediaItem {
             return MediaItem(adult: adult,
                              backdropPath: backdrop_path,
@@ -50,13 +55,15 @@ internal class MediaItemsMapper {
     
     private static var OK_200: Int { return 200 }
     
-    internal static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [MediaItem] {
-        guard response.statusCode == OK_200 else {
-            throw RemoteMediaLoader.Error.invalidData
+    internal static func map(_ data: Data, _ response: HTTPURLResponse) -> RemoteMediaLoader.Result {
+        guard response.statusCode == OK_200,
+              let root = try? JSONDecoder().decode(Root.self, from: data)  else {
+            return .failure(.invalidData)
         }
-        let root = try JSONDecoder().decode(Root.self, from: data)
-        return root.results.map { $0.item }
+        
+        return .success(root.media)
     }
+    
 }
 
     
