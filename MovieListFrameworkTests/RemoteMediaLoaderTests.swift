@@ -73,6 +73,83 @@ final class RemoteMediaLoaderTests: XCTestCase {
         }
     }
     
+    func test_load_delivers_ItemsOn200HTTPResponseWithJSONItems() {
+        let (sut, client) = makeSUT()
+        
+        let item1 = MediaItem(adult: false,
+                              backdropPath: "a backdrop path",
+                              genreIds: [0,1,2],
+                              id: UUID(),
+                              mediaType: "movie",
+                              originalLanguage: "a language",
+                              originalTitle: "an original title",
+                              overview: "an overview",
+                              popularity: 3.0,
+                              posterPath: "a poster path",
+                              releaseDate: "a release date",
+                              title: "a title",
+                              video: false,
+                              voteAverage: 2.0,
+                              voteCount: 1)
+        
+        let item1JSON: [String: Any] = [
+            "adult": item1.adult,
+            "backdrop_path": item1.backdropPath,
+            "genre_ids": item1.genreIds,
+            "id": item1.id.uuidString,
+            "media_type": item1.mediaType,
+            "original_language": item1.originalLanguage,
+            "original_title": item1.originalTitle,
+            "overview": item1.overview,
+            "popularity": item1.popularity,
+            "poster_path": item1.posterPath,
+            "release_date": item1.releaseDate,
+            "title": item1.title,
+            "video": item1.video,
+            "vote_average": item1.voteAverage,
+            "vote_count": item1.voteCount
+        ]
+        
+        let item2 = MediaItem(adult: true,
+                              backdropPath: nil,
+                              genreIds: [],
+                              id: UUID(),
+                              mediaType: nil,
+                              originalLanguage: "another language",
+                              originalTitle: "another original title",
+                              overview: "another overview",
+                              popularity: 1.0,
+                              posterPath: nil,
+                              releaseDate: "another release date",
+                              title: "another title",
+                              video: true,
+                              voteAverage: 4.3,
+                              voteCount: 222)
+        
+        let item2JSON: [String: Any] = [
+            "adult": item2.adult,
+            "genre_ids": item2.genreIds,
+            "id": item2.id.uuidString,
+            "original_language": item2.originalLanguage,
+            "original_title": item2.originalTitle,
+            "overview": item2.overview,
+            "popularity": item2.popularity,
+            "release_date": item2.releaseDate,
+            "title": item2.title,
+            "video": item2.video,
+            "vote_average": item2.voteAverage,
+            "vote_count": item2.voteCount
+        ]
+        
+        let itemsJSON = ["results": [item1JSON, item2JSON]]
+        
+        expect(sut, toCompleteWith: .success([item1, item2])) {
+            let json = try! JSONSerialization.data(withJSONObject: itemsJSON)
+            client.complete(withStatusCode: 200, data: json)
+        }
+        
+    }
+    
     //MARK: - Helpers
     
     private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteMediaLoader, client: HTTPClientSpy) {

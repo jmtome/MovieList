@@ -10,21 +10,54 @@ import Foundation
 public typealias MediaItem = MovieItem
 
 public struct MovieItem: Equatable {
-    let adult: Bool
-    let backdrop_path: String?
-    let genre_ids: [Int]
-    let id: UUID
-    let media_type: String?
-    let original_language: String
-    let original_title: String
-    let overview: String
-    let popularity: Double
-    let poster_path: String?
-    let release_date: String
-    let title: String
-    let video: Bool
-    let vote_average: Double
-    let vote_count: Int
+    public let adult: Bool
+    public let backdropPath: String?
+    public let genreIds: [Int]
+    public let id: UUID
+    public let mediaType: String?
+    public let originalLanguage: String
+    public let originalTitle: String
+    public let overview: String
+    public let popularity: Double
+    public let posterPath: String?
+    public let releaseDate: String
+    public let title: String
+    public let video: Bool
+    public let voteAverage: Double
+    public let voteCount: Int
+    
+    public init(adult: Bool, backdropPath: String? = nil, genreIds: [Int], id: UUID, mediaType: String? = nil, originalLanguage: String, originalTitle: String, overview: String, popularity: Double, posterPath: String? = nil, releaseDate: String, title: String, video: Bool, voteAverage: Double, voteCount: Int) {
+        self.adult = adult
+        self.backdropPath = backdropPath
+        self.genreIds = genreIds
+        self.id = id
+        self.mediaType = mediaType
+        self.originalLanguage = originalLanguage
+        self.originalTitle = originalTitle
+        self.overview = overview
+        self.popularity = popularity
+        self.posterPath = posterPath
+        self.releaseDate = releaseDate
+        self.title = title
+        self.video = video
+        self.voteAverage = voteAverage
+        self.voteCount = voteCount
+    }
+}
+
+extension MediaItem: Decodable {
+    private enum CodingKeys: String, CodingKey {
+        case adult, id, overview, popularity, title, video
+        case backdropPath = "backdrop_path"
+        case genreIds = "genre_ids"
+        case mediaType = "media_type"
+        case originalLanguage = "original_language"
+        case originalTitle = "original_title"
+        case posterPath = "poster_path"
+        case releaseDate = "release_date"
+        case voteAverage = "vote_average"
+        case voteCount = "vote_count"
+    }
 }
 
 
