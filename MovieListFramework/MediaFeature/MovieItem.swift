@@ -45,19 +45,3 @@ public struct MovieItem: Equatable {
     }
 }
 
-extension MediaItem: Decodable {
-    private enum CodingKeys: String, CodingKey {
-        case adult, id, overview, popularity, title, video
-        case backdropPath = "backdrop_path"
-        case genreIds = "genre_ids"
-        case mediaType = "media_type"
-        case originalLanguage = "original_language"
-        case originalTitle = "original_title"
-        case posterPath = "poster_path"
-        case releaseDate = "release_date"
-        case voteAverage = "vote_average"
-        case voteCount = "vote_count"
-    }
-}
-
-
