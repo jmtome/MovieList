@@ -121,10 +121,21 @@ final class RemoteMediaLoaderTests: XCTestCase {
     
     //MARK: - Helpers
     
-    private func makeSUT(url: URL = URL(string: "https://a-url.com")!) -> (sut: RemoteMediaLoader, client: HTTPClientSpy) {
+    private func makeSUT(url: URL = URL(string: "https://a-url.com")!,
+                         file: StaticString = #file, line: UInt = #line) -> (sut: RemoteMediaLoader, client: HTTPClientSpy) {
         let client = HTTPClientSpy()
         let sut = RemoteMediaLoader(url: url, client: client)
+       
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(client, file: file, line: line)
+        
         return (sut, client)
+    }
+    
+    private func trackForMemoryLeaks(_ instance: AnyObject, file: StaticString = #file, line: UInt = #line) {
+        addTeardownBlock { [weak instance] in
+            XCTAssertNil(instance, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
+        }
     }
     
     private func makeItem(adult: Bool, backdropPath: String? = nil, genreIds: [Int], id: UUID, mediaType: String? = nil, originalLanguage: String, originalTitle: String, overview: String, popularity: Double, posterPath: String? = nil, releaseDate: String, title: String, video: Bool, voteAverage: Double, voteCount: Int) -> (model: MediaItem, json: [String: Any]) {
