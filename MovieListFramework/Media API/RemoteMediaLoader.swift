@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class RemoteMediaLoader {
+public final class RemoteMediaLoader: MediaLoader {
     private let url: URL
     private let client: HTTPClient
     
