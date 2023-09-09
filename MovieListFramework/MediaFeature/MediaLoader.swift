@@ -12,6 +12,6 @@ public enum LoadMediaResult {
     case failure(Error)
 }
 
-protocol MediaLoader {
+public protocol MediaLoader {
     func load(completion: @escaping(LoadMediaResult) -> Void)
 }
