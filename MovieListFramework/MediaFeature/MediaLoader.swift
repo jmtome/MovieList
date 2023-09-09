@@ -7,13 +7,11 @@
 
 import Foundation
 
-public enum LoadMediaResult<Error: Swift.Error> {
+public enum LoadMediaResult {
     case success([MediaItem])
     case failure(Error)
 }
 
 protocol MediaLoader {
-    associatedtype Error: Swift.Error
-    
-    func load(completion: @escaping(LoadMediaResult<Error>) -> Void)
+    func load(completion: @escaping(LoadMediaResult) -> Void)
 }

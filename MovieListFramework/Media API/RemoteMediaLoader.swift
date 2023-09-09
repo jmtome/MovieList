@@ -16,7 +16,7 @@ public final class RemoteMediaLoader: MediaLoader {
         case invalidData
     }
     
-    public typealias Result = LoadMediaResult<Error>
+    public typealias Result = LoadMediaResult
     
     public init(url: URL, client: HTTPClient) {
         self.client = client
@@ -31,7 +31,7 @@ public final class RemoteMediaLoader: MediaLoader {
             case .success(let data, let response):
                 completion(MediaItemsMapper.map(data, response))
             case .failure:
-                completion(.failure(.connectivity))
+                completion(.failure(Error.connectivity))
             }
         }
     }
