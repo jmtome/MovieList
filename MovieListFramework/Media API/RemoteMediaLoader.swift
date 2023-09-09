@@ -16,10 +16,7 @@ public final class RemoteMediaLoader {
         case invalidData
     }
     
-    public enum Result: Equatable {
-        case success([MediaItem])
-        case failure(Error)
-    }
+    public typealias Result = LoadMediaResult<Error>
     
     public init(url: URL, client: HTTPClient) {
         self.client = client

@@ -7,10 +7,15 @@
 
 import Foundation
 
-enum LoadMediaResult {
+public enum LoadMediaResult<Error: Swift.Error> {
     case success([MediaItem])
+    case failure(Error)
 }
 
+extension LoadMediaResult: Equatable where Error: Equatable {}
+
 protocol MediaLoader {
-    func load(completion: @escaping(LoadMediaResult) -> Void)
+    associatedtype Error: Swift.Error
+    
+    func load(completion: @escaping(LoadMediaResult<Error>) -> Void)
 }
