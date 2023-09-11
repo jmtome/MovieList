@@ -104,6 +104,7 @@
 		FAF8AF892A1D369C0086B926 /* FavoritesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2E01E2A1D2920006EC398 /* FavoritesPresenter.swift */; };
 		FAF8AF8A2A1D369E0086B926 /* FavoritesInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2E01B2A1D2531006EC398 /* FavoritesInteractor.swift */; };
 		FAF8AF8B2A1D369F0086B926 /* FavoritesInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB2E01B2A1D2531006EC398 /* FavoritesInteractor.swift */; };
+		FAFAEF482AAFB7800054B653 /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAFAEF472AAFB7800054B653 /* URLSessionHTTPClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -194,6 +195,7 @@
 		FAB7F1B02A1566460015C55D /* MediaInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaInfoView.swift; sourceTree = "<group>"; };
 		FADCBCF92A1FE71400A74D85 /* UIKitPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitPreview.swift; sourceTree = "<group>"; };
 		FADCBCFB2A1FFF2A00A74D85 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		FAFAEF472AAFB7800054B653 /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -338,6 +340,7 @@
 				FA3FA4632AA8FD8C00135863 /* RemoteMediaLoader.swift */,
 				FA5ADCC72AABC37A0068C134 /* MediaItemsMapper.swift */,
 				FA5ADCC52AABC31B0068C134 /* HTTPClient.swift */,
+				FAFAEF472AAFB7800054B653 /* URLSessionHTTPClient.swift */,
 			);
 			path = "Media API";
 			sourceTree = "<group>";
@@ -796,6 +799,7 @@
 				FA3FA45C2AA7D1FD00135863 /* MovieItem.swift in Sources */,
 				FA5ADCC62AABC31B0068C134 /* HTTPClient.swift in Sources */,
 				FA3FA45E2AA7E70E00135863 /* MediaLoader.swift in Sources */,
+				FAFAEF482AAFB7800054B653 /* URLSessionHTTPClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
