@@ -175,15 +175,15 @@ final class RemoteMediaLoaderTests: XCTestCase {
         
         let json = [
             "adult": item.adult,
-            "backdrop_path": item.backdropPath,
+            "backdrop_path": item.backdropPath as Any,
             "genre_ids": item.genreIds,
             "id": item.id.uuidString,
-            "media_type": item.mediaType,
+            "media_type": item.mediaType as Any,
             "original_language": item.originalLanguage,
             "original_title": item.originalTitle,
             "overview": item.overview,
             "popularity": item.popularity,
-            "poster_path": item.posterPath,
+            "poster_path": item.posterPath as Any,
             "release_date": item.releaseDate,
             "title": item.title,
             "video": item.video,
