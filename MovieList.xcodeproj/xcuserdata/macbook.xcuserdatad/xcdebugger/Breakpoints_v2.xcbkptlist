@@ -1251,8 +1251,8 @@
             filePath = "MovieListFrameworkTests/Media API/RemoteMediaLoaderTests.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "194"
-            endingLineNumber = "194"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
             landmarkName = "makeItem(adult:backdropPath:genreIds:id:mediaType:originalLanguage:originalTitle:overview:popularity:posterPath:releaseDate:title:video:voteAverage:voteCount:)"
             landmarkType = "7">
          </BreakpointContent>
