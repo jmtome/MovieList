@@ -48,9 +48,11 @@ class CacheMediaUseCase: XCTestCase {
     
     //MARK: - Helpers
     
-    private func makeSUT() -> (sut: LocalMediaLoader, store: MediaStore) {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalMediaLoader, store: MediaStore) {
         let store = MediaStore()
         let sut = LocalMediaLoader(store: store)
+        trackForMemoryLeaks(store, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, store)
     }
     
