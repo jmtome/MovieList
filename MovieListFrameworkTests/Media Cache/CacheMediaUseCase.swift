@@ -31,15 +31,13 @@ class MediaStore {
 class CacheMediaUseCase: XCTestCase {
     
     func test_init_doesNotDeleteCacheUponCreation() {
-        let store = MediaStore()
-        _ = LocalMediaLoader(store: store)
+        let (_, store) = makeSUT()
         
         XCTAssertEqual(store.deleteCachedMediaCallCount, 0)
     }
     
     func test_save_requestsCacheDeletion() {
-        let store = MediaStore()
-        let sut = LocalMediaLoader(store: store)
+        let (sut, store) = makeSUT()
         let items = [uniqueItem(), uniqueItem()]
         
         sut.save(items)
@@ -49,6 +47,12 @@ class CacheMediaUseCase: XCTestCase {
     
     
     //MARK: - Helpers
+    
+    private func makeSUT() -> (sut: LocalMediaLoader, store: MediaStore) {
+        let store = MediaStore()
+        let sut = LocalMediaLoader(store: store)
+        return (sut, store)
+    }
     
     private func uniqueItem() -> MediaItem {
         return MediaItem(adult: false,
