@@ -1,5 +1,5 @@
 //
-//  RemoteMediaLoaderTests.swift
+//  LoadMediaFromRemoteUseCaseTests.swift
 //  MovieListFrameworkTests
 //
 //  Created by macbook on 05/09/2023.
@@ -8,7 +8,7 @@
 import XCTest
 import MovieListFramework
 
-final class RemoteMediaLoaderTests: XCTestCase {
+final class LoadMediaFromRemoteUseCaseTests: XCTestCase {
 
     func test_init_doesNotRequestDataFromURL() {
         let (_, client) = makeSUT()
