@@ -21,7 +21,7 @@ internal class MediaItemsMapper {
         let adult: Bool
         let backdrop_path: String?
         let genre_ids: [Int]
-        let id: UUID
+        let id: Int
         let media_type: String?
         let original_language: String
         let original_title: String

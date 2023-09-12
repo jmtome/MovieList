@@ -13,7 +13,7 @@ public struct MovieItem: Equatable {
     public let adult: Bool
     public let backdropPath: String?
     public let genreIds: [Int]
-    public let id: UUID
+    public let id: Int
     public let mediaType: String?
     public let originalLanguage: String
     public let originalTitle: String
@@ -26,7 +26,7 @@ public struct MovieItem: Equatable {
     public let voteAverage: Double
     public let voteCount: Int
     
-    public init(adult: Bool, backdropPath: String? = nil, genreIds: [Int], id: UUID, mediaType: String? = nil, originalLanguage: String, originalTitle: String, overview: String, popularity: Double, posterPath: String? = nil, releaseDate: String, title: String, video: Bool, voteAverage: Double, voteCount: Int) {
+    public init(adult: Bool, backdropPath: String? = nil, genreIds: [Int], id: Int, mediaType: String? = nil, originalLanguage: String, originalTitle: String, overview: String, popularity: Double, posterPath: String? = nil, releaseDate: String, title: String, video: Bool, voteAverage: Double, voteCount: Int) {
         self.adult = adult
         self.backdropPath = backdropPath
         self.genreIds = genreIds
