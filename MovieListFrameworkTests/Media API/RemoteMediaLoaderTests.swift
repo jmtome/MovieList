@@ -80,7 +80,7 @@ final class RemoteMediaLoaderTests: XCTestCase {
         let item1 = makeItem(adult: false,
                              backdropPath: "a backdrop path",
                              genreIds: [0,1,2],
-                             id: UUID(),
+                             id: 1,
                              mediaType: "movie",
                              originalLanguage: "a language",
                              originalTitle: "an original title",
@@ -97,7 +97,7 @@ final class RemoteMediaLoaderTests: XCTestCase {
         let item2 = makeItem(adult: true,
                               backdropPath: nil,
                               genreIds: [],
-                              id: UUID(),
+                              id: 0,
                               mediaType: nil,
                               originalLanguage: "another language",
                               originalTitle: "another original title",
@@ -150,7 +150,7 @@ final class RemoteMediaLoaderTests: XCTestCase {
         return .failure(error)
     }
     
-    private func makeItem(adult: Bool, backdropPath: String? = nil, genreIds: [Int], id: UUID, mediaType: String? = nil, originalLanguage: String, originalTitle: String, overview: String, popularity: Double, posterPath: String? = nil, releaseDate: String, title: String, video: Bool, voteAverage: Double, voteCount: Int) -> (model: MediaItem, json: [String: Any]) {
+    private func makeItem(adult: Bool, backdropPath: String? = nil, genreIds: [Int], id: Int, mediaType: String? = nil, originalLanguage: String, originalTitle: String, overview: String, popularity: Double, posterPath: String? = nil, releaseDate: String, title: String, video: Bool, voteAverage: Double, voteCount: Int) -> (model: MediaItem, json: [String: Any]) {
         let item = MediaItem(adult: adult,
                              backdropPath: backdropPath,
                              genreIds: genreIds,
@@ -171,7 +171,7 @@ final class RemoteMediaLoaderTests: XCTestCase {
             "adult": item.adult,
             "backdrop_path": item.backdropPath as Any,
             "genre_ids": item.genreIds,
-            "id": item.id.uuidString,
+            "id": item.id,
             "media_type": item.mediaType as Any,
             "original_language": item.originalLanguage,
             "original_title": item.originalTitle,
