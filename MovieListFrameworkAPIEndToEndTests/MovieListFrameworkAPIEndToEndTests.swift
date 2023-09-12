@@ -11,20 +11,7 @@ final class MovieListFrameworkAPIEndToEndTests: XCTestCase {
     
     
     func test_endToEndServerGETMediaResult_matchesFixedTestAccountData() {
-        let testServerURL = URL(string: "https://gist.githubusercontent.com/jmtome/f09b007a6e46ae91148372a296e8c30d/raw/52267abea83aec0014db7388678e513695e8b6c2/E2ETestApiTMDB.json")!
-        let client = URLSessionHTTPClient()
-        let loader = RemoteMediaLoader(url: testServerURL, client: client)
-        
-        let exp = expectation(description: "Wait for load completion")
-        
-        var receivedResult: LoadMediaResult?
-        loader.load { result in
-            receivedResult = result
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 15.0)
-        
-        switch receivedResult {
+        switch getFeedResult() {
         case let .success(items)?:
             XCTAssertEqual(items.count, 20, "Expected 20 items in the test account of media items")
             
@@ -40,6 +27,22 @@ final class MovieListFrameworkAPIEndToEndTests: XCTestCase {
     }
     
     //MARK: - Helpers
+    
+    private func getFeedResult() -> LoadMediaResult? {
+        let testServerURL = URL(string: "https://gist.githubusercontent.com/jmtome/f09b007a6e46ae91148372a296e8c30d/raw/52267abea83aec0014db7388678e513695e8b6c2/E2ETestApiTMDB.json")!
+        let client = URLSessionHTTPClient()
+        let loader = RemoteMediaLoader(url: testServerURL, client: client)
+        
+        let exp = expectation(description: "Wait for load completion")
+        
+        var receivedResult: LoadMediaResult?
+        loader.load { result in
+            receivedResult = result
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 15.0)
+        return receivedResult
+    }
     
     private func expectedItems(at index: Int) -> MediaItem {
         return MediaItem(adult: adult(at: index),
