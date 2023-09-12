@@ -348,6 +348,7 @@
 		FA3FA4512AA7D11700135863 /* MovieListFrameworkTests */ = {
 			isa = PBXGroup;
 			children = (
+				FA8F952F2AAF939700372BCF /* Helpers */,
 				FA543FC42AB11D6400702965 /* Media Cache */,
 				FA5ADCC92AABE2300068C134 /* Media API */,
 			);
@@ -385,7 +386,6 @@
 		FA5ADCC92AABE2300068C134 /* Media API */ = {
 			isa = PBXGroup;
 			children = (
-				FA8F952F2AAF939700372BCF /* Helpers */,
 				FA3FA4602AA8029100135863 /* LoadMediaFromRemoteUseCaseTests.swift */,
 				FA97B9E92AACFB2A00FB52D5 /* URLSessionHTTPClientTests.swift */,
 			);
