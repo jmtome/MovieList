@@ -44,7 +44,7 @@
 		FA4E00D52A2011D5002798A8 /* TVShow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4E00D32A2011D4002798A8 /* TVShow.swift */; };
 		FA4F9B2A2A250064007CC544 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4F9B292A250063007CC544 /* UIColor+Extension.swift */; };
 		FA4F9B2B2A250064007CC544 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4F9B292A250063007CC544 /* UIColor+Extension.swift */; };
-		FA543FC72AB120D600702965 /* CacheMediaUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA543FC52AB11D9100702965 /* CacheMediaUseCase.swift */; };
+		FA543FC72AB120D600702965 /* CacheMediaUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA543FC52AB11D9100702965 /* CacheMediaUseCaseTests.swift */; };
 		FA543FCA2AB250FF00702965 /* LocalMediaLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA543FC92AB250FF00702965 /* LocalMediaLoader.swift */; };
 		FA543FCC2AB2520300702965 /* MediaStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA543FCB2AB2520300702965 /* MediaStore.swift */; };
 		FA5ADCC62AABC31B0068C134 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5ADCC52AABC31B0068C134 /* HTTPClient.swift */; };
@@ -176,7 +176,7 @@
 		FA4E00D32A2011D4002798A8 /* TVShow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShow.swift; sourceTree = "<group>"; };
 		FA4F9B292A250063007CC544 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		FA543FC32AB0CE5F00702965 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
-		FA543FC52AB11D9100702965 /* CacheMediaUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheMediaUseCase.swift; sourceTree = "<group>"; };
+		FA543FC52AB11D9100702965 /* CacheMediaUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheMediaUseCaseTests.swift; sourceTree = "<group>"; };
 		FA543FC92AB250FF00702965 /* LocalMediaLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalMediaLoader.swift; sourceTree = "<group>"; };
 		FA543FCB2AB2520300702965 /* MediaStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaStore.swift; sourceTree = "<group>"; };
 		FA5ADCC52AABC31B0068C134 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
@@ -383,7 +383,7 @@
 		FA543FC42AB11D6400702965 /* Media Cache */ = {
 			isa = PBXGroup;
 			children = (
-				FA543FC52AB11D9100702965 /* CacheMediaUseCase.swift */,
+				FA543FC52AB11D9100702965 /* CacheMediaUseCaseTests.swift */,
 			);
 			path = "Media Cache";
 			sourceTree = "<group>";
@@ -900,7 +900,7 @@
 				FA3FA4612AA8029100135863 /* LoadMediaFromRemoteUseCaseTests.swift in Sources */,
 				FA97B9EA2AACFB2A00FB52D5 /* URLSessionHTTPClientTests.swift in Sources */,
 				FA8F95312AAF93B400372BCF /* XCTestCase+MemoryLeakTracking.swift in Sources */,
-				FA543FC72AB120D600702965 /* CacheMediaUseCase.swift in Sources */,
+				FA543FC72AB120D600702965 /* CacheMediaUseCaseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
