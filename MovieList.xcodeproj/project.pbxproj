@@ -48,6 +48,7 @@
 		FA543FCA2AB250FF00702965 /* LocalMediaLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA543FC92AB250FF00702965 /* LocalMediaLoader.swift */; };
 		FA543FCC2AB2520300702965 /* MediaStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA543FCB2AB2520300702965 /* MediaStore.swift */; };
 		FA543FCE2AB26AA100702965 /* RemoteMediaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA543FCD2AB26AA100702965 /* RemoteMediaItem.swift */; };
+		FA543FD22AB26B0300702965 /* LocalMediaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA543FD12AB26B0300702965 /* LocalMediaItem.swift */; };
 		FA5ADCC62AABC31B0068C134 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5ADCC52AABC31B0068C134 /* HTTPClient.swift */; };
 		FA5ADCC82AABC37A0068C134 /* MediaItemsMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5ADCC72AABC37A0068C134 /* MediaItemsMapper.swift */; };
 		FA8F24442A1DA4A80096A69E /* Networking+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8F24432A1DA4A80096A69E /* Networking+Helpers.swift */; };
@@ -181,6 +182,7 @@
 		FA543FC92AB250FF00702965 /* LocalMediaLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalMediaLoader.swift; sourceTree = "<group>"; };
 		FA543FCB2AB2520300702965 /* MediaStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaStore.swift; sourceTree = "<group>"; };
 		FA543FCD2AB26AA100702965 /* RemoteMediaItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMediaItem.swift; sourceTree = "<group>"; };
+		FA543FD12AB26B0300702965 /* LocalMediaItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalMediaItem.swift; sourceTree = "<group>"; };
 		FA5ADCC52AABC31B0068C134 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		FA5ADCC72AABC37A0068C134 /* MediaItemsMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaItemsMapper.swift; sourceTree = "<group>"; };
 		FA8F24432A1DA4A80096A69E /* Networking+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Networking+Helpers.swift"; sourceTree = "<group>"; };
@@ -396,6 +398,7 @@
 			children = (
 				FA543FC92AB250FF00702965 /* LocalMediaLoader.swift */,
 				FA543FCB2AB2520300702965 /* MediaStore.swift */,
+				FA543FD12AB26B0300702965 /* LocalMediaItem.swift */,
 			);
 			path = "Media Cache";
 			sourceTree = "<group>";
@@ -892,6 +895,7 @@
 				FA543FCA2AB250FF00702965 /* LocalMediaLoader.swift in Sources */,
 				FA3FA45C2AA7D1FD00135863 /* MovieItem.swift in Sources */,
 				FA5ADCC62AABC31B0068C134 /* HTTPClient.swift in Sources */,
+				FA543FD22AB26B0300702965 /* LocalMediaItem.swift in Sources */,
 				FA3FA45E2AA7E70E00135863 /* MediaLoader.swift in Sources */,
 				FAFAEF482AAFB7800054B653 /* URLSessionHTTPClient.swift in Sources */,
 			);
