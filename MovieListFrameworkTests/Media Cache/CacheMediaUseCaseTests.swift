@@ -80,7 +80,7 @@ class CacheMediaUseCase: XCTestCase {
         let store = MediaStoreSpy()
         var sut: LocalMediaLoader? = LocalMediaLoader(store: store, currentDate: Date.init)
         
-        var receivedResults = [Error?]()
+        var receivedResults = [LocalMediaLoader.SaveResult]()
         sut?.save([uniqueItem()]) { receivedResults.append($0) }
         
         sut = nil
@@ -93,7 +93,7 @@ class CacheMediaUseCase: XCTestCase {
         let store = MediaStoreSpy()
         var sut: LocalMediaLoader? = LocalMediaLoader(store: store, currentDate: Date.init)
         
-        var receivedResults = [Error?]()
+        var receivedResults = [LocalMediaLoader.SaveResult]()
         sut?.save([uniqueItem()]) { receivedResults.append($0) }
         
         store.completeDeletionSuccessfully()
