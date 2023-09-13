@@ -31,7 +31,6 @@ class MediaStore {
     typealias DeletionCompletion = (Error?) -> Void
     
     var deleteCachedMediaCallCount = 0
-    var insertCallCount = 0
     var insertions = [(items: [MediaItem], timestamp: Date)]()
     
     private var deletionCompletions = [DeletionCompletion]()
@@ -50,7 +49,6 @@ class MediaStore {
     }
     
     func insert(_ items: [MediaItem], timestamp: Date) {
-        insertCallCount += 1
         insertions.append((items, timestamp))
     }
 }
@@ -80,17 +78,7 @@ class CacheMediaUseCase: XCTestCase {
         sut.save(items)
         store.completeDeletion(with: deletionError)
         
-        XCTAssertEqual(store.insertCallCount, 0)
-    }
-    
-    func test_save_requestsNewCacheInsertionOnSuccessfulDeletion() {
-        let (sut, store) = makeSUT()
-        let items = [uniqueItem(), uniqueItem()]
-        
-        sut.save(items)
-        store.completeDeletionSuccessfully()
-        
-        XCTAssertEqual(store.insertCallCount, 1)
+        XCTAssertEqual(store.insertions.count, 0)
     }
     
     func test_save_requestsNewCacheInsertionWithTimestampOnSuccessfulDeletion() {
