@@ -25,11 +25,15 @@ class LocalMediaLoader {
             if let cacheDeletionError = error {
                 completion(cacheDeletionError)
             } else {
-                self.store.insert(items, timestamp: self.currentDate()) { [weak self] error in
-                    guard self != nil else { return }
-                    completion(error)
-                }
+                self.cache(items, with: completion)
             }
+        }
+    }
+    
+    private func cache(_ items: [MediaItem], with completion: @escaping (Error?) -> Void) {
+        store.insert(items, timestamp: self.currentDate()) { [weak self] error in
+            guard self != nil else { return }
+            completion(error)
         }
     }
 }
@@ -84,7 +88,7 @@ class CacheMediaUseCase: XCTestCase {
     func test_save_failsOnDeletionError() {
         let (sut, store) = makeSUT()
         let deletionError = anyNSError()
-       
+        
         expect(sut, toCompleteWithError: deletionError, when: {
             store.completeDeletion(with: deletionError)
         })
@@ -93,7 +97,7 @@ class CacheMediaUseCase: XCTestCase {
     func test_save_failsOnInsertionError() {
         let (sut, store) = makeSUT()
         let insertionError = anyNSError()
-  
+        
         expect(sut, toCompleteWithError: insertionError, when: {
             store.completeDeletionSuccessfully()
             store.completeInsertion(with: insertionError)
@@ -103,7 +107,7 @@ class CacheMediaUseCase: XCTestCase {
     
     func test_save_succeedsOnSuccessfulCacheInsertion() {
         let (sut, store) = makeSUT()
-
+        
         expect(sut, toCompleteWithError: nil, when: {
             store.completeDeletionSuccessfully()
             store.completeInsertionSuccessfully()
