@@ -8,6 +8,7 @@
 import XCTest
 import MovieListFramework
 
+
 class LocalMediaLoader {
     private let store: MediaStore
     
@@ -16,20 +17,37 @@ class LocalMediaLoader {
     }
     
     func save(_ items: [MediaItem]) {
-        store.deleteCachedMedia()
+        store.deleteCachedMedia { [unowned self] error in
+            if error == nil {
+                self.store.insert(items)
+            }
+        }
     }
 }
 
 class MediaStore {
+    typealias DeletionCompletion = (Error?) -> Void
+    
     var deleteCachedMediaCallCount = 0
     var insertCallCount = 0
 
-    func deleteCachedMedia() {
+    private var deletionCompletions = [DeletionCompletion]()
+    
+    func deleteCachedMedia(completion: @escaping DeletionCompletion) {
         deleteCachedMediaCallCount += 1
+        deletionCompletions.append(completion)
     }
     
     func completeDeletion(with error: Error, at index: Int = 0) {
-        
+        deletionCompletions[index](error)
+    }
+    
+    func completeDeletionSuccessfully(at index: Int = 0) {
+        deletionCompletions[index](nil)
+    }
+    
+    func insert(_ items: [MediaItem]) {
+        insertCallCount += 1
     }
 }
 
@@ -59,6 +77,16 @@ class CacheMediaUseCase: XCTestCase {
         store.completeDeletion(with: deletionError)
         
         XCTAssertEqual(store.insertCallCount, 0)
+    }
+    
+    func test_save_requestsNewCacheInsertionOnSuccessfulDeletion() {
+        let (sut, store) = makeSUT()
+        let items = [uniqueItem(), uniqueItem()]
+        
+        sut.save(items)
+        store.completeDeletionSuccessfully()
+        
+        XCTAssertEqual(store.insertCallCount, 1)
     }
     
     
