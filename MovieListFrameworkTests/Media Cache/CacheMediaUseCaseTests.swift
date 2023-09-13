@@ -40,11 +40,12 @@ class CacheMediaUseCase: XCTestCase {
         let timestamp = Date()
         let (sut, store) = makeSUT(currentDate: { timestamp })
         let items = [uniqueItem(), uniqueItem()]
+        let localItems = items.toLocal()
         
         sut.save(items) { _ in }
         store.completeDeletionSuccessfully()
         
-        XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed, .insert(items, timestamp)])
+        XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed, .insert(localItems, timestamp)])
     }
     
     func test_save_failsOnDeletionError() {
@@ -117,7 +118,7 @@ class CacheMediaUseCase: XCTestCase {
     private class MediaStoreSpy: MediaStore {
         enum ReceivedMessage: Equatable {
             case deleteCachedFeed
-            case insert([MediaItem], Date)
+            case insert([LocalMediaItem], Date)
         }
         
         private(set) var receivedMessages = [ReceivedMessage]()
@@ -138,7 +139,7 @@ class CacheMediaUseCase: XCTestCase {
             deletionCompletions[index](nil)
         }
         
-        func insert(_ items: [MediaItem], timestamp: Date, completion: @escaping (InsertionCompletion)) {
+        func insert(_ items: [LocalMediaItem], timestamp: Date, completion: @escaping (InsertionCompletion)) {
             insertionCompletions.append(completion)
             receivedMessages.append(.insert(items, timestamp))
         }
@@ -190,5 +191,11 @@ class CacheMediaUseCase: XCTestCase {
     
     private func anyNSError() -> NSError{
         return NSError(domain: "any error", code: 0)
+    }
+}
+
+private extension Array where Element == MediaItem {
+    func toLocal() -> [LocalMediaItem] {
+        return map { LocalMediaItem(adult: $0.adult, backdropPath: $0.backdropPath, genreIds: $0.genreIds, id: $0.id, mediaType: $0.mediaType, originalLanguage: $0.originalLanguage, originalTitle: $0.originalTitle, overview: $0.overview, popularity: $0.popularity, posterPath: $0.posterPath, releaseDate: $0.releaseDate, title: $0.title, video: $0.video, voteAverage: $0.voteAverage, voteCount: $0.voteCount) }
     }
 }
