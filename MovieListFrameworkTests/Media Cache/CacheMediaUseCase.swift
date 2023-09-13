@@ -19,7 +19,8 @@ class LocalMediaLoader {
     }
     
     func save(_ items: [MediaItem], completion: @escaping (Error?) -> Void) {
-        store.deleteCachedMedia { [unowned self] error in
+        store.deleteCachedMedia { [weak self] error in
+            guard let self = self else { return }
             if error == nil {
                 self.store.insert(items, timestamp: self.currentDate(), completion: completion)
             } else {
@@ -103,6 +104,19 @@ class CacheMediaUseCase: XCTestCase {
             store.completeDeletionSuccessfully()
             store.completeInsertionSuccessfully()
         })
+    }
+    
+    func test_save_doesNotDeliverDeletionErrorAfterSUTInstanceHasBeenDeallocated() {
+        let store = MediaStoreSpy()
+        var sut: LocalMediaLoader? = LocalMediaLoader(store: store, currentDate: Date.init)
+        
+        var receivedResults = [Error?]()
+        sut?.save([uniqueItem()]) { receivedResults.append($0) }
+        
+        sut = nil
+        store.completeDeletion(with: anyNSError())
+        
+        XCTAssertTrue(receivedResults.isEmpty)
     }
     
     
