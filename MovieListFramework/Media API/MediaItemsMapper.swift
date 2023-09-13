@@ -7,61 +7,38 @@
 
 import Foundation
 
+internal struct RemoteMediaItem: Decodable {
+    internal let adult: Bool
+    internal let backdrop_path: String?
+    internal let genre_ids: [Int]
+    internal let id: Int
+    internal let media_type: String?
+    internal let original_language: String
+    internal let original_title: String
+    internal let overview: String
+    internal let popularity: Double
+    internal let poster_path: String?
+    internal let release_date: String
+    internal let title: String
+    internal let video: Bool
+    internal let vote_average: Double
+    internal let vote_count: Int
+}
+
 internal class MediaItemsMapper {
     private struct Root: Decodable {
-        let results: [Item]
-        
-        var media: [MediaItem] {
-            return results.map { $0.item }
-        }
-    }
-    
-    
-    private struct Item: Decodable {
-        let adult: Bool
-        let backdrop_path: String?
-        let genre_ids: [Int]
-        let id: Int
-        let media_type: String?
-        let original_language: String
-        let original_title: String
-        let overview: String
-        let popularity: Double
-        let poster_path: String?
-        let release_date: String
-        let title: String
-        let video: Bool
-        let vote_average: Double
-        let vote_count: Int
-        
-        var item: MediaItem {
-            return MediaItem(adult: adult,
-                             backdropPath: backdrop_path,
-                             genreIds: genre_ids,
-                             id: id,
-                             mediaType: media_type,
-                             originalLanguage: original_language,
-                             originalTitle: original_title,
-                             overview: overview,
-                             popularity: popularity,
-                             posterPath: poster_path,
-                             releaseDate: release_date,
-                             title: title,
-                             video: video,
-                             voteAverage: vote_average,
-                             voteCount: vote_count)
-        }
+        let results: [RemoteMediaItem]
     }
     
     private static var OK_200: Int { return 200 }
     
-    internal static func map(_ data: Data, _ response: HTTPURLResponse) -> RemoteMediaLoader.Result {
+    internal static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [RemoteMediaItem] {
         guard response.statusCode == OK_200,
-              let root = try? JSONDecoder().decode(Root.self, from: data)  else {
-            return .failure(RemoteMediaLoader.Error.invalidData)
+              let root = try? JSONDecoder().decode(Root.self, from: data) else {
+            throw RemoteMediaLoader.Error.invalidData
         }
         
-        return .success(root.media)
+        return root.results
     }
     
 }
