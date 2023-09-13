@@ -11,15 +11,17 @@ import MovieListFramework
 
 class LocalMediaLoader {
     private let store: MediaStore
+    private let currentDate: () -> Date
     
-    init(store: MediaStore) {
+    init(store: MediaStore, currentDate: @escaping () -> Date) {
         self.store = store
+        self.currentDate = currentDate
     }
     
     func save(_ items: [MediaItem]) {
         store.deleteCachedMedia { [unowned self] error in
             if error == nil {
-                self.store.insert(items)
+                self.store.insert(items, timestamp: self.currentDate())
             }
         }
     }
@@ -30,7 +32,8 @@ class MediaStore {
     
     var deleteCachedMediaCallCount = 0
     var insertCallCount = 0
-
+    var insertions = [(items: [MediaItem], timestamp: Date)]()
+    
     private var deletionCompletions = [DeletionCompletion]()
     
     func deleteCachedMedia(completion: @escaping DeletionCompletion) {
@@ -46,8 +49,9 @@ class MediaStore {
         deletionCompletions[index](nil)
     }
     
-    func insert(_ items: [MediaItem]) {
+    func insert(_ items: [MediaItem], timestamp: Date) {
         insertCallCount += 1
+        insertions.append((items, timestamp))
     }
 }
 
@@ -89,12 +93,25 @@ class CacheMediaUseCase: XCTestCase {
         XCTAssertEqual(store.insertCallCount, 1)
     }
     
+    func test_save_requestsNewCacheInsertionWithTimestampOnSuccessfulDeletion() {
+        let timestamp = Date()
+        let (sut, store) = makeSUT(currentDate: { timestamp })
+        let items = [uniqueItem(), uniqueItem()]
+        
+        sut.save(items)
+        store.completeDeletionSuccessfully()
+        
+        XCTAssertEqual(store.insertions.count, 1)
+        XCTAssertEqual(store.insertions.first?.items, items)
+        XCTAssertEqual(store.insertions.first?.timestamp, timestamp)
+    }
+    
     
     //MARK: - Helpers
     
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalMediaLoader, store: MediaStore) {
+    private func makeSUT(currentDate: @escaping () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (sut: LocalMediaLoader, store: MediaStore) {
         let store = MediaStore()
-        let sut = LocalMediaLoader(store: store)
+        let sut = LocalMediaLoader(store: store, currentDate: currentDate)
         trackForMemoryLeaks(store, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, store)
