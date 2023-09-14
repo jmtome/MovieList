@@ -30,8 +30,8 @@ public final class LocalMediaLoader {
         }
     }
     
-    public func load() {
-        store.retrieve()
+    public func load(completion: @escaping (Error?) -> Void) {
+        store.retrieve(completion: completion)
     }
     
     private func cache(_ items: [MediaItem], with completion: @escaping (SaveResult) -> Void) {

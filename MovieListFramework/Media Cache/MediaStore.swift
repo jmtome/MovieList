@@ -10,8 +10,9 @@ import Foundation
 public protocol MediaStore {
     typealias DeletionCompletion = (Error?) -> Void
     typealias InsertionCompletion = (Error?) -> Void
+    typealias RetrievalCompletion = (Error?) -> Void
     
     func deleteCachedMedia(completion: @escaping DeletionCompletion)
-    func insert(_ items: [LocalMediaItem], timestamp: Date, completion: @escaping (InsertionCompletion))
-    func retrieve()
+    func insert(_ items: [LocalMediaItem], timestamp: Date, completion: @escaping InsertionCompletion)
+    func retrieve(completion: @escaping RetrievalCompletion)
 }
