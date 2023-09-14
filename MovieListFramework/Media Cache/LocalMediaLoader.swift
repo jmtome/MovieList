@@ -51,8 +51,15 @@ public final class LocalMediaLoader {
     }
     
     public func validateCache() {
-        store.retrieve { _ in }
-        store.deleteCachedMedia { _ in }
+        store.retrieve { [unowned self] result in
+            switch result {
+            case .failure:
+                self.store.deleteCachedMedia { _ in }
+            default:
+                break
+            }
+        }
+
     }
     
     private var maxCacheAgeInDays: Int {
