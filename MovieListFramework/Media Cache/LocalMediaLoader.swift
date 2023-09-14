@@ -12,6 +12,7 @@ public final class LocalMediaLoader {
     private let currentDate: () -> Date
     
     public typealias SaveResult = Error?
+    public typealias LoadResult = LoadMediaResult
     
     public init(store: MediaStore, currentDate: @escaping () -> Date) {
         self.store = store
@@ -30,8 +31,12 @@ public final class LocalMediaLoader {
         }
     }
     
-    public func load(completion: @escaping (Error?) -> Void) {
-        store.retrieve(completion: completion)
+    public func load(completion: @escaping (LoadResult) -> Void) {
+        store.retrieve { error in
+            if let error = error {
+                completion(.failure(error))
+            }
+        }
     }
     
     private func cache(_ items: [MediaItem], with completion: @escaping (SaveResult) -> Void) {
