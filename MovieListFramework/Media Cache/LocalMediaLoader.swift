@@ -39,11 +39,13 @@ public final class LocalMediaLoader {
             switch result {
             case let .failure(error):
                 completion(.failure(error))
+                
             case let .found(items: localItems, timestamp: timestamp) where self.validate(timestamp):
                 completion(.success(localItems.toModels()))
+                
             case .found:
-                self.store.deleteCachedMedia { _ in }
                 completion(.success([]))
+                
             case .empty:
                 completion(.success([]))
             }
@@ -55,8 +57,11 @@ public final class LocalMediaLoader {
             switch result {
             case .failure:
                 self.store.deleteCachedMedia { _ in }
-            default:
-                break
+                
+            case let .found(items: _, timestamp: timestamp) where !self.validate(timestamp):
+                self.store.deleteCachedMedia { _ in }
+
+            case .empty, .found: break
             }
         }
 

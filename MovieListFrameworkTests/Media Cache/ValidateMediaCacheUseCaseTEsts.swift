@@ -1,5 +1,5 @@
 //
-//  ValidateMediaCacheUseCaseTEsts.swift
+//  ValidateMediaCacheUseCaseTests.swift
 //  MovieListFrameworkTests
 //
 //  Created by macbook on 14/09/2023.
@@ -8,7 +8,7 @@
 import XCTest
 import MovieListFramework
 
-final class ValidateMediaCacheUseCaseTEsts: XCTestCase {
+final class ValidateMediaCacheUseCaseTests: XCTestCase {
 
     func test_init_doesNotMessageStoreUponCreation() {
         let (_, store) = makeSUT()
@@ -44,6 +44,30 @@ final class ValidateMediaCacheUseCaseTEsts: XCTestCase {
         store.completeRetrieval(with: items.local, timestamp: lessThanSevenDaysOldTimestamp)
         
         XCTAssertEqual(store.receivedMessages, [.retrieve])
+    }
+    
+    func test_validateCache_deletesSevenDaysOldCache() {
+        let items = uniqueItems()
+        let fixedCurrentDate = Date()
+        let sevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7)
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
+        
+        sut.validateCache()
+        store.completeRetrieval(with: items.local, timestamp: sevenDaysOldTimestamp)
+        
+        XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCachedFeed])
+    }
+    
+    func test_validateCache_deletesMoreThanSevenDaysOldCache() {
+        let items = uniqueItems()
+        let fixedCurrentDate = Date()
+        let moreThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: -1)
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
+        
+        sut.validateCache()
+        store.completeRetrieval(with: items.local, timestamp: moreThanSevenDaysOldTimestamp)
+        
+        XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCachedFeed])
     }
     
     //MARK: - Helperrs
