@@ -33,7 +33,9 @@ public final class LocalMediaLoader {
     }
     
     public func load(completion: @escaping (LoadResult) -> Void) {
-        store.retrieve { [unowned self] result in
+        store.retrieve { [weak self] result in
+            guard let self = self else { return }
+            
             switch result {
             case let .failure(error):
                 self.store.deleteCachedMedia { _ in }
