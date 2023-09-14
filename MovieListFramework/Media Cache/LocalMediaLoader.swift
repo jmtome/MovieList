@@ -11,10 +11,7 @@ public final class LocalMediaLoader {
     private let store: MediaStore
     private let currentDate: () -> Date
     private let calendar = Calendar(identifier: .gregorian)
-    
-    public typealias SaveResult = Error?
-    public typealias LoadResult = LoadMediaResult
-    
+        
     public init(store: MediaStore, currentDate: @escaping () -> Date) {
         self.store = store
         self.currentDate = currentDate
@@ -33,6 +30,8 @@ public final class LocalMediaLoader {
 }
 
 extension LocalMediaLoader {
+    public typealias SaveResult = Error?
+    
     public func save(_ items: [MediaItem], completion: @escaping (SaveResult) -> Void) {
         store.deleteCachedMedia { [weak self] error in
             guard let self = self else { return }
@@ -54,6 +53,8 @@ extension LocalMediaLoader {
 }
 
 extension LocalMediaLoader: MediaLoader {
+    public typealias LoadResult = LoadMediaResult
+
     public func load(completion: @escaping (LoadResult) -> Void) {
         store.retrieve { [weak self] result in
             guard let self = self else { return }
