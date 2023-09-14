@@ -30,6 +30,10 @@ public final class LocalMediaLoader {
         }
     }
     
+    public func load() {
+        store.retrieve()
+    }
+    
     private func cache(_ items: [MediaItem], with completion: @escaping (SaveResult) -> Void) {
         store.insert(items.toLocal(), timestamp: self.currentDate()) { [weak self] error in
             guard self != nil else { return }

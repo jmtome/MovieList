@@ -13,4 +13,5 @@ public protocol MediaStore {
     
     func deleteCachedMedia(completion: @escaping DeletionCompletion)
     func insert(_ items: [LocalMediaItem], timestamp: Date, completion: @escaping (InsertionCompletion))
+    func retrieve()
 }

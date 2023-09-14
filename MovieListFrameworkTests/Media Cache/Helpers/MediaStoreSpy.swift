@@ -12,6 +12,7 @@ class MediaStoreSpy: MediaStore {
     enum ReceivedMessage: Equatable {
         case deleteCachedFeed
         case insert([LocalMediaItem], Date)
+        case retrieve
     }
     
     private(set) var receivedMessages = [ReceivedMessage]()
@@ -43,5 +44,9 @@ class MediaStoreSpy: MediaStore {
     
     func completeInsertionSuccessfully(at index: Int = 0) {
         insertionCompletions[index](nil)
+    }
+    
+    func retrieve() {
+        receivedMessages.append(.retrieve)
     }
 }
