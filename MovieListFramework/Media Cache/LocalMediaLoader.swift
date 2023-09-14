@@ -38,7 +38,6 @@ public final class LocalMediaLoader {
             
             switch result {
             case let .failure(error):
-                self.store.deleteCachedMedia { _ in }
                 completion(.failure(error))
             case let .found(items: localItems, timestamp: timestamp) where self.validate(timestamp):
                 completion(.success(localItems.toModels()))
@@ -49,6 +48,11 @@ public final class LocalMediaLoader {
                 completion(.success([]))
             }
         }
+    }
+    
+    public func validateCache() {
+        store.retrieve { _ in }
+        store.deleteCachedMedia { _ in }
     }
     
     private var maxCacheAgeInDays: Int {
