@@ -42,35 +42,35 @@ final class LoadMediaFromCacheUseCaseTests: XCTestCase {
     }
     
     func test_load_deliversCachedMediaItemsOnLessThanSevenDaysOldCache() {
-        let feed = uniqueItems()
+        let items = uniqueItems()
         let fixedCurrentDate = Date()
         let lessThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         
-        expect(sut, toCompleteWith: .success(feed.models), when: {
-            store.completeRetrieval(with: feed.local, timestamp: lessThanSevenDaysOldTimestamp)
+        expect(sut, toCompleteWith: .success(items.models), when: {
+            store.completeRetrieval(with: items.local, timestamp: lessThanSevenDaysOldTimestamp)
         })
     }
     
     func test_load_deliversNoMediaItemsOnSevenDaysOldCache() {
-        let feed = uniqueItems()
+        let items = uniqueItems()
         let fixedCurrentDate = Date()
         let sevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7)
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         
         expect(sut, toCompleteWith: .success([]), when: {
-            store.completeRetrieval(with: feed.local, timestamp: sevenDaysOldTimestamp)
+            store.completeRetrieval(with: items.local, timestamp: sevenDaysOldTimestamp)
         })
     }
     
     func test_load_deliversNoMediaItemsOnMoreThanSevenDaysOldCache() {
-        let feed = uniqueItems()
+        let items = uniqueItems()
         let fixedCurrentDate = Date()
         let moreThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: -1)
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         
         expect(sut, toCompleteWith: .success([]), when: {
-            store.completeRetrieval(with: feed.local, timestamp: moreThanSevenDaysOldTimestamp)
+            store.completeRetrieval(with: items.local, timestamp: moreThanSevenDaysOldTimestamp)
         })
     }
     
@@ -88,6 +88,18 @@ final class LoadMediaFromCacheUseCaseTests: XCTestCase {
         
         sut.load { _ in }
         store.completeRetrievalWithEmptyCache()
+        
+        XCTAssertEqual(store.receivedMessages, [.retrieve])
+    }
+    
+    func test_load_doesNotDeleteCacheOnLessThanSevenDaysOldCache() {
+        let items = uniqueItems()
+        let fixedCurrentDate = Date()
+        let lessThanSevenDaysOldTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
+        
+        sut.load { _ in }
+        store.completeRetrieval(with: items.local, timestamp: lessThanSevenDaysOldTimestamp)
         
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
