@@ -32,18 +32,25 @@ public final class LocalMediaLoader {
     }
     
     public func load(completion: @escaping (LoadResult) -> Void) {
-        store.retrieve { result in
+        store.retrieve { [unowned self] result in
             switch result {
-            case .empty:
-                completion(.success([]))
             case let .failure(error):
                 completion(.failure(error))
-            case let .found(items: localItems, timestamp: _):
+            case let .found(items: localItems, timestamp: timestamp) where self.validate(timestamp):
                 completion(.success(localItems.toModels()))
+            case .empty, .found:
+                completion(.success([]))
             }
         }
     }
     
+    private func validate(_ timestamp: Date) -> Bool {
+        let calendar = Calendar(identifier: .gregorian)
+        guard let maxCacheAge = calendar.date(byAdding: .day, value: 7, to: timestamp) else {
+            return false
+        }
+        return currentDate() < maxCacheAge
+    }
     private func cache(_ items: [MediaItem], with completion: @escaping (SaveResult) -> Void) {
         store.insert(items.toLocal(), timestamp: self.currentDate()) { [weak self] error in
             guard self != nil else { return }
