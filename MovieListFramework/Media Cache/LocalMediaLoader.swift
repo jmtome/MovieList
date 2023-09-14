@@ -40,7 +40,10 @@ public final class LocalMediaLoader {
                 completion(.failure(error))
             case let .found(items: localItems, timestamp: timestamp) where self.validate(timestamp):
                 completion(.success(localItems.toModels()))
-            case .empty, .found:
+            case .found:
+                self.store.deleteCachedMedia { _ in }
+                completion(.success([]))
+            case .empty:
                 completion(.success([]))
             }
         }
