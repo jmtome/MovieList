@@ -11,7 +11,7 @@ public final class LocalMediaLoader {
     private let store: MediaStore
     private let currentDate: () -> Date
     private let calendar = Calendar(identifier: .gregorian)
-
+    
     public typealias SaveResult = Error?
     public typealias LoadResult = LoadMediaResult
     
@@ -20,6 +20,19 @@ public final class LocalMediaLoader {
         self.currentDate = currentDate
     }
     
+    private var maxCacheAgeInDays: Int {
+        return 7
+    }
+    
+    private func validate(_ timestamp: Date) -> Bool {
+        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
+            return false
+        }
+        return currentDate() < maxCacheAge
+    }
+}
+
+extension LocalMediaLoader {
     public func save(_ items: [MediaItem], completion: @escaping (SaveResult) -> Void) {
         store.deleteCachedMedia { [weak self] error in
             guard let self = self else { return }
@@ -32,6 +45,15 @@ public final class LocalMediaLoader {
         }
     }
     
+    private func cache(_ items: [MediaItem], with completion: @escaping (SaveResult) -> Void) {
+        store.insert(items.toLocal(), timestamp: self.currentDate()) { [weak self] error in
+            guard self != nil else { return }
+            completion(error)
+        }
+    }
+}
+
+extension LocalMediaLoader {
     public func load(completion: @escaping (LoadResult) -> Void) {
         store.retrieve { [weak self] result in
             guard let self = self else { return }
@@ -48,7 +70,9 @@ public final class LocalMediaLoader {
             }
         }
     }
-    
+}
+
+extension LocalMediaLoader {
     public func validateCache() {
         store.retrieve { [weak self] result in
             guard let self = self else { return }
@@ -58,26 +82,9 @@ public final class LocalMediaLoader {
                 
             case let .found(items: _, timestamp: timestamp) where !self.validate(timestamp):
                 self.store.deleteCachedMedia { _ in }
-
+                
             case .empty, .found: break
             }
-        }
-
-    }
-    
-    private var maxCacheAgeInDays: Int {
-        return 7
-    }
-    private func validate(_ timestamp: Date) -> Bool {
-        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
-            return false
-        }
-        return currentDate() < maxCacheAge
-    }
-    private func cache(_ items: [MediaItem], with completion: @escaping (SaveResult) -> Void) {
-        store.insert(items.toLocal(), timestamp: self.currentDate()) { [weak self] error in
-            guard self != nil else { return }
-            completion(error)
         }
     }
 }
