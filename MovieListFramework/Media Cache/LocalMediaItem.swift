@@ -9,7 +9,7 @@ import Foundation
 
 public typealias LocalMediaItem = LocalMovieItem
 
-public struct LocalMovieItem: Equatable {
+public struct LocalMovieItem: Equatable, Codable {
     public let adult: Bool
     public let backdropPath: String?
     public let genreIds: [Int]
