@@ -164,7 +164,9 @@ final class CodableMediaStoreTests: XCTestCase {
     
     //MARK: - Helpers
     
-    private func makeSUT() -> CodableMediaStore {
-        return CodableMediaStore()
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableMediaStore {
+        let sut = CodableMediaStore()
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return sut
     }
 }
