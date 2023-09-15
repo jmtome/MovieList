@@ -97,7 +97,7 @@ final class CodableMediaStoreTests: XCTestCase {
     }
     
     func test_retrieve_deliversEmptyOnEmptyCache() {
-        let sut = CodableMediaStore()
+        let sut = makeSUT()
         let exp = expectation(description: "Wait for cache retrieval")
         
         sut.retrieve { result in
@@ -116,7 +116,7 @@ final class CodableMediaStoreTests: XCTestCase {
     }
     
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
-        let sut = CodableMediaStore()
+        let sut = makeSUT()
         let exp = expectation(description: "Wait for cache retrieval")
         
         sut.retrieve { firstResult in
@@ -137,7 +137,7 @@ final class CodableMediaStoreTests: XCTestCase {
     }
     
     func test_retrieveAfterInsertingToEmptyCache_deliversInsertedValues() {
-        let sut = CodableMediaStore()
+        let sut = makeSUT()
         let items = uniqueItems().local
         let timestamp = Date()
         
@@ -160,5 +160,11 @@ final class CodableMediaStoreTests: XCTestCase {
             }
         }
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    //MARK: - Helpers
+    
+    private func makeSUT() -> CodableMediaStore {
+        return CodableMediaStore()
     }
 }
