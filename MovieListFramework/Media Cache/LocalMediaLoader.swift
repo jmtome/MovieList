@@ -8,13 +8,14 @@
 import Foundation
 
 private final class MediaCachePolicy {
-    private let calendar = Calendar(identifier: .gregorian)
+    private init() {}
+    private static let calendar = Calendar(identifier: .gregorian)
 
-    private var maxCacheAgeInDays: Int {
+    private static var maxCacheAgeInDays: Int {
         return 7
     }
     
-    func validate(_ timestamp: Date, against date: Date) -> Bool {
+    static func validate(_ timestamp: Date, against date: Date) -> Bool {
         guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
             return false
         }
@@ -25,7 +26,6 @@ private final class MediaCachePolicy {
 public final class LocalMediaLoader {
     private let store: MediaStore
     private let currentDate: () -> Date
-    private let cachePolicy = MediaCachePolicy()
         
     public init(store: MediaStore, currentDate: @escaping () -> Date) {
         self.store = store
@@ -67,7 +67,7 @@ extension LocalMediaLoader: MediaLoader {
             case let .failure(error):
                 completion(.failure(error))
                 
-            case let .found(items: localItems, timestamp: timestamp) where self.cachePolicy.validate(timestamp, against: self.currentDate()):
+            case let .found(items: localItems, timestamp: timestamp) where MediaCachePolicy.validate(timestamp, against: self.currentDate()):
                 completion(.success(localItems.toModels()))
                 
             case .found, .empty:
@@ -85,7 +85,7 @@ extension LocalMediaLoader {
             case .failure:
                 self.store.deleteCachedMedia { _ in }
                 
-            case let .found(items: _, timestamp: timestamp) where !self.cachePolicy.validate(timestamp, against: self.currentDate()):
+            case let .found(items: _, timestamp: timestamp) where !MediaCachePolicy.validate(timestamp, against: self.currentDate()):
                 self.store.deleteCachedMedia { _ in }
                 
             case .empty, .found: break
