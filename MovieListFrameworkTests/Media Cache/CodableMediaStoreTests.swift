@@ -150,6 +150,18 @@ final class CodableMediaStoreTests: XCTestCase {
         expect(sut, toRetrieve: .failure(anyNSError()))
     }
     
+    func test_retrieve_hasNoSideEffectsOnFailure() {
+        //Given a storeURL and an SUT created with that storeURL
+        let storeURL = testSpecificStoreURL()
+        let sut = makeSUT(storeURL: storeURL)
+        
+        //When we save some invalid data to the storeURL
+        try! "invalid data".write(to: storeURL, atomically: false, encoding: .utf8)
+        
+        //Then we expect to retrieve a failure, because we cannot decode that invalid data.
+        expect(sut, toRetrieveTwice: .failure(anyNSError()))
+    }
+    
     //MARK: - Helpers
     
     private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> CodableMediaStore {
