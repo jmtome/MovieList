@@ -8,7 +8,7 @@
 import XCTest
 import MovieListFramework
 
-class CodableMediaStore {
+class CodableMediaStore: MediaStore {
     private struct Cache: Codable {
         let items: [CodableMediaItem]
         let timestamp: Date
@@ -64,7 +64,7 @@ class CodableMediaStore {
         self.storeURL = storeURL
     }
     
-    func deleteCachedMedia(completion: @escaping MediaStore.DeletionCompletion) {
+    func deleteCachedMedia(completion: @escaping DeletionCompletion) {
         guard FileManager.default.fileExists(atPath: storeURL.path()) else {
             return completion(nil)
         }
@@ -76,7 +76,7 @@ class CodableMediaStore {
         }
     }
     
-    func insert(_ items: [LocalMediaItem], timestamp: Date, completion: @escaping MediaStore.InsertionCompletion) {
+    func insert(_ items: [LocalMediaItem], timestamp: Date, completion: @escaping InsertionCompletion) {
         do {
             let encoder = JSONEncoder()
             let cache = Cache(items: items.map(CodableMediaItem.init), timestamp: timestamp)
@@ -88,7 +88,7 @@ class CodableMediaStore {
         }
     }
     
-    func retrieve(completion: @escaping MediaStore.RetrievalCompletion) {
+    func retrieve(completion: @escaping RetrievalCompletion) {
         guard let data = try? Data(contentsOf: storeURL) else {
             return completion(.empty)
         }
