@@ -57,7 +57,7 @@ public class CodableMediaStore: MediaStore {
         }
     }
     
-    private let queue = DispatchQueue(label: "\(CodableMediaStore.self)Queue", qos: .userInitiated)
+    private let queue = DispatchQueue(label: "\(CodableMediaStore.self)Queue", qos: .userInitiated, attributes: .concurrent)
     
     private let storeURL: URL
     
@@ -67,7 +67,7 @@ public class CodableMediaStore: MediaStore {
     
     public func deleteCachedMedia(completion: @escaping DeletionCompletion) {
         let storeURL = self.storeURL
-        queue.async {
+        queue.async(flags: .barrier) {
             guard FileManager.default.fileExists(atPath: storeURL.path()) else {
                 return completion(nil)
             }
@@ -82,7 +82,7 @@ public class CodableMediaStore: MediaStore {
     
     public func insert(_ items: [LocalMediaItem], timestamp: Date, completion: @escaping InsertionCompletion) {
         let storeURL = self.storeURL
-        queue.async {
+        queue.async(flags: .barrier) {
             do {
                 let encoder = JSONEncoder()
                 let cache = Cache(items: items.map(CodableMediaItem.init), timestamp: timestamp)
