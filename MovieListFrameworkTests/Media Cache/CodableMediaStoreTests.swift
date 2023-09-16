@@ -64,6 +64,10 @@ class CodableMediaStore {
         self.storeURL = storeURL
     }
     
+    func deleteCachedFeed(completion: @escaping MediaStore.DeletionCompletion) {
+        completion(nil)
+    }
+    
     func insert(_ items: [LocalMediaItem], timestamp: Date, completion: @escaping MediaStore.InsertionCompletion) {
         do {
             let encoder = JSONEncoder()
@@ -74,7 +78,6 @@ class CodableMediaStore {
         } catch {
             completion(error)
         }
-        
     }
     
     func retrieve(completion: @escaping MediaStore.RetrievalCompletion) {
@@ -190,6 +193,19 @@ final class CodableMediaStoreTests: XCTestCase {
         let insertionError = insert((items, timestamp), to: sut)
         
         XCTAssertNotNil(insertionError, "Expected cache insertion to fail with an error")
+        expect(sut, toRetrieve: .empty)
+    }
+    
+    func test_delete_hasNoSideEffectsOnEmptyCache() {
+        let sut = makeSUT()
+        let exp = expectation(description: "Wait for cache deletion")
+        
+        sut.deleteCachedFeed { deletionError in
+            XCTAssertNil(deletionError, "Expected empty cache deletion to succeed")
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+        
         expect(sut, toRetrieve: .empty)
     }
     
