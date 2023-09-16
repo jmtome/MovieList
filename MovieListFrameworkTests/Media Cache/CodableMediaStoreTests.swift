@@ -106,23 +106,8 @@ final class CodableMediaStoreTests: XCTestCase {
     
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
-        let exp = expectation(description: "Wait for cache retrieval")
         
-        sut.retrieve { firstResult in
-            sut.retrieve { secondResult in
-                switch (firstResult, secondResult) {
-                case (.empty, .empty):
-                    break
-                    
-                default:
-                    XCTFail("Expected retrieving twice from empty cache to deliver same empty result, got \(firstResult) and \(secondResult) instead")
-                }
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
+        expect(sut, toRetrieveTwice: .empty)
     }
     
     func test_retrieveAfterInsertingToEmptyCache_deliversInsertedValues() {
@@ -148,29 +133,14 @@ final class CodableMediaStoreTests: XCTestCase {
         let items = uniqueItems().local
         let timestamp = Date()
         
-        let exp = expectation(description: "Wait for cache retrieval")
-        
+        let exp = expectation(description: "Wait for cache insertion")
         sut.insert(items, timestamp: timestamp) { insertionError in
             XCTAssertNil(insertionError, "Expected feed to be inserted successfully")
-            
-            sut.retrieve { firstResult in
-                sut.retrieve { secondResult in
-                    switch (firstResult, secondResult) {
-                    case let (.found(firstFoundItems, firstFoundTimestamp), .found(secondFoundItems, secondFoundTimestamp)):
-                        XCTAssertEqual(firstFoundItems, items)
-                        XCTAssertEqual(firstFoundTimestamp, timestamp)
-                        
-                        XCTAssertEqual(secondFoundItems, items)
-                        XCTAssertEqual(secondFoundTimestamp, timestamp)
-                        
-                    default:
-                        XCTFail("Expected retrieving twice from non empty cache to deliver same found result with items \(items) and timestamp \(timestamp), got \(firstResult) and \(secondResult) instead")
-                    }
-                    exp.fulfill()
-                }
-            }
+            exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
+        
+        expect(sut, toRetrieveTwice: .found(items: items, timestamp: timestamp))
     }
     
     //MARK: - Helpers
@@ -179,6 +149,11 @@ final class CodableMediaStoreTests: XCTestCase {
         let sut = CodableMediaStore(storeURL: testSpecificStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
+    }
+    
+    private func expect(_ sut: CodableMediaStore, toRetrieveTwice expectedResult: RetrieveCachedMediaItemsResult, file: StaticString = #file, line: UInt = #line) {
+        expect(sut, toRetrieve: expectedResult, file: file, line: line)
+        expect(sut, toRetrieve: expectedResult, file: file, line: line)
     }
     
     private func expect(_ sut: CodableMediaStore, toRetrieve expectedResult: RetrieveCachedMediaItemsResult, file: StaticString = #file, line: UInt = #line) {
