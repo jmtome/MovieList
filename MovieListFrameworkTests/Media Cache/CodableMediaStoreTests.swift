@@ -65,12 +65,16 @@ class CodableMediaStore {
     }
     
     func insert(_ items: [LocalMediaItem], timestamp: Date, completion: @escaping MediaStore.InsertionCompletion) {
-        let encoder = JSONEncoder()
-        let cache = Cache(items: items.map(CodableMediaItem.init), timestamp: timestamp)
-        let encoded = try! encoder.encode(cache)
-        try! encoded.write(to: storeURL)
+        do {
+            let encoder = JSONEncoder()
+            let cache = Cache(items: items.map(CodableMediaItem.init), timestamp: timestamp)
+            let encoded = try encoder.encode(cache)
+            try encoded.write(to: storeURL)
+            completion(nil)
+        } catch {
+            completion(error)
+        }
         
-        completion(nil)
     }
     
     func retrieve(completion: @escaping MediaStore.RetrievalCompletion) {
@@ -175,6 +179,18 @@ final class CodableMediaStoreTests: XCTestCase {
         XCTAssertNil(latestInsertionError, "Expected to override cache successfully")
         expect(sut, toRetrieve: .found(items: latestMediaItems, timestamp: latestTimestamp))
         
+    }
+    
+    func test_insert_deliversErrorOnInsertionError() {
+        let invalidStoreURL = URL(string: "invalid://store-url")!
+        let sut = makeSUT(storeURL: invalidStoreURL)
+        let items = uniqueItems().local
+        let timestamp = Date()
+        
+        let insertionError = insert((items, timestamp), to: sut)
+        
+        XCTAssertNotNil(insertionError, "Expected cache insertion to fail with an error")
+        expect(sut, toRetrieve: .empty)
     }
     
     //MARK: - Helpers
