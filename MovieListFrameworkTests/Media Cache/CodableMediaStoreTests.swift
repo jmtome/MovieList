@@ -162,6 +162,21 @@ final class CodableMediaStoreTests: XCTestCase {
         expect(sut, toRetrieveTwice: .failure(anyNSError()))
     }
     
+    func test_insert_overridesPreviouslyInsertedCacheValues() {
+        let sut = makeSUT()
+        
+        let firstInsertionError = insert((uniqueItems().local, Date()), to: sut)
+        XCTAssertNil(firstInsertionError, "Expected to insert cache successfully")
+        
+        let latestMediaItems = uniqueItems().local
+        let latestTimestamp = Date()
+        let latestInsertionError = insert((latestMediaItems, latestTimestamp), to: sut)
+        
+        XCTAssertNil(latestInsertionError, "Expected to override cache successfully")
+        expect(sut, toRetrieve: .found(items: latestMediaItems, timestamp: latestTimestamp))
+        
+    }
+    
     //MARK: - Helpers
     
     private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> CodableMediaStore {
@@ -175,13 +190,16 @@ final class CodableMediaStoreTests: XCTestCase {
         expect(sut, toRetrieve: expectedResult, file: file, line: line)
     }
     
-    private func insert(_ cache: (items: [LocalMediaItem], timestamp: Date), to sut: CodableMediaStore) {
+    @discardableResult
+    private func insert(_ cache: (items: [LocalMediaItem], timestamp: Date), to sut: CodableMediaStore) -> Error? {
         let exp = expectation(description: "Wait for cache insertion")
-        sut.insert(cache.items, timestamp: cache.timestamp) { insertionError in
-            XCTAssertNil(insertionError, "Expected feed to be inserted successfully")
+        var insertionError: Error?
+        sut.insert(cache.items, timestamp: cache.timestamp) { receivedInsertionError in
+            insertionError = receivedInsertionError
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
+        return insertionError
     }
     
     private func expect(_ sut: CodableMediaStore, toRetrieve expectedResult: RetrieveCachedMediaItemsResult, file: StaticString = #file, line: UInt = #line) {
