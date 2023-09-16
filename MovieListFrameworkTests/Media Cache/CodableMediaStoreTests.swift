@@ -236,18 +236,18 @@ final class CodableMediaStoreTests: XCTestCase {
     
     //MARK: - Helpers
     
-    private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> CodableMediaStore {
+    private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> MediaStore {
         let sut = CodableMediaStore(storeURL: storeURL ?? testSpecificStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
     
-    private func expect(_ sut: CodableMediaStore, toRetrieveTwice expectedResult: RetrieveCachedMediaItemsResult, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: MediaStore, toRetrieveTwice expectedResult: RetrieveCachedMediaItemsResult, file: StaticString = #file, line: UInt = #line) {
         expect(sut, toRetrieve: expectedResult, file: file, line: line)
         expect(sut, toRetrieve: expectedResult, file: file, line: line)
     }
     
-    private func deleteCache(from sut: CodableMediaStore) -> Error? {
+    private func deleteCache(from sut: MediaStore) -> Error? {
         let exp = expectation(description: "Wait for cache deletion")
         var deletionError: Error?
         sut.deleteCachedMedia { receivedDeletionError in
@@ -259,7 +259,7 @@ final class CodableMediaStoreTests: XCTestCase {
     }
     
     @discardableResult
-    private func insert(_ cache: (items: [LocalMediaItem], timestamp: Date), to sut: CodableMediaStore) -> Error? {
+    private func insert(_ cache: (items: [LocalMediaItem], timestamp: Date), to sut: MediaStore) -> Error? {
         let exp = expectation(description: "Wait for cache insertion")
         var insertionError: Error?
         sut.insert(cache.items, timestamp: cache.timestamp) { receivedInsertionError in
@@ -270,7 +270,7 @@ final class CodableMediaStoreTests: XCTestCase {
         return insertionError
     }
     
-    private func expect(_ sut: CodableMediaStore, toRetrieve expectedResult: RetrieveCachedMediaItemsResult, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: MediaStore, toRetrieve expectedResult: RetrieveCachedMediaItemsResult, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Wait for cache retrieval")
         
         sut.retrieve { retrievedResult in
