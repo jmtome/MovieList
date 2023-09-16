@@ -100,21 +100,8 @@ final class CodableMediaStoreTests: XCTestCase {
     
     func test_retrieve_deliversEmptyOnEmptyCache() {
         let sut = makeSUT()
-        let exp = expectation(description: "Wait for cache retrieval")
         
-        sut.retrieve { result in
-            switch result {
-            case .empty:
-                break
-                
-            default:
-                XCTFail("Expected empty result, got \(result) instead")
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
+        expect(sut, toRetrieve: .empty)
     }
     
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
@@ -139,29 +126,21 @@ final class CodableMediaStoreTests: XCTestCase {
     }
     
     func test_retrieveAfterInsertingToEmptyCache_deliversInsertedValues() {
+        //Given the SUT, the items, and the timestamp
         let sut = makeSUT()
         let items = uniqueItems().local
         let timestamp = Date()
         
+        //When the SUT inserts the items into the cache without error
         let exp = expectation(description: "Wait for cache retrieval")
-        
         sut.insert(items, timestamp: timestamp) { insertionError in
             XCTAssertNil(insertionError, "Expected feed to be inserted successfully")
-            
-            sut.retrieve { retrieveResult in
-                switch retrieveResult {
-                case let .found(items: retrievedMediaItems, timestamp: retrievedTimestamp):
-                    XCTAssertEqual(retrievedMediaItems, items)
-                    XCTAssertEqual(retrievedTimestamp, timestamp)
-                    
-                default:
-                    XCTFail("Expected found result with feed \(items) and timestamp \(timestamp) got \(retrieveResult) instead")
-                }
-                
-                exp.fulfill()
-            }
+            exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
+        
+        //Then we expect that when the SUT retrieves, it retrieves the exact same items and timestamp we just inserted
+        expect(sut, toRetrieve: .found(items: items, timestamp: timestamp))
     }
     
     func test_retrieveHasNoSideEffectsOnNonEmptyCache() {
@@ -200,6 +179,27 @@ final class CodableMediaStoreTests: XCTestCase {
         let sut = CodableMediaStore(storeURL: testSpecificStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
+    }
+    
+    private func expect(_ sut: CodableMediaStore, toRetrieve expectedResult: RetrieveCachedMediaItemsResult, file: StaticString = #file, line: UInt = #line) {
+        let exp = expectation(description: "Wait for cache retrieval")
+        
+        sut.retrieve { retrievedResult in
+            switch (expectedResult, retrievedResult) {
+            case (.empty, .empty):
+                break
+                
+            case let (.found(expectedItems, expectedTimestamp), .found(retrievedItems, retrievedTimestamp)):
+                XCTAssertEqual(expectedItems, retrievedItems, file: file, line: line)
+                XCTAssertEqual(expectedTimestamp, retrievedTimestamp, file: file, line: line)
+                
+            default:
+                XCTFail("Expected to retrieve \(expectedResult), got \(retrievedResult) instead", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
     }
     
     private func testSpecificStoreURL() -> URL {
