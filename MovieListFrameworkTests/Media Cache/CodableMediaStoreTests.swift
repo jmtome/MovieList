@@ -64,13 +64,16 @@ class CodableMediaStore {
         self.storeURL = storeURL
     }
     
-    func deleteCachedFeed(completion: @escaping MediaStore.DeletionCompletion) {
+    func deleteCachedMedia(completion: @escaping MediaStore.DeletionCompletion) {
         guard FileManager.default.fileExists(atPath: storeURL.path()) else {
             return completion(nil)
         }
-        
-        try! FileManager.default.removeItem(at: storeURL)
-        completion(nil)
+        do {
+            try FileManager.default.removeItem(at: storeURL)
+            completion(nil)
+        } catch {
+            completion(error)
+        }
     }
     
     func insert(_ items: [LocalMediaItem], timestamp: Date, completion: @escaping MediaStore.InsertionCompletion) {
@@ -220,6 +223,17 @@ final class CodableMediaStoreTests: XCTestCase {
         expect(sut, toRetrieve: .empty)
     }
     
+    
+    func test_delete_deliversErrorOnDeletionError() {
+        let noDeletePermissionURL = cachesDirectory()
+        let sut = makeSUT(storeURL: noDeletePermissionURL)
+        
+        let deletionError = deleteCache(from: sut)
+        
+        XCTAssertNotNil(deletionError, "Expected cache deletion to fail")
+        expect(sut, toRetrieve: .empty)
+    }
+    
     //MARK: - Helpers
     
     private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> CodableMediaStore {
@@ -236,7 +250,7 @@ final class CodableMediaStoreTests: XCTestCase {
     private func deleteCache(from sut: CodableMediaStore) -> Error? {
         let exp = expectation(description: "Wait for cache deletion")
         var deletionError: Error?
-        sut.deleteCachedFeed { receivedDeletionError in
+        sut.deleteCachedMedia { receivedDeletionError in
             deletionError = receivedDeletionError
             exp.fulfill()
         }
@@ -278,7 +292,11 @@ final class CodableMediaStoreTests: XCTestCase {
     }
     
     private func testSpecificStoreURL() -> URL {
-        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appending(path: "\(type(of: self)).store")
+        return cachesDirectory().appendingPathComponent("\(type(of: self)).store")
+    }
+    
+    private func cachesDirectory() -> URL {
+        return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
     }
     
     private func setupEmptyStoreState() {
