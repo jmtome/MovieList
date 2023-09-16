@@ -117,13 +117,8 @@ final class CodableMediaStoreTests: XCTestCase {
         let timestamp = Date()
         
         //When the SUT inserts the items into the cache without error
-        let exp = expectation(description: "Wait for cache retrieval")
-        sut.insert(items, timestamp: timestamp) { insertionError in
-            XCTAssertNil(insertionError, "Expected feed to be inserted successfully")
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
-        
+        insert((items, timestamp), to: sut)
+
         //Then we expect that when the SUT retrieves, it retrieves the exact same items and timestamp we just inserted
         expect(sut, toRetrieve: .found(items: items, timestamp: timestamp))
     }
@@ -133,12 +128,7 @@ final class CodableMediaStoreTests: XCTestCase {
         let items = uniqueItems().local
         let timestamp = Date()
         
-        let exp = expectation(description: "Wait for cache insertion")
-        sut.insert(items, timestamp: timestamp) { insertionError in
-            XCTAssertNil(insertionError, "Expected feed to be inserted successfully")
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
+        insert((items, timestamp), to: sut)
         
         expect(sut, toRetrieveTwice: .found(items: items, timestamp: timestamp))
     }
@@ -154,6 +144,15 @@ final class CodableMediaStoreTests: XCTestCase {
     private func expect(_ sut: CodableMediaStore, toRetrieveTwice expectedResult: RetrieveCachedMediaItemsResult, file: StaticString = #file, line: UInt = #line) {
         expect(sut, toRetrieve: expectedResult, file: file, line: line)
         expect(sut, toRetrieve: expectedResult, file: file, line: line)
+    }
+    
+    private func insert(_ cache: (items: [LocalMediaItem], timestamp: Date), to sut: CodableMediaStore) {
+        let exp = expectation(description: "Wait for cache insertion")
+        sut.insert(cache.items, timestamp: cache.timestamp) { insertionError in
+            XCTAssertNil(insertionError, "Expected feed to be inserted successfully")
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
     }
     
     private func expect(_ sut: CodableMediaStore, toRetrieve expectedResult: RetrieveCachedMediaItemsResult, file: StaticString = #file, line: UInt = #line) {
