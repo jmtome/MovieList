@@ -110,7 +110,7 @@ final class CodableMediaStoreTests: XCTestCase {
         expect(sut, toRetrieveTwice: .empty)
     }
     
-    func test_retrieveAfterInsertingToEmptyCache_deliversInsertedValues() {
+    func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
         //Given the SUT, the items, and the timestamp
         let sut = makeSUT()
         let items = uniqueItems().local
@@ -123,7 +123,7 @@ final class CodableMediaStoreTests: XCTestCase {
         expect(sut, toRetrieve: .found(items: items, timestamp: timestamp))
     }
     
-    func test_retrieveHasNoSideEffectsOnNonEmptyCache() {
+    func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
         let sut = makeSUT()
         let items = uniqueItems().local
         let timestamp = Date()
