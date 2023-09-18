@@ -8,7 +8,7 @@
 import XCTest
 import MovieListFramework
 
-final class CodableMediaStoreTests: XCTestCase {
+final class CodableMediaStoreTests: XCTestCase, FailableMediaStoreSpecs {
     
     override func setUp() {
         super.setUp()
