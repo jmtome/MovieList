@@ -1,5 +1,5 @@
 //
-//  CTestCase+FailableDeleteMediaStoreSpecs.swift
+//  XCTestCase+FailableDeleteMediaStoreSpecs.swift
 //  MovieListFrameworkTests
 //
 //  Created by macbook on 18/09/2023.
