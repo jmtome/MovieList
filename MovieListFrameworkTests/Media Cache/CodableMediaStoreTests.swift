@@ -55,7 +55,7 @@ final class CodableMediaStoreTests: XCTestCase, FailableMediaStoreSpecs {
         try! "invalid data".write(to: storeURL, atomically: false, encoding: .utf8)
         
         //Then we expect to retrieve a failure, because we cannot decode that invalid data.
-        expect(sut, toRetrieve: .failure(anyNSError()))
+        assertThatRetrieveDeliversFailureOnRetrievalError(on: sut)
     }
     
     func test_retrieve_hasNoSideEffectsOnFailure() {
@@ -67,7 +67,7 @@ final class CodableMediaStoreTests: XCTestCase, FailableMediaStoreSpecs {
         try! "invalid data".write(to: storeURL, atomically: false, encoding: .utf8)
         
         //Then we expect to retrieve a failure, because we cannot decode that invalid data.
-        expect(sut, toRetrieveTwice: .failure(anyNSError()))
+        assertThatRetrieveHasNoSideEffectsOnFailure(on: sut)
     }
     
     func test_insert_deliversNoErrorOnEmptyCache() {
