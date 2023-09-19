@@ -41,10 +41,7 @@ public final class CoreDataMediaStore: MediaStore {
         let context = self.context
         context.perform {
             do {
-                let request = NSFetchRequest<ManagedCache>(entityName: ManagedCache.entity().name!)
-                request.returnsObjectsAsFaults = false
-                
-                guard let cache = try context.fetch(request).first else {
+                guard let cache = try ManagedCache.find(in: context) else {
                     return completion(.empty)
                 }
                 
@@ -93,6 +90,12 @@ private class ManagedCache: NSManagedObject {
     
     var localItems: [LocalMediaItem] {
         return items.compactMap { ($0 as? ManagedMediaItem)?.local }
+    }
+    
+    static func find(in context: NSManagedObjectContext) throws -> ManagedCache? {
+        let request = NSFetchRequest<ManagedCache>(entityName: entity().name!)
+        request.returnsObjectsAsFaults = false
+        return try context.fetch(request).first
     }
 }
 
