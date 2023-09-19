@@ -23,6 +23,41 @@ protocol MediaDetailInteractorInputProtocol: AnyObject {
     func fetchMediaDetails(for mediaTypeId: MediaTypeID)
 }
 
+//Called by Presenter, Implemented by MediaDetailFavoritesInteractor
+protocol MediaDetailInteractorFavoriteInputProtocol: AnyObject {
+    func isMovieInFavorites(media: MediaViewModel) -> Bool
+    func handleFavoriteAction(for media: MediaViewModel)
+}
+
+protocol MediaDetailFavoriteOutputProtocol: AnyObject {
+    func presentMediaRemovedFromFavorites()
+    func presentMediaAddedToFavorites()
+}
+
+class MediaDetailFavoritesInteractor {
+    private var favoritesRepository: FavoritesRepository
+    weak var output: MediaDetailFavoriteOutputProtocol?
+    
+    init(favoritesRepository: FavoritesRepository) {
+        self.favoritesRepository = favoritesRepository
+    }
+}
+
+extension MediaDetailFavoritesInteractor: MediaDetailInteractorFavoriteInputProtocol {
+    func handleFavoriteAction(for media: MediaViewModel) {
+        if isMovieInFavorites(media: media) {
+            favoritesRepository.removeFavorite(media: media)
+            output?.presentMediaRemovedFromFavorites()
+        } else {
+            favoritesRepository.saveFavorite(media: media)
+            output?.presentMediaAddedToFavorites()
+        }
+    }
+    func isMovieInFavorites(media: MediaViewModel) -> Bool {
+        favoritesRepository.isMediaInFavorites(media: media)
+    }
+    
+}
 
 class MediaDetailInteractor {
     weak var output: MediaDetailInteractorOutputProtocol?

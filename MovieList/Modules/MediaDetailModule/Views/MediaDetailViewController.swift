@@ -37,7 +37,6 @@ class MediaDetailViewController: UIViewController {
     }()
     
     
-    var inFavorites = false
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Testing title"
@@ -53,14 +52,13 @@ class MediaDetailViewController: UIViewController {
     //para poder favoritear tendria que pasar el modulo de favoritos, investigar como es la forma correcta de inyeccion de dependencias , ver el video de Essential
     //Developer, creo que hablan de esto.
     func updateNavBar() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: inFavorites ? "star.fill" : "star"), style: .plain, target: self, action: #selector(pressedFavorite))
+        let isFav = presenter.isMovieInFavorites()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: isFav ? "star.fill" : "star"), style: .plain, target: self, action: #selector(pressedFavorite))
 
     }
     @objc func pressedFavorite() {
-        print("infavs: \(inFavorites)")
-        inFavorites.toggle()
-        print("infavs: \(inFavorites)")
-        updateNavBar()
+        presenter.handleFavoriteAction()
+        presentFavoriteAction(added: presenter.isMovieInFavorites())
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -112,11 +110,7 @@ class MediaDetailViewController: UIViewController {
         // this is important for scrolling
         scrollViewContainer.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
         
-        
-       
         view.backgroundColor = .softDark
-
-
     }
     
     private func updateCarousel() {
@@ -132,8 +126,7 @@ extension MediaDetailViewController: MediaDetailPresenterOutputProtocol {
         updateCarousel()
         DispatchQueue.mainAsyncIfNeeded { [weak self] in
             self?.title = self?.presenter.title
+            self?.updateNavBar()
         }
     }
-    
-    
 }

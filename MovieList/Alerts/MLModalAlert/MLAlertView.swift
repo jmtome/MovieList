@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+//
 class MLAlertView: UIViewController {
     
     let containerView = MLAlertContainerView()
@@ -19,6 +19,12 @@ class MLAlertView: UIViewController {
     var buttonTitle: String?
     
     let padding: CGFloat = 20
+    
+    var alertController: UIAlertController?
+    var alertTimer: Timer?
+    var remainingTime = 0
+//    var baseMessage: String?
+
     
     
     init(title: String, message: String, buttonTitle: String) {

@@ -124,12 +124,35 @@ extension MainScreenViewController {
     private func setupFilterMenu() {
         var menuActions: [UIAction] {
             SortingOption.allCases.map { option in
-                UIAction(title: option.title, image: option.image , identifier: UIAction.Identifier(option.identifier), handler: {[weak self] _ in
-                    self?.presenter.sortMedia(with: option)
+                UIAction(title: option.title,
+                         image: presenter.sortOption.title == option.title ? UIImage(systemName: presenter.isAscending ? "chevron.up" : "chevron.down") : nil ,
+                         identifier: UIAction.Identifier(option.identifier),
+                         state: presenter.sortOption.title == option.title ? .on : .off,
+                         handler: {[weak self] action in
+                    guard let self = self else { return }
+                    
+                    guard presenter.sortOption.title != action.title else {
+                        presenter.isAscending = !presenter.isAscending
+                        self.presenter.sortMedia(with: option)
+                        return
+                    }
+                    
+                    SortingOption.allCases.forEach { category in
+                        if action.title == category.title {
+                            self.presenter.sortOption = category
+                            self.presenter.isAscending = true
+                        }
+                    }
+                    self.presenter.sortMedia(with: option)
                 })
             }
         }
-        let demoMenu = UIMenu(title: "",options: [.displayInline], children: menuActions)
+        
+        let demoMenu = UIMenu(title: "",options: [.displayInline], children: [
+            UIDeferredMenuElement.uncached { completion in
+                completion(menuActions)
+            }
+        ])
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sort", image: UIImage(systemName: "ellipsis.circle"), primaryAction: nil, menu: demoMenu)
     }
 }
@@ -141,11 +164,11 @@ extension MainScreenViewController {
 //Called by Presenter, Instantiated by MainScreenViewController
 extension MainScreenViewController: MainScreenPresenterOutputProtocol {
     func showAlertFavoritedMedia() {
-        presentMLAlert(title: "Favorites", message: "Media has been added to Favorites", buttonTitle: "Dismiss")
+        presentFavoriteAction(added: true)
     }
     
     func showAlertUnfavoritedMedia() {
-        presentMLAlert(title: "Favorites", message: "Media has been removed from Favorites", buttonTitle: "Dismiss")
+        presentFavoriteAction(added: false)
     }
     
     func showError(_ error: Error) {
