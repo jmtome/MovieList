@@ -40,6 +40,7 @@
 		FA3FA4642AA8FD8C00135863 /* RemoteMediaLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3FA4632AA8FD8C00135863 /* RemoteMediaLoader.swift */; };
 		FA49D69F2AB9251400DBC597 /* CoreDataMediaStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA49D69E2AB9251400DBC597 /* CoreDataMediaStoreTests.swift */; };
 		FA49D6A12AB9317100DBC597 /* CoreDataMediaStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA49D6A02AB9317100DBC597 /* CoreDataMediaStore.swift */; };
+		FA49D6A72AB93F0800DBC597 /* MediaStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FA49D6A52AB93F0800DBC597 /* MediaStore.xcdatamodeld */; };
 		FA4E00D12A201192002798A8 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4E00D02A201192002798A8 /* Movie.swift */; };
 		FA4E00D22A201192002798A8 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4E00D02A201192002798A8 /* Movie.swift */; };
 		FA4E00D42A2011D5002798A8 /* TVShow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4E00D32A2011D4002798A8 /* TVShow.swift */; };
@@ -191,6 +192,7 @@
 		FA3FA4632AA8FD8C00135863 /* RemoteMediaLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteMediaLoader.swift; sourceTree = "<group>"; };
 		FA49D69E2AB9251400DBC597 /* CoreDataMediaStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataMediaStoreTests.swift; sourceTree = "<group>"; };
 		FA49D6A02AB9317100DBC597 /* CoreDataMediaStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataMediaStore.swift; sourceTree = "<group>"; };
+		FA49D6A62AB93F0800DBC597 /* MediaStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MediaStore.xcdatamodel; sourceTree = "<group>"; };
 		FA4E00D02A201192002798A8 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		FA4E00D32A2011D4002798A8 /* TVShow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShow.swift; sourceTree = "<group>"; };
 		FA4F9B292A250063007CC544 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
@@ -415,6 +417,15 @@
 			path = "Media API";
 			sourceTree = "<group>";
 		};
+		FA49D6B82AB94C8F00DBC597 /* Core Data Store */ = {
+			isa = PBXGroup;
+			children = (
+				FA49D6A52AB93F0800DBC597 /* MediaStore.xcdatamodeld */,
+				FA49D6A02AB9317100DBC597 /* CoreDataMediaStore.swift */,
+			);
+			path = "Core Data Store";
+			sourceTree = "<group>";
+		};
 		FA543FC42AB11D6400702965 /* Media Cache */ = {
 			isa = PBXGroup;
 			children = (
@@ -432,12 +443,12 @@
 		FA543FC82AB250E700702965 /* Media Cache */ = {
 			isa = PBXGroup;
 			children = (
+				FA49D6B82AB94C8F00DBC597 /* Core Data Store */,
 				FA543FCB2AB2520300702965 /* MediaStore.swift */,
 				FA543FC92AB250FF00702965 /* LocalMediaLoader.swift */,
 				FA543FD12AB26B0300702965 /* LocalMediaItem.swift */,
 				FAC5738D2AB3DFA900FF41EE /* MediaCachePolicy.swift */,
 				FA9470BC2AB6506100C49F0F /* CodableMediaStore.swift */,
-				FA49D6A02AB9317100DBC597 /* CoreDataMediaStore.swift */,
 			);
 			path = "Media Cache";
 			sourceTree = "<group>";
@@ -961,6 +972,7 @@
 				FA543FD22AB26B0300702965 /* LocalMediaItem.swift in Sources */,
 				FA3FA45E2AA7E70E00135863 /* MediaLoader.swift in Sources */,
 				FAFAEF482AAFB7800054B653 /* URLSessionHTTPClient.swift in Sources */,
+				FA49D6A72AB93F0800DBC597 /* MediaStore.xcdatamodeld in Sources */,
 				FAC5738E2AB3DFA900FF41EE /* MediaCachePolicy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1490,6 +1502,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		FA49D6A52AB93F0800DBC597 /* MediaStore.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				FA49D6A62AB93F0800DBC597 /* MediaStore.xcdatamodel */,
+			);
+			currentVersion = FA49D6A62AB93F0800DBC597 /* MediaStore.xcdatamodel */;
+			path = MediaStore.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = FA1709C32A02E8A700E1B1ED /* Project object */;
 }
