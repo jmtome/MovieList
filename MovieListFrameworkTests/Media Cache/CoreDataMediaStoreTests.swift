@@ -52,7 +52,9 @@ final class CoreDataMediaStoreTests: XCTestCase, MediaStoreSpecs {
     }
     
     func test_delete_deliversNoErrorOnEmptyCache() {
+        let sut = makeSUT()
         
+        assertThatDeleteDeliversNoErrorOnEmptyCache(on: sut)
     }
     
     func test_delete_hasNoSideEffectsOnEmptyCache() {

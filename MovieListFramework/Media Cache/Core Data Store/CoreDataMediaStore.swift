@@ -18,7 +18,7 @@ public final class CoreDataMediaStore: MediaStore {
     }
     
     public func deleteCachedMedia(completion: @escaping DeletionCompletion) {
-        
+        completion(nil)
     }
     
     public func insert(_ items: [LocalMediaItem], timestamp: Date, completion: @escaping InsertionCompletion) {
