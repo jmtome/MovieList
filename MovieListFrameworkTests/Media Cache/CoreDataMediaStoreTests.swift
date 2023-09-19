@@ -6,10 +6,13 @@
 //
 
 import XCTest
+import MovieListFramework
 
 final class CoreDataMediaStoreTests: XCTestCase, MediaStoreSpecs {
     func test_retrieve_deliversEmptyOnEmptyCache() {
+        let sut = makeSUT()
         
+        assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
     }
     
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
@@ -54,5 +57,13 @@ final class CoreDataMediaStoreTests: XCTestCase, MediaStoreSpecs {
     
     func test_storeSideEffects_runSerially() {
         
+    }
+    
+    //MARK: - Helpers
+    
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> MediaStore {
+        let sut = CoreDataMediaStore()
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return sut
     }
 }
