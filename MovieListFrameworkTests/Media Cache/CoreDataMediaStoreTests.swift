@@ -64,7 +64,8 @@ final class CoreDataMediaStoreTests: XCTestCase, MediaStoreSpecs {
     //MARK: - Helpers
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> MediaStore {
-        let sut = CoreDataMediaStore()
+        let storeBundle = Bundle(for: CoreDataMediaStore.self)
+        let sut = try! CoreDataMediaStore(bundle: storeBundle)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
