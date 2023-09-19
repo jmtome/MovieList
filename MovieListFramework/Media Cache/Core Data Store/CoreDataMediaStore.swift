@@ -10,9 +10,11 @@ import CoreData
 
 public final class CoreDataMediaStore: MediaStore {
     private let container: NSPersistentContainer
+    private let context: NSManagedObjectContext
     
     public init(bundle: Bundle = .main) throws {
         container = try NSPersistentContainer.load(modelName: "MediaStore", in: bundle)
+        context = container.newBackgroundContext()
     }
     
     public func deleteCachedMedia(completion: @escaping DeletionCompletion) {
