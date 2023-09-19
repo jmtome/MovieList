@@ -27,25 +27,7 @@ public final class CoreDataMediaStore: MediaStore {
             do {
                 let managedCache = ManagedCache(context: context)
                 managedCache.timestamp = timestamp
-                managedCache.items = NSOrderedSet(array: items.map({ local in
-                    let managedItem = ManagedMediaItem(context: context)
-                    managedItem.adult = local.adult
-                    managedItem.backdropPath = local.backdropPath
-                    managedItem.genreIds = CoreDataMediaStore.encodeIntArrayToJson(local.genreIds)
-                    managedItem.id = Int64(local.id)
-                    managedItem.mediaType = local.mediaType
-                    managedItem.originalLanguage = local.originalLanguage
-                    managedItem.originalTitle = local.originalTitle
-                    managedItem.overview = local.overview
-                    managedItem.popularity = local.popularity
-                    managedItem.posterPath = local.posterPath
-                    managedItem.releaseDate = local.releaseDate
-                    managedItem.title = local.title
-                    managedItem.video = local.video
-                    managedItem.voteAverage = local.voteAverage
-                    managedItem.voteCount = Int32(local.voteCount)
-                    return managedItem
-                }))
+                managedCache.items = ManagedMediaItem.cachedItems(from: items, in: context)
                 
                 try context.save()
                 completion(nil)
@@ -66,37 +48,11 @@ public final class CoreDataMediaStore: MediaStore {
                     return completion(.empty)
                 }
                 
-                let retrievedItems = cache.items.compactMap { $0 as? ManagedMediaItem }.map { CoreDataMediaStore.mapToLocal($0) }
-                let retrievedTimestamp = cache.timestamp
-                
-                completion(.found(items: retrievedItems, timestamp: retrievedTimestamp))
-                
+                completion(.found(items: cache.localItems, timestamp: cache.timestamp))
             } catch {
                 completion(.failure(error))
             }
         }
-    }
-    
-    private static func mapToLocal(_ managedItem: ManagedMediaItem) -> LocalMediaItem {
-        LocalMediaItem(adult: managedItem.adult, backdropPath: managedItem.backdropPath, genreIds: decodeJsonToIntArray(managedItem.genreIds), id: Int(managedItem.id), mediaType: managedItem.mediaType, originalLanguage: managedItem.originalLanguage, originalTitle: managedItem.originalTitle, overview: managedItem.overview, popularity: managedItem.popularity, posterPath: managedItem.posterPath, releaseDate: managedItem.releaseDate, title: managedItem.title, video: managedItem.video, voteAverage: managedItem.voteAverage, voteCount: Int(managedItem.voteCount))
-    }
-    
-    private static func encodeIntArrayToJson(_ array: [Int]) -> String? {
-        let jsonEncoder = JSONEncoder()
-        if let jsonData = try? jsonEncoder.encode(array),
-           let jsonString = String(data: jsonData, encoding: .utf8) {
-            return jsonString
-        }
-        return nil
-    }
-    
-    private static func decodeJsonToIntArray(_ jsonString: String?) -> [Int] {
-        guard let jString = jsonString else { return [] }
-        if let jsonData = jString.data(using: .utf8),
-           let intArray = try? JSONDecoder().decode([Int].self, from: jsonData) {
-            return intArray
-        }
-        return []
     }
 }
 
@@ -134,6 +90,10 @@ private extension NSManagedObjectModel {
 private class ManagedCache: NSManagedObject {
     @NSManaged public var timestamp: Date
     @NSManaged public var items: NSOrderedSet
+    
+    var localItems: [LocalMediaItem] {
+        return items.compactMap { ($0 as? ManagedMediaItem)?.local }
+    }
 }
 
 @objc(ManagedMediaItem)
@@ -154,4 +114,65 @@ private class ManagedMediaItem: NSManagedObject {
     @NSManaged public var voteAverage: Double
     @NSManaged public var voteCount: Int32
     @NSManaged public var cache: ManagedCache
+    
+    var local: LocalMediaItem {
+        LocalMediaItem(adult: adult,
+                       backdropPath: backdropPath,
+                       genreIds: genreIds.mapJSONToArray(of: Int.self),
+                       id: Int(id),
+                       mediaType: mediaType,
+                       originalLanguage: originalLanguage,
+                       originalTitle: originalTitle,
+                       overview: overview,
+                       popularity: popularity,
+                       posterPath: posterPath,
+                       releaseDate: releaseDate,
+                       title: title,
+                       video: video,
+                       voteAverage: voteAverage,
+                       voteCount: Int(voteCount))
+    }
+    
+    static func cachedItems(from localMedia: [LocalMediaItem], in context: NSManagedObjectContext) -> NSOrderedSet {
+        NSOrderedSet(array: localMedia.map({ local in
+            let managedItem = ManagedMediaItem(context: context)
+            managedItem.adult = local.adult
+            managedItem.backdropPath = local.backdropPath
+            managedItem.genreIds = local.genreIds.mapToJSONString()
+            managedItem.id = Int64(local.id)
+            managedItem.mediaType = local.mediaType
+            managedItem.originalLanguage = local.originalLanguage
+            managedItem.originalTitle = local.originalTitle
+            managedItem.overview = local.overview
+            managedItem.popularity = local.popularity
+            managedItem.posterPath = local.posterPath
+            managedItem.releaseDate = local.releaseDate
+            managedItem.title = local.title
+            managedItem.video = local.video
+            managedItem.voteAverage = local.voteAverage
+            managedItem.voteCount = Int32(local.voteCount)
+            return managedItem
+        }))
+    }
 }
+
+private extension Array where Element: Encodable {
+    func mapToJSONString() -> String? {
+        guard let data = try? JSONEncoder().encode(self),
+              let jsonString = String(data: data, encoding: .utf8) else {
+            return nil
+        }
+        return jsonString
+    }
+}
+
+private extension String? {
+    func mapJSONToArray<T: Decodable>(of type: T.Type) -> [T] {
+        guard let data = self?.data(using: .utf8),
+              let array = try? JSONDecoder().decode([T].self, from: data) else {
+            return []
+        }
+        return array
+    }
+}
+
