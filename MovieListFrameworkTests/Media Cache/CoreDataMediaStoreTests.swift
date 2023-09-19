@@ -16,7 +16,9 @@ final class CoreDataMediaStoreTests: XCTestCase, MediaStoreSpecs {
     }
     
     func test_retrieve_hasNoSideEffectsOnEmptyCache() {
+        let sut = makeSUT()
         
+        assertThatRetrieveHasNoSideEffectsOnEmptyCache(on: sut)
     }
     
     func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
