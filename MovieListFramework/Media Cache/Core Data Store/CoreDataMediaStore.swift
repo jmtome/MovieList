@@ -18,7 +18,15 @@ public final class CoreDataMediaStore: MediaStore {
     }
     
     public func deleteCachedMedia(completion: @escaping DeletionCompletion) {
-        completion(nil)
+        let context = self.context
+        context.perform {
+            do {
+                try ManagedCache.find(in: context).map(context.delete).map(context.save)
+                completion(nil)
+            } catch {
+                completion(error)
+            }
+        }
     }
     
     public func insert(_ items: [LocalMediaItem], timestamp: Date, completion: @escaping InsertionCompletion) {
