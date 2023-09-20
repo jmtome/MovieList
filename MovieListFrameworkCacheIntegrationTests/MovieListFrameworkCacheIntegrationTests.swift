@@ -33,12 +33,7 @@ final class MovieListFrameworkCacheIntegrationTests: XCTestCase {
         let sutToPerformLoad = makeSUT()
         let items = uniqueItems().models
         
-        let saveExp = expectation(description: "Wait for save completion")
-        sutToPerformSave.save(items) { saveError in
-            XCTAssertNil(saveError, "Expected to save media items successfully")
-            saveExp.fulfill()
-        }
-        wait(for: [saveExp], timeout: 2.0)
+        save(items, with: sutToPerformSave)
         
         expect(sutToPerformLoad, toLoad: items)
     }
@@ -50,19 +45,8 @@ final class MovieListFrameworkCacheIntegrationTests: XCTestCase {
         let firstMediaItems = uniqueItems().models
         let lastMediaItems = uniqueItems().models
         
-        let saveExp1 = expectation(description: "Wait for save completion")
-        sutToPerformFirstSave.save(firstMediaItems) { saveError in
-            XCTAssertNil(saveError, "Expected to save media items successfully")
-            saveExp1.fulfill()
-        }
-        wait(for: [saveExp1], timeout: 1.0)
-        
-        let saveExp2 = expectation(description: "Wait for save completion")
-        sutToPerformSecondSave.save(lastMediaItems) { saveError in
-            XCTAssertNil(saveError, "Expected to save media items successfully")
-            saveExp2.fulfill()
-        }
-        wait(for: [saveExp2], timeout: 1.0)
+        save(firstMediaItems, with: sutToPerformFirstSave)
+        save(lastMediaItems, with: sutToPerformSecondSave)
         
         expect(sutToPerformLoad, toLoad: lastMediaItems)
     }
@@ -78,6 +62,15 @@ final class MovieListFrameworkCacheIntegrationTests: XCTestCase {
         trackForMemoryLeaks(store, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
+    }
+    
+    private func save(_ mediaItems: [MediaItem], with loader: LocalMediaLoader, file: StaticString = #file, line: UInt = #line) {
+        let saveExp = expectation(description: "Wait for save completion")
+        loader.save(mediaItems) { saveError in
+            XCTAssertNil(saveError, "Expected to save media items successfully")
+            saveExp.fulfill()
+        }
+        wait(for: [saveExp], timeout: 1.0)
     }
     
     private func expect(_ sut: LocalMediaLoader, toLoad expectedItems: [MediaItem], file: StaticString = #file, line: UInt = #line) {
