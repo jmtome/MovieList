@@ -26,6 +26,13 @@
         "identifier" : "FA3FA44C2AA7D11700135863",
         "name" : "MovieListFrameworkTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:MovieList.xcodeproj",
+        "identifier" : "FA49D6C62ABB64C900DBC597",
+        "name" : "MovieListFrameworkCacheIntegrationTests"
+      }
     }
   ],
   "version" : 1
