@@ -7,10 +7,7 @@
 
 import Foundation
 
-public enum LoadMediaResult {
-    case success([MediaItem])
-    case failure(Error)
-}
+public typealias LoadMediaResult = Result<[MediaItem], Error>
 
 public protocol MediaLoader {
     func load(completion: @escaping(LoadMediaResult) -> Void)
