@@ -47,6 +47,7 @@
 		FA49D6C22ABA734B00DBC597 /* Foundation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA49D6C12ABA734B00DBC597 /* Foundation+Extensions.swift */; };
 		FA49D6CA2ABB64CA00DBC597 /* MovieListFrameworkCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA49D6C92ABB64CA00DBC597 /* MovieListFrameworkCacheIntegrationTests.swift */; };
 		FA49D6CB2ABB64CA00DBC597 /* MovieListFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA3FA4462AA7D11600135863 /* MovieListFramework.framework */; };
+		FA49D6D22ABB7D0600DBC597 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8F95302AAF93B400372BCF /* XCTestCase+MemoryLeakTracking.swift */; };
 		FA4E00D12A201192002798A8 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4E00D02A201192002798A8 /* Movie.swift */; };
 		FA4E00D22A201192002798A8 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4E00D02A201192002798A8 /* Movie.swift */; };
 		FA4E00D42A2011D5002798A8 /* TVShow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4E00D32A2011D4002798A8 /* TVShow.swift */; };
@@ -1097,6 +1098,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA49D6CA2ABB64CA00DBC597 /* MovieListFrameworkCacheIntegrationTests.swift in Sources */,
+				FA49D6D22ABB7D0600DBC597 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
