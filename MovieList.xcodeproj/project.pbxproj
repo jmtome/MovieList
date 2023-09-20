@@ -426,6 +426,23 @@
 			path = "Core Data Store";
 			sourceTree = "<group>";
 		};
+		FA49D6B92ABA712000DBC597 /* Infrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				FA49D6B82AB94C8F00DBC597 /* Core Data Store */,
+				FA49D6BA2ABA713700DBC597 /* Codable Store */,
+			);
+			path = Infrastructure;
+			sourceTree = "<group>";
+		};
+		FA49D6BA2ABA713700DBC597 /* Codable Store */ = {
+			isa = PBXGroup;
+			children = (
+				FA9470BC2AB6506100C49F0F /* CodableMediaStore.swift */,
+			);
+			path = "Codable Store";
+			sourceTree = "<group>";
+		};
 		FA543FC42AB11D6400702965 /* Media Cache */ = {
 			isa = PBXGroup;
 			children = (
@@ -443,12 +460,11 @@
 		FA543FC82AB250E700702965 /* Media Cache */ = {
 			isa = PBXGroup;
 			children = (
-				FA49D6B82AB94C8F00DBC597 /* Core Data Store */,
+				FA49D6B92ABA712000DBC597 /* Infrastructure */,
 				FA543FCB2AB2520300702965 /* MediaStore.swift */,
 				FA543FC92AB250FF00702965 /* LocalMediaLoader.swift */,
 				FA543FD12AB26B0300702965 /* LocalMediaItem.swift */,
 				FAC5738D2AB3DFA900FF41EE /* MediaCachePolicy.swift */,
-				FA9470BC2AB6506100C49F0F /* CodableMediaStore.swift */,
 			);
 			path = "Media Cache";
 			sourceTree = "<group>";
