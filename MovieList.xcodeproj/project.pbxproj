@@ -42,6 +42,9 @@
 		FA49D6A12AB9317100DBC597 /* CoreDataMediaStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA49D6A02AB9317100DBC597 /* CoreDataMediaStore.swift */; };
 		FA49D6A72AB93F0800DBC597 /* MediaStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FA49D6A52AB93F0800DBC597 /* MediaStore.xcdatamodeld */; };
 		FA49D6BC2ABA71BB00DBC597 /* CoreDataHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA49D6BB2ABA71BB00DBC597 /* CoreDataHelpers.swift */; };
+		FA49D6BE2ABA727300DBC597 /* ManagedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA49D6BD2ABA727300DBC597 /* ManagedCache.swift */; };
+		FA49D6C02ABA727E00DBC597 /* ManagedMediaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA49D6BF2ABA727E00DBC597 /* ManagedMediaItem.swift */; };
+		FA49D6C22ABA734B00DBC597 /* Foundation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA49D6C12ABA734B00DBC597 /* Foundation+Extensions.swift */; };
 		FA4E00D12A201192002798A8 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4E00D02A201192002798A8 /* Movie.swift */; };
 		FA4E00D22A201192002798A8 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4E00D02A201192002798A8 /* Movie.swift */; };
 		FA4E00D42A2011D5002798A8 /* TVShow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4E00D32A2011D4002798A8 /* TVShow.swift */; };
@@ -195,6 +198,9 @@
 		FA49D6A02AB9317100DBC597 /* CoreDataMediaStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataMediaStore.swift; sourceTree = "<group>"; };
 		FA49D6A62AB93F0800DBC597 /* MediaStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MediaStore.xcdatamodel; sourceTree = "<group>"; };
 		FA49D6BB2ABA71BB00DBC597 /* CoreDataHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelpers.swift; sourceTree = "<group>"; };
+		FA49D6BD2ABA727300DBC597 /* ManagedCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedCache.swift; sourceTree = "<group>"; };
+		FA49D6BF2ABA727E00DBC597 /* ManagedMediaItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedMediaItem.swift; sourceTree = "<group>"; };
+		FA49D6C12ABA734B00DBC597 /* Foundation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Extensions.swift"; sourceTree = "<group>"; };
 		FA4E00D02A201192002798A8 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		FA4E00D32A2011D4002798A8 /* TVShow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShow.swift; sourceTree = "<group>"; };
 		FA4F9B292A250063007CC544 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
@@ -424,7 +430,10 @@
 			children = (
 				FA49D6A52AB93F0800DBC597 /* MediaStore.xcdatamodeld */,
 				FA49D6A02AB9317100DBC597 /* CoreDataMediaStore.swift */,
+				FA49D6BD2ABA727300DBC597 /* ManagedCache.swift */,
+				FA49D6BF2ABA727E00DBC597 /* ManagedMediaItem.swift */,
 				FA49D6BB2ABA71BB00DBC597 /* CoreDataHelpers.swift */,
+				FA49D6C12ABA734B00DBC597 /* Foundation+Extensions.swift */,
 			);
 			path = "Core Data Store";
 			sourceTree = "<group>";
@@ -987,12 +996,15 @@
 				FA49D6A12AB9317100DBC597 /* CoreDataMediaStore.swift in Sources */,
 				FA543FCE2AB26AA100702965 /* RemoteMediaItem.swift in Sources */,
 				FA543FCA2AB250FF00702965 /* LocalMediaLoader.swift in Sources */,
+				FA49D6C22ABA734B00DBC597 /* Foundation+Extensions.swift in Sources */,
 				FA3FA45C2AA7D1FD00135863 /* MovieItem.swift in Sources */,
+				FA49D6C02ABA727E00DBC597 /* ManagedMediaItem.swift in Sources */,
 				FA5ADCC62AABC31B0068C134 /* HTTPClient.swift in Sources */,
 				FA543FD22AB26B0300702965 /* LocalMediaItem.swift in Sources */,
 				FA3FA45E2AA7E70E00135863 /* MediaLoader.swift in Sources */,
 				FAFAEF482AAFB7800054B653 /* URLSessionHTTPClient.swift in Sources */,
 				FA49D6A72AB93F0800DBC597 /* MediaStore.xcdatamodeld in Sources */,
+				FA49D6BE2ABA727300DBC597 /* ManagedCache.swift in Sources */,
 				FAC5738E2AB3DFA900FF41EE /* MediaCachePolicy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
