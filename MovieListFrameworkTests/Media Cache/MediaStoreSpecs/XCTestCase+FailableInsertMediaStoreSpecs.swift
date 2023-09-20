@@ -20,6 +20,6 @@ extension FailableInsertMediaStoreSpecs where Self: XCTestCase {
     func assertThatInsertHasNoSideEffectsOnInsertionError(on sut: MediaStore, file: StaticString = #file, line: UInt = #line) {
         insert((uniqueItems().local, Date()), to: sut)
         
-        expect(sut, toRetrieve: .empty, file: file, line: line)
+        expect(sut, toRetrieve: .success(.empty), file: file, line: line)
     }
 }

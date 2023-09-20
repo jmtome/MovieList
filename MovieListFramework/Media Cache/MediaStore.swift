@@ -7,16 +7,20 @@
 
 import Foundation
 
-public enum RetrieveCachedMediaItemsResult {
+
+
+
+public enum CachedItems {
     case empty
     case found(items: [LocalMediaItem], timestamp: Date)
-    case failure(Error)
 }
 
 public protocol MediaStore {
     typealias DeletionCompletion = (Error?) -> Void
     typealias InsertionCompletion = (Error?) -> Void
-    typealias RetrievalCompletion = (RetrieveCachedMediaItemsResult) -> Void
+
+    typealias RetrievalResult = Result<CachedItems, Error>
+    typealias RetrievalCompletion = (RetrievalResult) -> Void
     
     /// The completion handler can be invoked in any thread.
     /// Clients are responsible to dispatch to appropriate threads, if needed.
