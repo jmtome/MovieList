@@ -18,8 +18,7 @@ public final class CoreDataMediaStore: MediaStore {
     }
     
     public func deleteCachedMedia(completion: @escaping DeletionCompletion) {
-        let context = self.context
-        context.perform {
+        perform { context in
             do {
                 try ManagedCache.find(in: context).map(context.delete).map(context.save)
                 completion(nil)
@@ -30,8 +29,7 @@ public final class CoreDataMediaStore: MediaStore {
     }
     
     public func insert(_ items: [LocalMediaItem], timestamp: Date, completion: @escaping InsertionCompletion) {
-        let context = self.context
-        context.perform {
+        perform { context in
             do {
                 let managedCache = try ManagedCache.newUniqueInstance(in: context)
                 managedCache.timestamp = timestamp
@@ -46,8 +44,7 @@ public final class CoreDataMediaStore: MediaStore {
     }
     
     public func retrieve(completion: @escaping RetrievalCompletion) {
-        let context = self.context
-        context.perform {
+        perform { context in
             do {
                 guard let cache = try ManagedCache.find(in: context) else {
                     return completion(.empty)
@@ -58,6 +55,11 @@ public final class CoreDataMediaStore: MediaStore {
                 completion(.failure(error))
             }
         }
+    }
+    
+    private func perform(_ action: @escaping (NSManagedObjectContext) -> Void) {
+        let context = self.context
+        context.perform { action(context) }
     }
 }
 
