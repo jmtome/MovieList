@@ -16,7 +16,7 @@ public final class RemoteMediaLoader: MediaLoader {
         case invalidData
     }
     
-    public typealias Result = LoadMediaResult
+    public typealias Result = MediaLoader.Result
     
     public init(url: URL, client: HTTPClient) {
         self.client = client

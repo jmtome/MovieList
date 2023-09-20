@@ -28,7 +28,7 @@ final class MovieListFrameworkAPIEndToEndTests: XCTestCase {
     
     //MARK: - Helpers
     
-    private func getFeedResult(file: StaticString = #file, line: UInt = #line) -> LoadMediaResult? {
+    private func getFeedResult(file: StaticString = #file, line: UInt = #line) -> MediaLoader.Result? {
         let testServerURL = URL(string: "https://gist.githubusercontent.com/jmtome/f09b007a6e46ae91148372a296e8c30d/raw/52267abea83aec0014db7388678e513695e8b6c2/E2ETestApiTMDB.json")!
         let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
         let loader = RemoteMediaLoader(url: testServerURL, client: client)
@@ -36,7 +36,7 @@ final class MovieListFrameworkAPIEndToEndTests: XCTestCase {
         trackForMemoryLeaks(loader, file: file, line: line)
         let exp = expectation(description: "Wait for load completion")
         
-        var receivedResult: LoadMediaResult?
+        var receivedResult: MediaLoader.Result?
         loader.load { result in
             receivedResult = result
             exp.fulfill()

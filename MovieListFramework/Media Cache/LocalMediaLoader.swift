@@ -41,7 +41,7 @@ extension LocalMediaLoader {
 }
 
 extension LocalMediaLoader: MediaLoader {
-    public typealias LoadResult = LoadMediaResult
+    public typealias LoadResult = MediaLoader.Result
 
     public func load(completion: @escaping (LoadResult) -> Void) {
         store.retrieve { [weak self] result in

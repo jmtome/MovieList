@@ -7,8 +7,8 @@
 
 import Foundation
 
-public typealias LoadMediaResult = Result<[MediaItem], Error>
 
 public protocol MediaLoader {
-    func load(completion: @escaping(LoadMediaResult) -> Void)
+    typealias Result = Swift.Result<[MediaItem], Error>
+    func load(completion: @escaping(Result) -> Void)
 }
