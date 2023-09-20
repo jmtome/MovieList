@@ -12,6 +12,9 @@ internal class ManagedCache: NSManagedObject {
     @NSManaged internal var timestamp: Date
     @NSManaged internal var items: NSOrderedSet
     
+}
+
+extension ManagedCache {
     internal var localItems: [LocalMediaItem] {
         return items.compactMap { ($0 as? ManagedMediaItem)?.local }
     }

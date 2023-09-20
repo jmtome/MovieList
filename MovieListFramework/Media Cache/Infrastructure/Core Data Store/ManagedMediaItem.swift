@@ -25,7 +25,9 @@ internal class ManagedMediaItem: NSManagedObject {
     @NSManaged internal var voteAverage: Double
     @NSManaged internal var voteCount: Int32
     @NSManaged internal var cache: ManagedCache
-    
+}
+
+extension ManagedMediaItem {
     internal var local: LocalMediaItem {
         LocalMediaItem(adult: adult,
                        backdropPath: backdropPath,
