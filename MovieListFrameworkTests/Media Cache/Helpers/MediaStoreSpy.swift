@@ -57,10 +57,10 @@ class MediaStoreSpy: MediaStore {
     }
     
     func completeRetrievalWithEmptyCache(at index: Int = 0) {
-        retrievalCompletions[index](.success(.empty))
+        retrievalCompletions[index](.success(.none))
     }
     
     func completeRetrieval(with items: [LocalMediaItem], timestamp: Date, at index: Int = 0) {
-        retrievalCompletions[index](.success(.found(items: items, timestamp: timestamp)))
+        retrievalCompletions[index](.success(CachedItems(items: items, timestamp: timestamp)))
     }
 }

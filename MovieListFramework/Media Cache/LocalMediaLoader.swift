@@ -51,8 +51,8 @@ extension LocalMediaLoader: MediaLoader {
             case let .failure(error):
                 completion(.failure(error))
                 
-            case let .success(.found(items: localItems, timestamp: timestamp)) where MediaCachePolicy.validate(timestamp, against: self.currentDate()):
-                completion(.success(localItems.toModels()))
+            case let .success(.some(cache)) where MediaCachePolicy.validate(cache.timestamp, against: self.currentDate()):
+                completion(.success(cache.items.toModels()))
                 
             case .success:
                 completion(.success([]))
@@ -69,7 +69,7 @@ extension LocalMediaLoader {
             case .failure:
                 self.store.deleteCachedMedia { _ in }
                 
-            case let .success(.found(items: _, timestamp: timestamp)) where !MediaCachePolicy.validate(timestamp, against: self.currentDate()):
+            case let .success(.some(cache)) where !MediaCachePolicy.validate(cache.timestamp, against: self.currentDate()):
                 self.store.deleteCachedMedia { _ in }
                 
             case .success: break

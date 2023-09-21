@@ -47,10 +47,10 @@ public final class CoreDataMediaStore: MediaStore {
         perform { context in
             do {
                 guard let cache = try ManagedCache.find(in: context) else {
-                    return completion(.success(.empty))
+                    return completion(.success(.none))
                 }
                 
-                completion(.success(.found(items: cache.localItems, timestamp: cache.timestamp)))
+                completion(.success(CachedItems(items: cache.localItems, timestamp: cache.timestamp)))
             } catch {
                 completion(.failure(error))
             }
