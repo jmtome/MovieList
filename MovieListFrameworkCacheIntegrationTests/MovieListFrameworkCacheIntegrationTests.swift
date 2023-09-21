@@ -66,8 +66,10 @@ final class MovieListFrameworkCacheIntegrationTests: XCTestCase {
     
     private func save(_ mediaItems: [MediaItem], with loader: LocalMediaLoader, file: StaticString = #file, line: UInt = #line) {
         let saveExp = expectation(description: "Wait for save completion")
-        loader.save(mediaItems) { saveError in
-            XCTAssertNil(saveError, "Expected to save media items successfully")
+        loader.save(mediaItems) { saveResult in
+            if case let Result.failure(saveError) = saveResult {
+                XCTAssertNil(saveError, "Expected to save media items successfully")
+            }
             saveExp.fulfill()
         }
         wait(for: [saveExp], timeout: 1.0)

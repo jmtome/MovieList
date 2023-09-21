@@ -8,7 +8,7 @@
 import XCTest
 import MovieListFramework
 
-class CacheMediaUseCase: XCTestCase {
+class CacheMediaUseCaseTests: XCTestCase {
     
     func test_init_doesNotMessageStoreUponCreation() {
         let (_, store) = makeSUT()
@@ -116,8 +116,10 @@ class CacheMediaUseCase: XCTestCase {
         let exp = expectation(description: "Wait for save completion")
         
         var receivedError: Error?
-        sut.save(uniqueItems().models) { error in
-            receivedError = error
+        sut.save(uniqueItems().models) { saveResult in
+            if case let Result.failure(error) = saveResult {
+                receivedError = error
+            }
             exp.fulfill()
         }
         action()

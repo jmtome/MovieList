@@ -120,8 +120,10 @@ extension MediaStoreSpecs where Self: XCTestCase {
     func insert(_ cache: (items: [LocalMediaItem], timestamp: Date), to sut: MediaStore) -> Error? {
         let exp = expectation(description: "Wait for cache insertion")
         var insertionError: Error?
-        sut.insert(cache.items, timestamp: cache.timestamp) { receivedInsertionError in
-            insertionError = receivedInsertionError
+        sut.insert(cache.items, timestamp: cache.timestamp) { insertionResult in
+            if case let Result.failure(receivedInsertionError) = insertionResult {
+                insertionError = receivedInsertionError
+            }
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
@@ -132,8 +134,10 @@ extension MediaStoreSpecs where Self: XCTestCase {
     func deleteCache(from sut: MediaStore) -> Error? {
         let exp = expectation(description: "Wait for cache deletion")
         var deletionError: Error?
-        sut.deleteCachedMedia { receivedDeletionError in
-            deletionError = receivedDeletionError
+        sut.deleteCachedMedia { deletionResult in
+            if case let Result.failure(receivedDeletionError) = deletionResult {                
+                deletionError = receivedDeletionError
+            }
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
