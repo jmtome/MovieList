@@ -19,41 +19,31 @@ public final class CoreDataMediaStore: MediaStore {
     
     public func deleteCachedMedia(completion: @escaping DeletionCompletion) {
         perform { context in
-            do {
+            completion(Result(catching: {
                 try ManagedCache.find(in: context).map(context.delete).map(context.save)
-                completion(.success(()))
-            } catch {
-                completion(.failure(error))
-            }
+            }))
         }
     }
     
     public func insert(_ items: [LocalMediaItem], timestamp: Date, completion: @escaping InsertionCompletion) {
         perform { context in
-            do {
+            completion(Result(catching: {
                 let managedCache = try ManagedCache.newUniqueInstance(in: context)
                 managedCache.timestamp = timestamp
                 managedCache.items = ManagedMediaItem.cachedItems(from: items, in: context)
                 
                 try context.save()
-                completion(.success(()))
-            } catch {
-                completion(.failure(error))
-            }
+            }))
         }
     }
     
     public func retrieve(completion: @escaping RetrievalCompletion) {
         perform { context in
-            do {
-                guard let cache = try ManagedCache.find(in: context) else {
-                    return completion(.success(.none))
+            completion(Result(catching: {
+                try ManagedCache.find(in: context).map{ cache in
+                    return CachedItems(items: cache.localItems, timestamp: cache.timestamp)
                 }
-                
-                completion(.success(CachedItems(items: cache.localItems, timestamp: cache.timestamp)))
-            } catch {
-                completion(.failure(error))
-            }
+            }))
         }
     }
     
