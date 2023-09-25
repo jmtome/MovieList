@@ -25,8 +25,9 @@ extension UIImageView {
                     guard let data = data, error == nil else { return }
                     
                     if let image = UIImage(data: data) {
-                        DispatchQueue.main.async {
-                            self.image = image
+                        DispatchQueue.main.async { [weak self] in
+                            guard let self else { return }
+                            setImageAnimated(image)
                         }
                         ImageCache.saveImage(image, for: url.absoluteString)
                     }
@@ -34,6 +35,18 @@ extension UIImageView {
                 }
                 task.resume()
             }
+        }
+    }
+}
+
+extension UIImageView {
+    func setImageAnimated(_ newImage: UIImage?) {
+        image = newImage
+        guard newImage != nil else { return }
+        
+        alpha = 0
+        UIView.animate(withDuration: 0.25) {
+            self.alpha = 1
         }
     }
 }

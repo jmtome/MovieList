@@ -30,6 +30,7 @@ class MainScreenTableViewCell: UITableViewCell {
     
     private let posterImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "popcorn")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -159,29 +160,16 @@ class MainScreenTableViewCell: UITableViewCell {
         ratingLabel.text = media.getStarRating()
         dateLabel.text = media.dateAired
         
-        posterImageView.loadImage(from: media.mainPosterURLString, placeholder: UIImage(systemName: "popcorn"))
-    }
-    
-    func setup(with movie: AnyMedia) {
-        titleLabel.text = movie.title
-        descriptionLabel.text = movie.overview
-        
-
-        ratingLabel.text = "Rating: \(movie.voteAverage.getStarRating())"
-        dateLabel.text = "Date Released: \(movie.releaseDate)"
-        
-        // Load the image from the provided URL or set the placeholder image
-        if let fullPosterPath = movie.fullPosterPath, let imageURL = URL(string: fullPosterPath) {
-            posterImageView.loadImage(from: imageURL.absoluteString, placeholder: UIImage(systemName: "popcorn"))
-        } else {
-            posterImageView.image = UIImage(systemName: "popcorn")
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            isShimmering = true
+        }
+        posterImageView.loadImage(from: media.mainPosterURLString, placeholder: UIImage(systemName: "popcorn")) { [weak self] in
+            guard let self else { return }
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                isShimmering = false
+            }
         }
     }
-    
-    
 }
-
-
-
-
-
