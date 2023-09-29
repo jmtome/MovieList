@@ -66,6 +66,8 @@
 		FA543FD72AB282A100702965 /* MediaStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA543FD62AB282A100702965 /* MediaStoreSpy.swift */; };
 		FA5ADCC62AABC31B0068C134 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5ADCC52AABC31B0068C134 /* HTTPClient.swift */; };
 		FA5ADCC82AABC37A0068C134 /* MediaItemsMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5ADCC72AABC37A0068C134 /* MediaItemsMapper.swift */; };
+		FA6969642AC623DD00DC9AE3 /* MovieListFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA3FA4462AA7D11600135863 /* MovieListFramework.framework */; };
+		FA6969652AC623DD00DC9AE3 /* MovieListFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FA3FA4462AA7D11600135863 /* MovieListFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FA8F24442A1DA4A80096A69E /* Networking+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8F24432A1DA4A80096A69E /* Networking+Helpers.swift */; };
 		FA8F95312AAF93B400372BCF /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA8F95302AAF93B400372BCF /* XCTestCase+MemoryLeakTracking.swift */; };
 		FA9470BD2AB6506100C49F0F /* CodableMediaStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9470BC2AB6506100C49F0F /* CodableMediaStore.swift */; };
@@ -171,6 +173,13 @@
 			remoteGlobalIDString = FA3FA4452AA7D11600135863;
 			remoteInfo = MovieListFramework;
 		};
+		FA6969662AC623DD00DC9AE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FA1709C32A02E8A700E1B1ED /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FA3FA4452AA7D11600135863;
+			remoteInfo = MovieListFramework;
+		};
 		FAFAEF532AAFDEB10054B653 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FA1709C32A02E8A700E1B1ED /* Project object */;
@@ -179,6 +188,20 @@
 			remoteInfo = MovieListFramework;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FA6969682AC623DE00DC9AE3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FA6969652AC623DD00DC9AE3 /* MovieListFramework.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		FA1709CB2A02E8A700E1B1ED /* MovieList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieList.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -286,6 +309,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA6969642AC623DD00DC9AE3 /* MovieListFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,6 +375,7 @@
 				FAFAEF4F2AAFDEB10054B653 /* MovieListFrameworkAPIEndToEndTests */,
 				FA49D6C82ABB64CA00DBC597 /* MovieListFrameworkCacheIntegrationTests */,
 				FA1709CC2A02E8A700E1B1ED /* Products */,
+				FA6969632AC623DD00DC9AE3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -537,6 +562,13 @@
 			path = "Media API";
 			sourceTree = "<group>";
 		};
+		FA6969632AC623DD00DC9AE3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		FA8F952F2AAF939700372BCF /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -718,10 +750,12 @@
 				FA1709C72A02E8A700E1B1ED /* Sources */,
 				FA1709C82A02E8A700E1B1ED /* Frameworks */,
 				FA1709C92A02E8A700E1B1ED /* Resources */,
+				FA6969682AC623DE00DC9AE3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				FA6969672AC623DD00DC9AE3 /* PBXTargetDependency */,
 			);
 			name = MovieList;
 			packageProductDependencies = (
@@ -1153,6 +1187,11 @@
 			isa = PBXTargetDependency;
 			target = FA3FA4452AA7D11600135863 /* MovieListFramework */;
 			targetProxy = FA49D6CC2ABB64CA00DBC597 /* PBXContainerItemProxy */;
+		};
+		FA6969672AC623DD00DC9AE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FA3FA4452AA7D11600135863 /* MovieListFramework */;
+			targetProxy = FA6969662AC623DD00DC9AE3 /* PBXContainerItemProxy */;
 		};
 		FAFAEF542AAFDEB10054B653 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
