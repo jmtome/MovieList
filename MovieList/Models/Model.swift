@@ -110,8 +110,30 @@ struct MediaViewModel: Identifiable, Codable, Hashable {
     
     var genres: [Genre]
 }
+
 extension MediaViewModel {
-    
+    init() {
+        self.type = .movie
+        self.id = 0
+        self.title = "Loading..."
+        self.backdrops = []
+        self.dateAired = "200 years ago"
+        self.uuid = UUID().uuidString
+        self.mainPosterURLString = ""
+        self.language = ""
+        self.credits = nil
+        self.posters = []
+        self.description = ""
+        self.runtime = []
+        self.voteAverage = 0
+        self.voteCount = 0
+        self.genres = []
+        self.languages = []
+        self.tagline = ""
+        self.seasons = 0
+        self.rating = 0
+        self.popularity = 0
+    }
 }
 extension MediaViewModel {
     init(tvshow: TVShow) {
