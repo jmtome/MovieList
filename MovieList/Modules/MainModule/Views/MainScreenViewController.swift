@@ -78,6 +78,7 @@ extension MainScreenViewController {
         
         tableView.delegate = self
         tableView.dataSource = dataSource
+//        tableView.register(MediaTableViewCell.self, forCellReuseIdentifier: MediaTableViewCell.reuseIdentifier)
         tableView.register(MainScreenTableViewCell.self, forCellReuseIdentifier: MainScreenTableViewCell.reuseIdentifier)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = UITableView.automaticDimension
@@ -95,7 +96,11 @@ extension MainScreenViewController {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: MainScreenTableViewCell.reuseIdentifier, for: indexPath) as? MainScreenTableViewCell else {
                 fatalError("Failed to dequeue MainScreenTableViewCell")
             }
+//            guard let cell = tableView.dequeueReusableCell(withIdentifier: MediaTableViewCell.reuseIdentifier, for: indexPath) as? MediaTableViewCell else {
+//                fatalError("Failed to dequeue MainScreenTableViewCell")
+//            }
             cell.setup(with: media)
+//            cell.configure(with: media)
             return cell
         }
     }
