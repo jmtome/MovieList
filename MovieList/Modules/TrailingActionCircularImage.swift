@@ -8,11 +8,21 @@
 import SwiftUI
 
 struct TrailingActionCircularImage: View {
+    @Binding var isFavorite: Bool
+    private let largeConfig = UIImage.SymbolConfiguration(pointSize: 17.0, weight: .bold, scale: .large)
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Image(uiImage: generateUIImage())
+    }
+    
+    func generateUIImage() -> UIImage {
+        let uimage = UIImage(systemName: isFavorite ? "star" : "star.fill", withConfiguration: largeConfig)?
+            .withTintColor(.white, renderingMode: .alwaysTemplate)
+            .addBackgroundCircle(isFavorite ? .systemRed : .systemGreen) ?? UIImage()
+        return uimage
     }
 }
 
 #Preview {
-    TrailingActionCircularImage()
+    TrailingActionCircularImage(isFavorite: .constant(true))
 }
