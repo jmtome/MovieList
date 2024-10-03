@@ -57,8 +57,8 @@ struct MediaCellView: View {
         .frame(maxWidth: .infinity, alignment: .leading) // Make HStack fill available width
         .background(Color(uiColor: .systemFill))
         .cornerRadius(12)
-        .padding(.leading, 0)
-        .padding(.trailing, 0)
+//        .padding(.leading, 0)
+//        .padding(.trailing, 0)
     }
     
     func fullPosterPath(posterPath: String?) -> String? {
@@ -84,25 +84,25 @@ struct MediaCellView: View {
     .preferredColorScheme(.dark)
 }
 
-private extension MediaViewModel {
-    static func viewModelFrom(mediaItem: MediaItem) -> MediaViewModel {
-        let uuid = UUID().uuidString
-        return MediaViewModel(id: mediaItem.id,
-                              uuid: uuid,
-                              title: mediaItem.title,
-                              description: mediaItem.overview,
-                              mainPosterURLString: mediaItem.posterPath,
-                              type: .movie,
-                              dateAired: "12-10-2020",
-                              language: "Eng",
-                              rating: mediaItem.voteAverage,
-                              popularity: mediaItem.popularity,
-                              voteCount: mediaItem.voteCount,
-                              voteAverage: mediaItem.voteAverage,
-                              backdrops: [],
-                              posters: [],
-                              runtime: [],
-                              languages: [],
-                              genres: [])
-    }
-}
+//private extension MediaViewModel {
+//    private static func viewModelFrom(mediaItem: MediaItem) -> MediaViewModel {
+//        let uuid = UUID().uuidString
+//        return MediaViewModel(id: mediaItem.id,
+//                              uuid: uuid,
+//                              title: mediaItem.title,
+//                              description: mediaItem.overview,
+//                              mainPosterURLString: mediaItem.posterPath,
+//                              type: .movie,
+//                              dateAired: "12-10-2020",
+//                              language: "Eng",
+//                              rating: mediaItem.voteAverage,
+//                              popularity: mediaItem.popularity,
+//                              voteCount: mediaItem.voteCount,
+//                              voteAverage: mediaItem.voteAverage,
+//                              backdrops: [],
+//                              posters: [],
+//                              runtime: [],
+//                              languages: [],
+//                              genres: [])
+//    }
+//}
