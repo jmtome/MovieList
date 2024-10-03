@@ -7,7 +7,8 @@
 
 import Foundation
 import UIKit
-
+import SwiftUI
+import MovieListFramework
 
 typealias MediaTypeID = (type: MediaType, id: Int)
 
@@ -16,7 +17,9 @@ enum MediaType: Codable {
     case tvshow
 }
 
-enum SortingOption: CaseIterable {
+enum SortingOption: SortableEnum {
+    var id: SortingOption { self }
+    
     case relevance
     case date
     case rating
@@ -41,6 +44,15 @@ enum SortingOption: CaseIterable {
         case .date: return UIImage(systemName: "chevron.up")!
         case .rating: return UIImage(systemName: "chevron.up")!
         case .title: return UIImage(systemName: "chevron.up")!
+        }
+    }
+    
+    var swiftUIImageString: String {
+        switch self {
+        case .relevance: return "chevron.up"
+        case .date: return "chevron.up"
+        case .rating: return "chevron.up"
+        case .title: return "chevron.up"
         }
     }
 }
