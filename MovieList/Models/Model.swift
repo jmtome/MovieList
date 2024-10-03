@@ -124,7 +124,30 @@ struct MediaViewModel: Identifiable, Codable, Hashable {
 }
 
 extension MediaViewModel {
-    init() {
+    static func viewModelFrom(mediaItem: MediaItem) -> MediaViewModel {
+        let uuid = UUID().uuidString
+        return MediaViewModel(id: mediaItem.id,
+                              uuid: uuid,
+                              title: mediaItem.title,
+                              description: mediaItem.overview,
+                              mainPosterURLString: mediaItem.posterPath,
+                              type: .movie,
+                              dateAired: "12-10-2020",
+                              language: "Eng",
+                              rating: mediaItem.voteAverage,
+                              popularity: mediaItem.popularity,
+                              voteCount: mediaItem.voteCount,
+                              voteAverage: mediaItem.voteAverage,
+                              backdrops: [],
+                              posters: [],
+                              runtime: [],
+                              languages: [],
+                              genres: [])
+    }
+}
+
+extension MediaViewModel {
+    init(_ credits: MediaCredits? = nil) {
         self.type = .movie
         self.id = 0
         self.title = "Loading..."
@@ -133,7 +156,7 @@ extension MediaViewModel {
         self.uuid = UUID().uuidString
         self.mainPosterURLString = ""
         self.language = ""
-        self.credits = nil
+        self.credits = credits
         self.posters = []
         self.description = ""
         self.runtime = []
