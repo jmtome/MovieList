@@ -29,6 +29,7 @@ enum ApiDict {
     
     static let movieDetailsPath = "/movie/"
     static let tvShowDetailsPath = "/tv/"
+    static let personDetailsPath = "/person/"
     
 }
 
@@ -39,6 +40,7 @@ enum MovieDBEndpoint {
     case trendingMovies(page: Int)
     case trendingTV(page: Int)
     
+    case personDetails(id: Int)
     case movieDetails(id: Int)
     case tvShowDetails(id: Int)
     
@@ -64,6 +66,8 @@ enum MovieDBEndpoint {
             return ApiDict.trendingMoviesPath
         case .trendingTV:
             return ApiDict.trendingTVPath
+        case .personDetails(id: let id):
+            return ApiDict.personDetailsPath + "\(id)"
         case .movieDetails(id: let id):
             return ApiDict.movieDetailsPath + "\(id)"
         case .tvShowDetails(id: let id):
@@ -99,6 +103,11 @@ enum MovieDBEndpoint {
         case .movieDetails, .tvShowDetails, .movieCredits, .tvShowCredits, .movieImages, .tvShowImages, .imageWithPath:
             return [
                 URLQueryItem(name: "api_key", value: ApiDict.apiKey)
+            ]
+        case .personDetails(id: let id):
+            return [
+                URLQueryItem(name: "api_key", value: ApiDict.apiKey),
+                URLQueryItem(name: "append_to_response", value: "movie_credits,images")
             ]
         }
     }
