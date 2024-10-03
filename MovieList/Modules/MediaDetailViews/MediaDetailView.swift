@@ -20,6 +20,15 @@ class MediaDetailStore: ObservableObject {
     func fetchMediaDetails() {
         presenter.viewDidLoad()
     }
+    
+    func buildStoreForActor(for actorId: Int) -> ActorProfileStore {
+        let interactor = ActorProfileInteractor(networkingService: TMDBNetworkingService())
+        let presenter = ActorProfilePresenter(interactor: interactor)
+        let store = ActorProfileStore(presenter: presenter, actorId: actorId)
+        presenter.output = store
+        interactor.output = presenter 
+        return store
+    }
 }
 extension MediaDetailStore: MediaDetailPresenterOutputProtocol {
     func updateUI() {
@@ -57,7 +66,7 @@ struct MediaDetailView: View {
                 MediaFacts(media: store.media)
                     .padding(.horizontal, 4)
                 
-                CastAndCrewView(media: store.media)
+                CastAndCrewView(media: store.media, buildActorStoreClosure: store.buildStoreForActor)
                     .padding(.horizontal, 4)
                 Spacer()
             }
@@ -110,7 +119,7 @@ struct PostersCarouselView: View {
             }
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        .background(.secondary)
+        .background(.clear)
         .clipped()
     }
 }
