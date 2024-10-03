@@ -11,6 +11,7 @@ import MovieListFramework
 
 struct CastAndCrewView: View {
     let media: MediaViewModel
+    let buildActorStoreClosure: ((Int) -> ActorProfileStore)!
     var body: some View {
         VStack {
             Text("Cast")
@@ -20,9 +21,14 @@ struct CastAndCrewView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .top) {
                     ForEach(getCrew(), id: \.id) { cast in
-                        CastView(cast: cast)
-//                            .background(.yellow)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                        NavigationLink {
+                            ActorProfileView(store: buildActorStoreClosure(cast.id), actor: .loadMockData()!)
+                        } label: {
+                            CastView(cast: cast)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                        .buttonStyle(.plain)
+
                     }
                 }
             }
@@ -33,6 +39,7 @@ struct CastAndCrewView: View {
         .clipShape(RoundedRectangle(cornerRadius: 10))
     }
     
+    
     private func getCrew() -> [Cast] {
         return media.credits?.cast ?? []
     }
@@ -41,7 +48,16 @@ struct CastAndCrewView: View {
 #Preview {
     let mock = MediaCredits.loadMockData()!
     let media = MediaViewModel(mock)
-    CastAndCrewView(media: media)
+    NavigationStack {
+        CastAndCrewView(media: media, buildActorStoreClosure: { id in
+            let interactor = ActorProfileInteractor(networkingService: TMDBNetworkingService())
+            let presenter = ActorProfilePresenter(interactor: interactor)
+            let store = ActorProfileStore(presenter: presenter, actorId: id)
+            presenter.output = store
+            return store
+            
+        })
+    }
 }
 
 struct CastView: View {
@@ -61,7 +77,6 @@ struct CastView: View {
                             .tint(.black)
                     }
                 }
-//                .padding(4)
                 .scaledToFit()
                 .frame(width: 100)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
