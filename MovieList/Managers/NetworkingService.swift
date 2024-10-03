@@ -14,6 +14,7 @@ protocol NetworkingService {
     func getMediaDetails(for mediaTypeId: MediaTypeID) async throws -> Data
     func getMediaCredits(for mediaTypeId: MediaTypeID) async throws -> Data
     func getImagesForMedia(for mediaTypeId: MediaTypeID) async throws -> Data
+    func getActorDetails(for actorId: Int) async throws -> Data
 }
 
 //ver lo de page para el metodo searchMEdia
@@ -56,6 +57,12 @@ class TMDBNetworkingService {
         }
         
         return try await makeNetworkCall(with: mediaCreditsEndpoint)
+    }
+    
+    func getActorDetails(for actorId: Int) async throws -> Data {
+        let actorDetailsEndpoint: MovieDBEndpoint = .personDetails(id: actorId)
+        
+        return try await makeNetworkCall(with: actorDetailsEndpoint)
     }
     
     func getImagesForMedia(for mediaTypeId: MediaTypeID) async throws -> Data {
