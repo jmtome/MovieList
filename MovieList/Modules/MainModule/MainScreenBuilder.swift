@@ -77,7 +77,7 @@ class HostingController: UIViewController {
         presenter.output = store
         favoritesPresenter.output = store
 
-        let mainScreenView = MainScreenView(dataSource: dataSource, isFavorited: MyTestPublisher(), newVM: store)
+        let mainScreenView = MainScreenView(dataSource: dataSource, newVM: store)
         
         // Create a UIHostingController with the SwiftUI view
         let hostingController = UIHostingController(rootView: mainScreenView)
