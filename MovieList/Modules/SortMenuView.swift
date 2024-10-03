@@ -41,7 +41,7 @@ struct SortMenuView<T: SortableEnum>: View where T.AllCases: RandomAccessCollect
                 }
             }
         } label: {
-            Label("Sort", systemImage: "ellipsis.circle")
+            Label("", systemImage: "ellipsis.circle")
         }
     }
 }
