@@ -226,7 +226,7 @@ struct MediaFacts: View {
             return ""
         }
     }
-
+    
     private func getRuntime() -> String {
         if let runtime = media.runtime.first {
             return "\(runtime) min"
