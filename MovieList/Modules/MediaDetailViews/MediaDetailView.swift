@@ -106,7 +106,7 @@ struct PostersCarouselView: View {
                     AsyncImage(url: URL) { image in
                         image
                             .resizable()
-                            .scaledToFit()
+                            .scaledToFill()
                             .frame(width: UIScreen.main.bounds.width)
                     } placeholder: {
                         ProgressView()
@@ -242,17 +242,3 @@ struct MediaFacts: View {
     }
 }
 
-
-// From carousel
-
-//        ScrollView(.horizontal) {
-//            HStack {
-//                ForEach(0..<images.count, id: \.self) { index in
-//                    images[index]
-//                        .resizable()
-//                        .scaledToFit()
-//                        .frame(width: UIScreen.main.bounds.width)
-//
-//                }
-//            }
-        //        }
