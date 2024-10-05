@@ -83,7 +83,7 @@ struct MediaDetailView: View {
     let router = MediaDetailRouter()
     let interactor = MediaDetailInteractor(networkingService: TMDBNetworkingService())
     let presenter = MediaDetailPresenter(interactor: interactor, router: router, mediaTypeId: (.movie, media.id))
-    let store = MediaDetailStore(presenter: presenter)
+    let store = MediaDetailStore(presenter: presenter, onDismissClosure: nil)
     NavigationStack {
         MediaDetailView(store: store, media: media)
             .navigationBarTitleDisplayMode(.inline)
