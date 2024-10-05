@@ -14,8 +14,9 @@ class MediaDetailStore: ObservableObject {
     var onDismissClosure: (() -> Void)? = nil
     //Viper Actors
     var presenter: MediaDetailPresenterInputProtocol!
-    init(presenter: MediaDetailPresenterInputProtocol) {
+    init(presenter: MediaDetailPresenterInputProtocol, onDismissClosure: (() -> Void)?) {
         self.presenter = presenter
+        self.onDismissClosure = onDismissClosure
     }
     var title: String { presenter.title ?? "No Title2" }
     func fetchMediaDetails() {
