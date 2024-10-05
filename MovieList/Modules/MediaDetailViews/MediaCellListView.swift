@@ -62,7 +62,7 @@ struct MediaCellListView: View {
     
     var body: some View {
         HStack(alignment: .top) {
-            AsyncImage(url: URL(string: fullPosterPath(posterPath: media.mainPosterURLString) ?? ""), content: { image in
+            AsyncImage(url: URL(string: media.mainPosterURLString ?? ""), content: { image in
                 image
                     .resizable()
                     .frame(width: 80, height: 120)
