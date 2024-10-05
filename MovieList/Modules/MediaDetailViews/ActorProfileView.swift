@@ -277,7 +277,7 @@ struct MediaAppearances: View {
     let presenter = ActorProfilePresenter(interactor: interactor)
     let store = ActorProfileStore(presenter: presenter, actorId: actor.id)
     NavigationStack {
-        ActorProfileView(store: store, actor: actor)
+        ActorProfileView(store: store)
             .navigationBarTitleDisplayMode(.inline)
     }
     .preferredColorScheme(.dark)
