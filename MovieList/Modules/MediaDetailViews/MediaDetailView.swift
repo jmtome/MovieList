@@ -45,16 +45,8 @@ class MediaDetailStore: ObservableObject {
 }
 extension MediaDetailStore: MediaDetailPresenterOutputProtocol {
     func updateUI() {
-        //here i should also see to implement the behaviour when the user taps to fav/unfav in the detail screen
         DispatchQueue.main.async {
             self.media = self.presenter.getViewModel() ?? MediaViewModel()
-            print("#### backdrops are")
-            self.media.backdrops.forEach { backdrop in
-//                print(backdrop.fullImagePath)
-            }
-            self.media.credits?.crew.forEach({ actor in
-                print(actor.profilePicturePath)
-            })
         }
     }
 }
