@@ -13,7 +13,7 @@ struct MediaCellGridView: View {
     private let placeHolderImage: Image = Image(systemName: "popcorn")
 
     var body: some View {
-        if let posterPath = fullPosterPath(posterPath: media.mainPosterURLString), let URL = URL(string: posterPath) {
+        if let posterPath = media.mainPosterURLString, let URL = URL(string: posterPath) {
             AsyncImage(url: URL) { image in
                 image
                     .resizable()
