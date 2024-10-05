@@ -88,12 +88,18 @@ extension MediaDetailPresenter: MediaDetailPresenterInputProtocol {
 }
 
 extension MediaDetailPresenter: MediaDetailInteractorOutputProtocol {
+    func didReceiveMediaStreamingDetails(providers: CountryWatchProviders?) {
+        isLoading = false
+        self.viewModel?.countryWatchProviders = providers
+    }
+    
     func didReceiveMediaDetails(_ media: MediaViewModel) {
         isLoading = false
         
         self.viewModel = media
         interactor.fetchMediaImages(for: (type: media.type, id: media.id))
         interactor.fetchMediaCredits(for: (type: media.type, id: media.id))
+        interactor.fetchMediaStreamers(for: (type: media.type, id: media.id))
     }
     
     func didReceiveMediaImages(backdrops: [MediaImage], posters: [MediaImage]) {
