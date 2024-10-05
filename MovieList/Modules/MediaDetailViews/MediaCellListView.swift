@@ -26,7 +26,7 @@ struct MediaCellGridView: View {
                     .scaledToFit()
                     .frame(width: 80, height: 120)
                     .clipShape(RoundedRectangle(cornerRadius: 6))
-                    
+                    .tint(.white)
             }
 
         }
@@ -47,9 +47,6 @@ struct MediaCellGridView: View {
         }
         return myData
     }()
-//    List(dummyData, id: \.id) { mediaItem in
-//        MediaCellGridView(media: MediaViewModel.viewModelFrom(mediaItem: mediaItem))
-//    }
     let columns = [
         GridItem(.adaptive(minimum: 80))
     ]
@@ -78,15 +75,13 @@ struct MediaCellListView: View {
                     .scaledToFit()
                     .padding(.all, 0)
                     .foregroundColor(Color(uiColor: UIColor.prussianBlue))
-                    .background(.white)
             }, placeholder: {
                 placeHolderImage
                     .resizable()
-                    .frame(width: 80, height: 120)
                     .scaledToFit()
-                    .padding(.all, 5)
-                    .foregroundColor(Color(uiColor: UIColor.prussianBlue))
-                    .background(.white)
+                    .frame(width: 80, height: 120)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .tint(.white)
             })
                 .cornerRadius(8)
                 .padding(.leading, 4)
@@ -113,8 +108,6 @@ struct MediaCellListView: View {
         .frame(maxWidth: .infinity, alignment: .leading) // Make HStack fill available width
         .background(Color(uiColor: .systemFill))
         .cornerRadius(12)
-//        .padding(.leading, 0)
-//        .padding(.trailing, 0)
     }
     
     func fullPosterPath(posterPath: String?) -> String? {
