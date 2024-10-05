@@ -31,12 +31,6 @@ struct MediaCellGridView: View {
 
         }
     }
-    func fullPosterPath(posterPath: String?) -> String? {
-        guard let posterPath = posterPath else {
-            return nil
-        }
-        return "https://image.tmdb.org/t/p/w500/\(posterPath)"
-    }
 }
 
 #Preview {
