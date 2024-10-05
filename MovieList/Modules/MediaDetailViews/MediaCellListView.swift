@@ -114,7 +114,9 @@ struct MediaCellListView: View {
         guard let posterPath = posterPath else {
             return nil
         }
-        return "https://image.tmdb.org/t/p/w500/\(posterPath)"
+        print("#### posterpath is : \(posterPath)")
+        return posterPath
+//        return "https://image.tmdb.org/t/p/w500/\(posterPath)"
     }
 }
 
