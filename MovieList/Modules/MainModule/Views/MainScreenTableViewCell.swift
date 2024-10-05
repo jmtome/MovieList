@@ -8,50 +8,6 @@
 import UIKit
 import SwiftUI
 
-
-class MediaTableViewCell: UITableViewCell {
-    
-    private var hostingController: UIHostingController<MediaCellView>?
-    static let reuseIdentifier = "MediaTableViewCell"
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupHostingController()
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupHostingController()
-    }
-    
-    private func setupHostingController() {
-        // Initialize UIHostingController with an empty MediaCellView
-        let swiftUIView = MediaCellView(media: MediaViewModel()) // You can initialize this with placeholder data
-        hostingController = UIHostingController(rootView: swiftUIView)
-        
-        // Add the hosting controller’s view to the cell’s content view
-        if let hostingView = hostingController?.view {
-            hostingView.translatesAutoresizingMaskIntoConstraints = false
-            contentView.addSubview(hostingView)
-            
-            // Set constraints for the SwiftUI view
-            NSLayoutConstraint.activate([
-                hostingView.topAnchor.constraint(equalTo: contentView.topAnchor),
-                hostingView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-                hostingView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-                hostingView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8)
-            ])
-        }
-    }
-    
-    // Update method to pass new data to the SwiftUI view
-    func configure(with media: MediaViewModel) {
-        hostingController?.rootView = MediaCellView(media: media)
-    }
-}
-
-
-
 class MainScreenTableViewCell: UITableViewCell {
     
     // MARK: - Properties
