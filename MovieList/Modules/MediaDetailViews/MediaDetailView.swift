@@ -64,6 +64,9 @@ struct MediaDetailView: View {
                 MediaFacts(media: store.media)
                     .padding(.horizontal, 4)
                 
+                MediaStreamersView(streamers: store.media.countryWatchProviders)
+                    .padding(.horizontal, 4)
+                
                 CastAndCrewView(media: store.media, buildActorStoreClosure: store.buildStoreForActor)
                     .padding(.horizontal, 4)
                 
