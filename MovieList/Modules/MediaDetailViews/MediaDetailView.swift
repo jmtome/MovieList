@@ -57,13 +57,6 @@ struct MediaDetailView: View {
     let media: MediaViewModel
     var body: some View {
         VStack(spacing: 20) {
-            ZStack(alignment: .bottomLeading) {
-                PostersCarouselView(media: store.media)
-                    .frame(height: 230)
-                OverlaySpecsView(media: store.media)
-            }
-            .padding(.horizontal, 0)
-            
             ScrollView(.vertical, showsIndicators: false) {
                 TitleAndOverviewView(media: store.media)
                     .padding(.horizontal, 4)
