@@ -44,6 +44,8 @@ struct Movie: Media, Codable, Hashable  {
     var tagline: String? = nil
     var credits: MediaCredits? = nil
     
+    var videos: VideoResults? = nil
+    
     var fullPosterPath: String? {
         guard let posterPath = posterPath else {
             return nil
@@ -51,7 +53,7 @@ struct Movie: Media, Codable, Hashable  {
         return "https://image.tmdb.org/t/p/w500/\(posterPath)"
     }
     
-    internal init(adult: Bool? = nil, backdropPath: String? = nil, id: Int? = nil, mediaType: String? = nil, genreIds: [Int]? = nil, originalLanguage: String? = nil, originalTitle: String? = nil, overview: String? = nil, posterPath: String? = nil, releaseDate: String? = nil, title: String? = nil, video: Bool? = nil, voteAverage: Double? = nil, voteCount: Int? = nil, firstAirDate: String? = nil, originCountry: [String]? = nil, popularity: Double? = nil, credits: MediaCredits? = nil) {
+    internal init(adult: Bool? = nil, backdropPath: String? = nil, id: Int? = nil, mediaType: String? = nil, genreIds: [Int]? = nil, originalLanguage: String? = nil, originalTitle: String? = nil, overview: String? = nil, posterPath: String? = nil, releaseDate: String? = nil, title: String? = nil, video: Bool? = nil, voteAverage: Double? = nil, voteCount: Int? = nil, firstAirDate: String? = nil, originCountry: [String]? = nil, popularity: Double? = nil, credits: MediaCredits? = nil, videos: VideoResults? = nil) {
         self.adult = adult
         self.backdropPath = backdropPath
         self.id = id
@@ -70,6 +72,7 @@ struct Movie: Media, Codable, Hashable  {
         self.originCountry = originCountry
         self.popularity = popularity
         self.credits = credits
+        self.videos = videos
     }
     
     init() {
@@ -77,7 +80,7 @@ struct Movie: Media, Codable, Hashable  {
     }
     
     enum CodingKeys: String, CodingKey {
-        case adult, id, overview, video, title, genreIds, popularity
+        case adult, id, overview, video, videos, title, genreIds, popularity
         case backdropPath = "backdrop_path"
         case mediaType = "media_type"
         case originalLanguage = "original_language"
