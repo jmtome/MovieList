@@ -103,14 +103,5 @@ struct MediaCellListView: View {
         .background(Color(uiColor: .systemFill))
         .cornerRadius(12)
     }
-    
-    func fullPosterPath(posterPath: String?) -> String? {
-        guard let posterPath = posterPath else {
-            return nil
-        }
-        print("#### posterpath is : \(posterPath)")
-        return posterPath
-//        return "https://image.tmdb.org/t/p/w500/\(posterPath)"
-    }
 }
 
