@@ -8,6 +8,17 @@
 import SwiftUI
 import MovieListFramework
 
+private enum HomeMode {
+    case list, grid
+    
+    func icon() -> String {
+        switch self {
+        case .list: return "rectangle.3.offgrid.fill"
+        case .grid: return "rectangle.grid.1x2"
+        }
+    }
+}
+
 class MediaViewStore: ObservableObject {
     @Published var mediaVM: [MediaViewModel] = []
     var presenter: MainScreenPresenterInputProtocol
