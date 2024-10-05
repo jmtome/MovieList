@@ -50,7 +50,8 @@ struct Movie: Media, Codable, Hashable  {
         guard let posterPath = posterPath else {
             return nil
         }
-        return "https://image.tmdb.org/t/p/w500/\(posterPath)"
+        print("#### posterpath movie: \(posterPath)")
+        return "https://image.tmdb.org/t/p/w154/\(posterPath)"
     }
     
     internal init(adult: Bool? = nil, backdropPath: String? = nil, id: Int? = nil, mediaType: String? = nil, genreIds: [Int]? = nil, originalLanguage: String? = nil, originalTitle: String? = nil, overview: String? = nil, posterPath: String? = nil, releaseDate: String? = nil, title: String? = nil, video: Bool? = nil, voteAverage: Double? = nil, voteCount: Int? = nil, firstAirDate: String? = nil, originCountry: [String]? = nil, popularity: Double? = nil, credits: MediaCredits? = nil, videos: VideoResults? = nil) {
