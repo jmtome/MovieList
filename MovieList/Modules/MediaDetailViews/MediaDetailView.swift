@@ -95,12 +95,6 @@ struct PostersCarouselView: View {
     let images: [Image] = [Image(.dummy5), Image(.dummy7), Image(.dummy3), Image(.dummy4), Image(.dummy1), Image(.dummy6), Image(.dummy2), Image(.dummy8), Image(.dummy9), Image(.dummy10), Image(.dummy11), Image(.dummy12) ]
     var body: some View {
         TabView {
-            //            ForEach(0..<images.count, id: \.self) { index in
-            //                images[index]
-            //                    .resizable()
-            //                    .scaledToFit()
-            //                    .frame(width: UIScreen.main.bounds.width)
-            //            }
             ForEach(0..<media.backdrops.count, id: \.self) { index in
                 if let URL = URL(string: media.backdrops[index].fullImagePath) {
                     AsyncImage(url: URL) { image in
