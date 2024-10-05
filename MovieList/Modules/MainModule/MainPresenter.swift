@@ -35,7 +35,9 @@ protocol MainScreenPresenterInputProtocol: AnyObject {
     func sortMedia(with option: SortingOption)
     
     func isFavorite(at index: Int) -> Bool
+    func isFavorite(viewModel: MediaViewModel) -> Bool
     func handleFavoriteAction(at index: Int)
+    func handleFavoriteAction(viewModel: MediaViewModel)
     
     func didSelectCell(at index: Int)
     
@@ -110,6 +112,7 @@ extension MainScreenPresenter: MainScreenPresenterInputProtocol {
     }
     
     func viewDidLoad() {
+        isLoading = true 
         interactor.searchMedia(with: currentQuery, scope: currentScope, page: currentPage)
     }
     
@@ -144,8 +147,14 @@ extension MainScreenPresenter: MainScreenPresenterInputProtocol {
     func isFavorite(at index: Int) -> Bool {
         return interactor.isMovieInFavorites(media: viewModel[index])
     }
+    func isFavorite(viewModel: MediaViewModel) -> Bool {
+        interactor.isMovieInFavorites(media: viewModel)
+    }
     func handleFavoriteAction(at index: Int) {
         interactor.handleFavoriteAction(with: viewModel[index])
+    }
+    func handleFavoriteAction(viewModel: MediaViewModel) {
+        interactor.handleFavoriteAction(with: viewModel)
     }
     
     func didSelectCell(at index: Int) {

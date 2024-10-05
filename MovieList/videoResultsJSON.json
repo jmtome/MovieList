@@ -1,0 +1,254 @@
+{
+   "adult":false,
+   "backdrop_path":"/hND7xAaxxBgaIspp9iMsaEXOSTz.jpg",
+   "belongs_to_collection":{
+      "id":1069584,
+      "name":"Gladiator Collection",
+      "poster_path":"/r7uyUOB6fmmPumWwHiV7Hn2kUbL.jpg",
+      "backdrop_path":"/eCWJHiezqeSvn0aEt1kPM6Lmlhe.jpg"
+   },
+   "budget":103000000,
+   "genres":[
+      {
+         "id":28,
+         "name":"Action"
+      },
+      {
+         "id":18,
+         "name":"Drama"
+      },
+      {
+         "id":12,
+         "name":"Adventure"
+      }
+   ],
+   "homepage":"",
+   "id":98,
+   "imdb_id":"tt0172495",
+   "origin_country":[
+      "US"
+   ],
+   "original_language":"en",
+   "original_title":"Gladiator",
+   "overview":"In the year 180, the death of emperor Marcus Aurelius throws the Roman Empire into chaos.  Maximus is one of the Roman army's most capable and trusted generals and a key advisor to the emperor.  As Marcus' devious son Commodus ascends to the throne, Maximus is set to be executed.  He escapes, but is captured by slave traders.  Renamed Spaniard and forced to become a gladiator, Maximus must battle to the death with other men for the amusement of paying audiences.",
+   "popularity":90.342,
+   "poster_path":"/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg",
+   "production_companies":[
+      {
+         "id":33,
+         "logo_path":"/8lvHyhjr8oUKOOy2dKXoALWKdp0.png",
+         "name":"Universal Pictures",
+         "origin_country":"US"
+      },
+      {
+         "id":1645,
+         "logo_path":"/6Ry6uNBaa0IbbSs1XYIgX5DkA9r.png",
+         "name":"Scott Free Productions",
+         "origin_country":"GB"
+      },
+      {
+         "id":14440,
+         "logo_path":"/5QbaGiuxc91D6qf75JZGX6OKXoU.png",
+         "name":"Red Wagon Entertainment",
+         "origin_country":"US"
+      },
+      {
+         "id":21904,
+         "logo_path":null,
+         "name":"Mill Film",
+         "origin_country":"GB"
+      },
+      {
+         "id":7,
+         "logo_path":"/vru2SssLX3FPhnKZGtYw00pVIS9.png",
+         "name":"DreamWorks Pictures",
+         "origin_country":"US"
+      }
+   ],
+   "production_countries":[
+      {
+         "iso_3166_1":"GB",
+         "name":"United Kingdom"
+      },
+      {
+         "iso_3166_1":"US",
+         "name":"United States of America"
+      }
+   ],
+   "release_date":"2000-05-04",
+   "revenue":465361176,
+   "runtime":155,
+   "spoken_languages":[
+      {
+         "english_name":"English",
+         "iso_639_1":"en",
+         "name":"English"
+      }
+   ],
+   "status":"Released",
+   "tagline":"What we do in life echoes in eternity.",
+   "title":"Gladiator",
+   "video":false,
+   "vote_average":8.217,
+   "vote_count":18287,
+   "videos":{
+      "results":[
+         {
+            "iso_639_1":"en",
+            "iso_3166_1":"US",
+            "name":"The Emperor Wounds Maximus Before Battle - Full Scene",
+            "key":"j5qCH1odB3M",
+            "site":"YouTube",
+            "size":1080,
+            "type":"Clip",
+            "official":true,
+            "published_at":"2024-09-28T11:59:51.000Z",
+            "id":"66fa61d7c59a2db32dcfffa1"
+         },
+         {
+            "iso_639_1":"en",
+            "iso_3166_1":"US",
+            "name":"Omid Djalili's fond memories on the set of Gladiator REVEALED! | Plot Twist",
+            "key":"UgtUTpDlXYs",
+            "site":"YouTube",
+            "size":1080,
+            "type":"Featurette",
+            "official":true,
+            "published_at":"2023-06-27T16:02:00.000Z",
+            "id":"649cbda2c9dbf900e8ef54f8"
+         },
+         {
+            "iso_639_1":"en",
+            "iso_3166_1":"US",
+            "name":"\"Are You Not Entertained\" Clip",
+            "key":"yD0XIowNAG8",
+            "site":"YouTube",
+            "size":720,
+            "type":"Clip",
+            "official":true,
+            "published_at":"2022-01-27T17:45:12.000Z",
+            "id":"61f965c0ae28110045f2ba63"
+         },
+         {
+            "iso_639_1":"en",
+            "iso_3166_1":"US",
+            "name":"Paramount Movies Trailer",
+            "key":"P5ieIbInFpg",
+            "site":"YouTube",
+            "size":1080,
+            "type":"Trailer",
+            "official":true,
+            "published_at":"2021-06-17T15:59:56.000Z",
+            "id":"61f966bab6abc4001ccaf063"
+         },
+         {
+            "iso_639_1":"en",
+            "iso_3166_1":"US",
+            "name":"Every Gladiator Battle Scene",
+            "key":"KMcWh4nWqBE",
+            "site":"YouTube",
+            "size":1080,
+            "type":"Clip",
+            "official":true,
+            "published_at":"2020-05-06T15:00:13.000Z",
+            "id":"61f96851b7abb50066593f35"
+         },
+         {
+            "iso_639_1":"en",
+            "iso_3166_1":"US",
+            "name":"Theatrical Trailer",
+            "key":"TcYIqlBihW4",
+            "site":"YouTube",
+            "size":1080,
+            "type":"Trailer",
+            "official":true,
+            "published_at":"2018-11-13T01:26:34.000Z",
+            "id":"61f9673b559d220105d22efc"
+         },
+         {
+            "iso_639_1":"en",
+            "iso_3166_1":"US",
+            "name":"Gladiator Wins Costume Design: 2001 Oscars",
+            "key":"rdD3mKd1qcY",
+            "site":"YouTube",
+            "size":480,
+            "type":"Featurette",
+            "official":true,
+            "published_at":"2016-02-04T20:40:23.000Z",
+            "id":"63d1700be72fe800aa01be5d"
+         },
+         {
+            "iso_639_1":"en",
+            "iso_3166_1":"US",
+            "name":"\"Gladiator\" and \"U-571\" winning Oscars® for Sound and Sound Editing",
+            "key":"sQKfkmCp25w",
+            "site":"YouTube",
+            "size":480,
+            "type":"Featurette",
+            "official":true,
+            "published_at":"2016-02-04T20:40:22.000Z",
+            "id":"63d1704166ae4d007bf63c08"
+         },
+         {
+            "iso_639_1":"en",
+            "iso_3166_1":"US",
+            "name":"The Story of the \"Gladiator\" Costume",
+            "key":"rB7HBbxVieI",
+            "site":"YouTube",
+            "size":1080,
+            "type":"Featurette",
+            "official":false,
+            "published_at":"2015-08-17T16:57:44.000Z",
+            "id":"65c4bcb1fd6fa10187796324"
+         },
+         {
+            "iso_639_1":"en",
+            "iso_3166_1":"US",
+            "name":"\"Gladiator\" winning the Oscar® for Visual Effects",
+            "key":"LXw8I2Q4O6s",
+            "site":"YouTube",
+            "size":480,
+            "type":"Featurette",
+            "official":true,
+            "published_at":"2014-02-09T19:33:19.000Z",
+            "id":"63d1705e9f51af00dc259746"
+         },
+         {
+            "iso_639_1":"en",
+            "iso_3166_1":"US",
+            "name":"\"Gladiator\" winning Best Picture | 73rd Oscars (2001)",
+            "key":"UBYNeTIX7zs",
+            "site":"YouTube",
+            "size":480,
+            "type":"Featurette",
+            "official":true,
+            "published_at":"2011-07-29T23:56:36.000Z",
+            "id":"63d1704ea410c811e9be5f73"
+         },
+         {
+            "iso_639_1":"en",
+            "iso_3166_1":"US",
+            "name":"Russell Crowe winning Best Actor",
+            "key":"hwjqlN3jueg",
+            "site":"YouTube",
+            "size":480,
+            "type":"Featurette",
+            "official":true,
+            "published_at":"2010-10-27T16:58:21.000Z",
+            "id":"63d17033a410c812385cba39"
+         },
+         {
+            "iso_639_1":"en",
+            "iso_3166_1":"US",
+            "name":"Director Ridley Scott discussing \"Gladiator\"",
+            "key":"x2jDbgQ57ZM",
+            "site":"YouTube",
+            "size":480,
+            "type":"Featurette",
+            "official":true,
+            "published_at":"2008-06-03T20:21:02.000Z",
+            "id":"63d17095a410c8125be657fe"
+         }
+      ]
+   }
+}

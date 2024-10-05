@@ -8,7 +8,63 @@
 import SwiftUI
 import MovieListFramework
 
-struct MediaCellView: View {
+struct MediaCellGridView: View {
+    var media: MediaViewModel
+    private let placeHolderImage: Image = Image(systemName: "popcorn")
+
+    var body: some View {
+        if let posterPath = fullPosterPath(posterPath: media.mainPosterURLString), let URL = URL(string: posterPath) {
+            AsyncImage(url: URL) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 80, height: 120)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+            } placeholder: {
+                placeHolderImage
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 80, height: 120)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    
+            }
+
+        }
+    }
+    func fullPosterPath(posterPath: String?) -> String? {
+        guard let posterPath = posterPath else {
+            return nil
+        }
+        return "https://image.tmdb.org/t/p/w500/\(posterPath)"
+    }
+}
+
+#Preview {
+    var dummyData: [MediaItem] = {
+        var myData: [MediaItem] = []
+        for index in 0..<20 {
+            myData.append(MocchyItems.expectedItems(at: index))
+        }
+        return myData
+    }()
+//    List(dummyData, id: \.id) { mediaItem in
+//        MediaCellGridView(media: MediaViewModel.viewModelFrom(mediaItem: mediaItem))
+//    }
+    let columns = [
+        GridItem(.adaptive(minimum: 80))
+    ]
+    ScrollView {
+        LazyVGrid(columns: columns, alignment: .center, spacing: 20) {
+            ForEach(dummyData, id: \.id) { mediaItem in
+                MediaCellGridView(media: MediaViewModel.viewModelFrom(mediaItem: mediaItem))
+            }
+        }
+    }
+    .listStyle(.grouped)
+    .preferredColorScheme(.dark)
+}
+
+struct MediaCellListView: View {
     
     var media: MediaViewModel
     private let placeHolderImage: Image = Image(systemName: "popcorn")
@@ -19,7 +75,7 @@ struct MediaCellView: View {
                 image
                     .resizable()
                     .frame(width: 80, height: 120)
-                    .aspectRatio(contentMode: .fill)
+                    .scaledToFit()
                     .padding(.all, 0)
                     .foregroundColor(Color(uiColor: UIColor.prussianBlue))
                     .background(.white)
@@ -27,7 +83,7 @@ struct MediaCellView: View {
                 placeHolderImage
                     .resizable()
                     .frame(width: 80, height: 120)
-                    .aspectRatio(contentMode: .fill)
+                    .scaledToFit()
                     .padding(.all, 5)
                     .foregroundColor(Color(uiColor: UIColor.prussianBlue))
                     .background(.white)
@@ -69,20 +125,20 @@ struct MediaCellView: View {
     }
 }
 
-#Preview {
-    var dummyData: [MediaItem] = {
-        var myData: [MediaItem] = []
-        for index in 0..<20 {
-            myData.append(MocchyItems.expectedItems(at: index))
-        }
-        return myData
-    }()
-    List(dummyData, id: \.id) { mediaItem in
-        MediaCellView(media: MediaViewModel.viewModelFrom(mediaItem: mediaItem))
-    }
-    .listStyle(.grouped)
-    .preferredColorScheme(.dark)
-}
+//#Preview {
+//    var dummyData: [MediaItem] = {
+//        var myData: [MediaItem] = []
+//        for index in 0..<20 {
+//            myData.append(MocchyItems.expectedItems(at: index))
+//        }
+//        return myData
+//    }()
+//    List(dummyData, id: \.id) { mediaItem in
+//        MediaCellListView(media: MediaViewModel.viewModelFrom(mediaItem: mediaItem))
+//    }
+//    .listStyle(.grouped)
+//    .preferredColorScheme(.dark)
+//}
 
 //private extension MediaViewModel {
 //    private static func viewModelFrom(mediaItem: MediaItem) -> MediaViewModel {
