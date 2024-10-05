@@ -69,6 +69,15 @@ struct MediaDetailView: View {
                 Spacer()
             }
             .navigationTitle(store.title)
+            .toolbar {
+                ToolbarItem(placement: .automatic) {
+                    Button(action: {
+                        store.handleFavoriteAction()
+                    }) {
+                        Image(systemName: store.isInFavorites() ? "star.fill" : "star")
+                    }
+                }
+            }
         }
         .onAppear {
             store.fetchMediaDetails()
