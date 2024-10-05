@@ -13,6 +13,7 @@ protocol NetworkingService {
     
     func getMediaDetails(for mediaTypeId: MediaTypeID) async throws -> Data
     func getMediaCredits(for mediaTypeId: MediaTypeID) async throws -> Data
+    func getMediaStreamers(for mediaTypeId: MediaTypeID) async throws -> Data
     func getImagesForMedia(for mediaTypeId: MediaTypeID) async throws -> Data
     func getActorDetails(for actorId: Int) async throws -> Data
 }
@@ -57,6 +58,19 @@ class TMDBNetworkingService {
         }
         
         return try await makeNetworkCall(with: mediaCreditsEndpoint)
+    }
+    
+    func getMediaStreamers(for mediaTypeId: MediaTypeID) async throws -> Data {
+        let mediaStreamersEndpoint: MovieDBEndpoint
+        
+        switch mediaTypeId.type {
+        case .movie:
+            mediaStreamersEndpoint = .movieStreamers(id: mediaTypeId.id)
+        case .tvshow:
+            mediaStreamersEndpoint = .tvStreamers(id: mediaTypeId.id)
+        }
+        
+        return try await makeNetworkCall(with: mediaStreamersEndpoint)
     }
     
     func getActorDetails(for actorId: Int) async throws -> Data {
