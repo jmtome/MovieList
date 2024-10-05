@@ -47,6 +47,9 @@ enum MovieDBEndpoint {
     case movieCredits(id: Int)
     case tvShowCredits(id: Int)
     
+    case movieStreamers(id: Int)
+    case tvStreamers(id: Int)
+    
     case movieImages(id: Int)
     case tvShowImages(id: Int)
     
@@ -76,6 +79,10 @@ enum MovieDBEndpoint {
             return ApiDict.movieDetailsPath + "\(id)" + "/credits"
         case .tvShowCredits(id: let id):
             return ApiDict.tvShowDetailsPath + "\(id)" + "/credits"
+        case .movieStreamers(id: let id):
+            return ApiDict.movieDetailsPath + "\(id)" + "/watch/providers"
+        case .tvStreamers(id: let id):
+            return ApiDict.tvShowDetailsPath + "\(id)" + "/watch/providers"
         case .movieImages(id: let id):
             return ApiDict.movieDetailsPath + "\(id)" + "/images"
         case .tvShowImages(id: let id):
@@ -100,11 +107,17 @@ enum MovieDBEndpoint {
                 URLQueryItem(name: "api_key", value: ApiDict.apiKey),
                 URLQueryItem(name: "page", value: String(page))
             ]
-        case .movieDetails, .tvShowDetails, .movieCredits, .tvShowCredits, .movieImages, .tvShowImages, .imageWithPath:
+        case .movieDetails, .tvShowDetails:
+            return [
+                URLQueryItem(name: "api_key", value: ApiDict.apiKey),
+                URLQueryItem(name: "append_to_response", value: "videos")
+
+            ]
+        case .movieCredits, .tvShowCredits, .movieImages, .tvShowImages, .imageWithPath, .movieStreamers, .tvStreamers:
             return [
                 URLQueryItem(name: "api_key", value: ApiDict.apiKey)
             ]
-        case .personDetails(id: let id):
+        case .personDetails:
             return [
                 URLQueryItem(name: "api_key", value: ApiDict.apiKey),
                 URLQueryItem(name: "append_to_response", value: "movie_credits,images")
