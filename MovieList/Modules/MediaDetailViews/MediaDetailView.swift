@@ -58,6 +58,13 @@ struct MediaDetailView: View {
     var body: some View {
         VStack(spacing: 20) {
             ScrollView(.vertical, showsIndicators: false) {
+                ZStack(alignment: .bottomLeading) {
+                    PostersCarouselView(media: store.media)
+                        .frame(height: 180)
+                    OverlaySpecsView(media: store.media)
+                }
+                .padding(.horizontal, 0)
+                
                 TitleAndOverviewView(media: store.media)
                     .padding(.horizontal, 4)
                 
