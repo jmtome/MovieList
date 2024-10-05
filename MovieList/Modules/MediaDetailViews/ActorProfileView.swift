@@ -9,7 +9,7 @@ import SwiftUI
 import MovieListFramework
 
 class ActorProfileStore: ObservableObject {
-    @Published var actor: Person? = .loadMockData()
+    @Published var actor: Person?
     
     let presenter: ActorProfilePresenterInputProtocol!
     let actorId: Int

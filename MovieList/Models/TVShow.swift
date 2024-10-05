@@ -56,7 +56,10 @@ struct TVShow: Media, Codable, Hashable {
         guard let posterPath = posterPath else {
             return nil
         }
-        return "https://image.tmdb.org/t/p/w500/\(posterPath)"
+        print("#### posterpath tvshow: \(posterPath)")
+
+//        return posterPath
+        return "https://image.tmdb.org/t/p/w154/\(posterPath)"
     }
     
     init(mediaType: String? = nil, adult: Bool? = nil, backdropPath: String? = nil, genreIds: [Int]? = nil, id: Int? = nil, originalLanguage: String? = nil, originalName: String? = nil, overview: String? = nil, popularity: Double? = nil, posterPath: String? = nil, releaseDate: String? = nil, name: String? = nil, voteAverage: Double? = nil, voteCount: Int? = nil, createdBy: [Creator]? = nil, episodeRunTime: [Int]? = nil, firstAirDate: String? = nil, genres: [Genre]? = nil, homepage: String? = nil, inProduction: Bool? = nil, languages: [String]? = nil, lastAirDate: String? = nil, lastEpisodeToAir: Episode? = nil, networks: [Network]? = nil, numberOfEpisodes: Int? = nil, numberOfSeasons: Int? = nil, originCountry: [String]? = nil, productionCompanies: [ProductionCompany]? = nil, productionCountries: [ProductionCountry]? = nil, seasons: [Season]? = nil, spokenLanguages: [SpokenLanguage]? = nil, status: String? = nil, tagline: String? = nil, credits: MediaCredits? = nil, videos: VideoResults? = nil) {

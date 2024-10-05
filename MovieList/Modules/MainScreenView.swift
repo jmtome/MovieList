@@ -324,7 +324,6 @@ struct MainScreenList: View {
                     )
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         Button {
-                            //                                    isFavorited.favorite.toggle()
                             newVM.handleFavorite(mediaItem)
                             let generator = UIImpactFeedbackGenerator(style: .heavy)
                             generator.impactOccurred()

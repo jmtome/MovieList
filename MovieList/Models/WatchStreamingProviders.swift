@@ -81,7 +81,7 @@ struct Provider: Codable, Equatable, Hashable {
     let displayPriority: Int
     
     var providerLogoPath: String {
-        return "https://image.tmdb.org/t/p/w500/\(logoPath)"
+        return "https://image.tmdb.org/t/p/w300/\(logoPath)"
     }
 
     enum CodingKeys: String, CodingKey {

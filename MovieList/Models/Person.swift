@@ -29,7 +29,10 @@ struct Person: Codable {
         guard let profilePath = profilePath else {
             return nil
         }
-        return "https://image.tmdb.org/t/p/w500/\(profilePath)"
+        print("#### posterpath person: \(profilePath)")
+
+//        return profilePath
+        return "https://image.tmdb.org/t/p/w300/\(profilePath)"
     }
     
     enum CodingKeys: String, CodingKey {
