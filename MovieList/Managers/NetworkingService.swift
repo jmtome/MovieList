@@ -157,4 +157,22 @@ extension TMDBNetworkingService {
     }
 }
 
+struct CountryService {
+    static func fetchCountryCodeAsync() async -> String? {
+        guard let url = URL(string: "https://api.country.is/") else { return nil }
 
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let country = try JSONDecoder().decode(Country.self, from: data)
+            return country.country
+        } catch {
+            print("Error fetching country code: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    private struct Country: Codable {
+        let ip: String
+        let country: String
+    }
+}
