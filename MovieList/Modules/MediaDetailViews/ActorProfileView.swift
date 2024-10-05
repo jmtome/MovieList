@@ -45,7 +45,6 @@ extension ActorProfileStore: ActorProfilePresenterOutputProtocol {
 
 struct ActorProfileView: View {
     @StateObject var store: ActorProfileStore
-    let actor: Person
     @State var showFullSreen: Bool = false
     @State var bigImage: Image? = nil
     
