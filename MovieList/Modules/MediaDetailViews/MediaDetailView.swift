@@ -22,7 +22,13 @@ class MediaDetailStore: ObservableObject {
     func fetchMediaDetails() {
         presenter.viewDidLoad()
     }
+    func handleFavoriteAction() {
+        presenter.handleFavoriteAction()
+    }
     
+    func isInFavorites() -> Bool {
+        presenter.isMovieInFavorites()
+    }
     
     func onDismiss() {
         onDismissClosure?()
