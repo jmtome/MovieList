@@ -28,7 +28,7 @@ class ActorProfileStore: ObservableObject {
         
         let presenter = MediaDetailPresenter(interactor: interactor, router: MediaDetailRouter(), mediaTypeId: mediaDetails)
         interactor.output = presenter
-        let store = MediaDetailStore(presenter: presenter)
+        let store = MediaDetailStore(presenter: presenter, onDismissClosure: nil)
         presenter.output = store
        
         return store
@@ -264,7 +264,7 @@ struct MediaAppearances: View {
         
         let presenter = MediaDetailPresenter(interactor: interactor, router: MediaDetailRouter(), mediaTypeId: mediaDetails)
         interactor.output = presenter
-        let store = MediaDetailStore(presenter: presenter)
+        let store = MediaDetailStore(presenter: presenter, onDismissClosure: nil)
         presenter.output = store
        
         return store
