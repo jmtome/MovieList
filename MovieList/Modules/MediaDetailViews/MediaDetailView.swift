@@ -11,6 +11,7 @@ import MovieListFramework
 class MediaDetailStore: ObservableObject {
     @Published var media: MediaViewModel = MediaViewModel()
     
+    var onDismissClosure: (() -> Void)? = nil
     //Viper Actors
     var presenter: MediaDetailPresenterInputProtocol!
     init(presenter: MediaDetailPresenterInputProtocol) {
@@ -19,6 +20,11 @@ class MediaDetailStore: ObservableObject {
     var title: String { presenter.title ?? "No Title2" }
     func fetchMediaDetails() {
         presenter.viewDidLoad()
+    }
+    
+    
+    func onDismiss() {
+        onDismissClosure?()
     }
     
     func buildStoreForActor(for actorId: Int) -> ActorProfileStore {
@@ -74,6 +80,9 @@ struct MediaDetailView: View {
         }
         .onAppear {
             store.fetchMediaDetails()
+        }
+        .onDisappear {
+            store.onDismiss()
         }
     }
 }
