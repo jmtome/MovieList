@@ -22,7 +22,7 @@ struct CastAndCrewView: View {
                 HStack(alignment: .top) {
                     ForEach(getCrew(), id: \.id) { cast in
                         NavigationLink {
-                            ActorProfileView(store: buildActorStoreClosure(cast.id), actor: .loadMockData()!)
+                            ActorProfileView(store: buildActorStoreClosure(cast.id))
                         } label: {
                             CastView(cast: cast)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
