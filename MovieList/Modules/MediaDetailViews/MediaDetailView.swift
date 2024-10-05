@@ -33,7 +33,7 @@ class MediaDetailStore: ObservableObject {
         let presenter = ActorProfilePresenter(interactor: interactor)
         let store = ActorProfileStore(presenter: presenter, actorId: actorId)
         presenter.output = store
-        interactor.output = presenter 
+        interactor.output = presenter
         return store
     }
 }
