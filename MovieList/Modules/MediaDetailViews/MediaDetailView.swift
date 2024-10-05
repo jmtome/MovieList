@@ -66,7 +66,9 @@ struct MediaDetailView: View {
                 
                 CastAndCrewView(media: store.media, buildActorStoreClosure: store.buildStoreForActor)
                     .padding(.horizontal, 4)
-                Spacer()
+                
+                VideosView(videos: store.media.videos)
+                    .padding(.horizontal, 4)
             }
             .navigationTitle(store.title)
             .toolbar {
