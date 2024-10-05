@@ -41,6 +41,14 @@ final class FavoritesScreenPresenter {
 }
 
 extension FavoritesScreenPresenter: MainScreenPresenterInputProtocol {
+    func isFavorite(viewModel: MediaViewModel) -> Bool {
+        interactor.isMovieInFavorites(media: viewModel)
+    }
+    
+    func handleFavoriteAction(viewModel: MediaViewModel) {
+        interactor.handleFavoriteAction(with: viewModel)
+    }
+    
     var title: String {
         return "Favorite Media"
     }
