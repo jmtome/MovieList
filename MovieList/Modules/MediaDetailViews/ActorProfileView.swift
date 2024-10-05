@@ -222,7 +222,7 @@ struct MediaAppearances: View {
             
             ForEach(moviesVM.indices, id:\.self) { index in
                 NavigationLink(destination: MediaDetailView(store: buildStoreForDetails(with: moviesVM[index]), media: moviesVM[index])) {
-                    MediaCellView(media: moviesVM[index])
+                    MediaCellListView(media: moviesVM[index])
 
                 }
             }
