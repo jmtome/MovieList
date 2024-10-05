@@ -57,6 +57,7 @@ extension MainScreenInteractor: MainScreenInteractorProtocol {
                 }
             } catch let error {
                 print("error decoding popular media for scope: \(scope), page: \(page), error: \(error)")
+                output?.didEncounterError(error)
             }
         }
     }
