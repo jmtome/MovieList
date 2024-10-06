@@ -330,6 +330,8 @@ struct MainScreenView: View {
                     Button(action: {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             self.homeMode = self.homeMode == .grid ? .list : .grid
+                            let generator = UIImpactFeedbackGenerator(style: .heavy)
+                            generator.impactOccurred()
                         }
                     }) {
                         HStack {
@@ -346,10 +348,22 @@ struct MainScreenView: View {
         //            Text("Movies").tag(0)
         //            Text("Series").tag(1)
         //        }
-        .onChange(of: tabSelection) { newVM.fetchFavorites() }
+        .onChange(of: tabSelection) {
+            let generator = UIImpactFeedbackGenerator(style: .heavy)
+            generator.impactOccurred()
+            newVM.fetchFavorites()
+        }
         .onChange(of: searchText) { changedSearchOrScope() }
-        .onChange(of: selectedSortingOption) { newVM.sortMedia(sortOption: selectedSortingOption) }
-        .onChange(of: isAscending) { newVM.sortMedia(sortOption: selectedSortingOption) }
+        .onChange(of: selectedSortingOption) {
+            let generator = UIImpactFeedbackGenerator(style: .heavy)
+            generator.impactOccurred()
+            newVM.sortMedia(sortOption: selectedSortingOption)
+        }
+        .onChange(of: isAscending) {
+            let generator = UIImpactFeedbackGenerator(style: .heavy)
+            generator.impactOccurred()
+            newVM.sortMedia(sortOption: selectedSortingOption)
+        }
         .onAppear { newVM.fetchMedia() }
     }
     
@@ -431,7 +445,8 @@ struct MainScreenFavoritesList: View {
                 )
                 .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                     Button {
-                        //                                    isFavorited.favorite.toggle()
+                        let generator = UIImpactFeedbackGenerator(style: .heavy)
+                        generator.impactOccurred()
                         newVM.handleFavorite(mediaItem)
                     } label: {
                         TrailingActionCircularImage(isFavorite: newVM.isFavorite(mediaItem))
