@@ -85,6 +85,8 @@ struct MediaDetailView: View {
                 ToolbarItem(placement: .automatic) {
                     Button(action: {
                         store.handleFavoriteAction()
+                        let generator = UIImpactFeedbackGenerator(style: .heavy)
+                        generator.impactOccurred()
                     }) {
                         Image(systemName: store.isInFavorites() ? "star.fill" : "star")
                     }

@@ -153,7 +153,7 @@ struct MainScreenView: View {
     @State private var selectedSortingOption: SortingOption = .relevance
     @State private var isAscending: Bool = false
     
-    @State private var homeMode: HomeMode = .list
+    @State private var homeMode: HomeMode = .grid
     private var searchTitle: String {
         newVM.searchTitle
     }
@@ -172,7 +172,9 @@ struct MainScreenView: View {
             return newVM.favoritesVM.filter { $0.title.lowercased().contains(searchText.lowercased()) }
         }
     }
+    @State private var isPressed = false
     @State private var navigateToDetails: Bool = false
+    let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
     var body: some View {
         NavigationStack {
             VStack {
@@ -181,7 +183,11 @@ struct MainScreenView: View {
                     Text("Movies").tag(0)
                     Text("Series").tag(1)
                 }
-                .onChange(of: segmentedScope) { changedSearchOrScope() /*; setSearchTitle()*/ }
+                .onChange(of: segmentedScope) {
+                    let generator = UIImpactFeedbackGenerator(style: .heavy)
+                    generator.impactOccurred()
+                    changedSearchOrScope()
+                }
                 .pickerStyle(.segmented)
                 
                 TabView(selection: $tabSelection) {
@@ -198,16 +204,48 @@ struct MainScreenView: View {
                         let columns = [
                             GridItem(.adaptive(minimum: 80))
                         ]
-                        ScrollView {
+                        ScrollView(.vertical, showsIndicators: false) {
                             LazyVGrid(columns: columns, alignment: .center, spacing: 20) {
                                 ForEach(filteredData, id: \.id) { mediaItem in
                                     NavigationLink(destination: MediaDetailView(store: newVM.buildStoreForDetails(with: mediaItem), media: mediaItem)) {
                                         MediaCellGridView(media: mediaItem)
-                                        
+                                            .onAppear {
+                                                impactFeedback.prepare()
+                                            }
+                                            .scaleEffect(isPressed ? 5 : 1.0) // Adjust the scale value for a more dramatic effect
+                                            .animation(.spring(response: 0.4, dampingFraction: 0.5), value: isPressed) // Control the speed and bounce of the animation
+                                            .gesture(
+                                                LongPressGesture(minimumDuration: 1.5) // Adjust the duration if needed
+                                                    .onChanged { _ in
+                                                        withAnimation {
+                                                            isPressed = true
+                                                        }
+                                                        impactFeedback.impactOccurred()
+                                                    }
+                                                    .onEnded { _ in
+                                                        withAnimation {
+                                                            isPressed = false
+                                                        }
+                                                    }
+                                            )
+                                            .contextMenu {
+                                                Button(action: {
+                                                    // Handle Favorite action
+                                                    newVM.handleFavorite(mediaItem)
+                                                }) {
+                                                    let isFavorite = newVM.isFavorite(mediaItem)
+                                                    Label(isFavorite ? "Unfavorite" : "Favorite", systemImage: isFavorite ? "star.fill" : "star")
+                                                }
+                                                Button(action: {
+                                                    // Handle Bookmark action
+                                                }) {
+                                                    Label("Bookmark", systemImage: "bookmark")
+                                                }
+                                            }
                                     }
                                 }
                             }
-                            .transition(.scale) // Add a scaling transition
+                            //                            .transition(.scale) // Add a scaling transition
                         }
                         .tabItem {
                             Label("Main", systemImage: "film.fill")
@@ -226,10 +264,45 @@ struct MainScreenView: View {
                         let columns = [
                             GridItem(.adaptive(minimum: 80))
                         ]
-                        ScrollView {
+                        ScrollView(.vertical, showsIndicators: false) {
                             LazyVGrid(columns: columns, alignment: .center, spacing: 20) {
                                 ForEach(filteredFavoriteData, id: \.id) { mediaItem in
-                                    MediaCellGridView(media: mediaItem)
+                                    NavigationLink(destination: MediaDetailView(store: newVM.buildStoreForDetails(with: mediaItem), media: mediaItem)) {
+                                        MediaCellGridView(media: mediaItem)
+                                            .onAppear {
+                                                impactFeedback.prepare()
+                                            }
+                                            .scaleEffect(isPressed ? 5 : 1.0) // Adjust the scale value for a more dramatic effect
+                                            .animation(.spring(response: 0.4, dampingFraction: 0.5), value: isPressed) // Control the speed and bounce of the animation
+                                            .gesture(
+                                                LongPressGesture(minimumDuration: 1.5) // Adjust the duration if needed
+                                                    .onChanged { _ in
+                                                        withAnimation {
+                                                            isPressed = true
+                                                        }
+                                                        impactFeedback.impactOccurred()
+                                                    }
+                                                    .onEnded { _ in
+                                                        withAnimation {
+                                                            isPressed = false
+                                                        }
+                                                    }
+                                            )
+                                            .contextMenu {
+                                                Button(action: {
+                                                    // Handle Favorite action
+                                                    newVM.handleFavorite(mediaItem)
+                                                }) {
+                                                    let isFavorite = newVM.isFavorite(mediaItem)
+                                                    Label(isFavorite ? "Unfavorite" : "Favorite", systemImage: isFavorite ? "star.fill" : "star")
+                                                }
+                                                Button(action: {
+                                                    // Handle Bookmark action
+                                                }) {
+                                                    Label("Bookmark", systemImage: "bookmark")
+                                                }
+                                            }
+                                    }
                                 }
                             }
                         }
