@@ -64,7 +64,7 @@ struct StreamingProviderView: View {
     var body: some View {
         if let URL = URL(string: provider.providerLogoPath) {
             VStack(alignment: .center) {
-                AsyncImage(url: URL) { image in
+                CachedAsyncImage(url: URL) { image in
                     image.resizable()
                 } placeholder: {
                     ZStack {
