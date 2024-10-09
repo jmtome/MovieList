@@ -11,24 +11,21 @@ import MovieListFramework
 struct MediaCellGridView: View {
     var media: MediaViewModel
     private let placeHolderImage: Image = Image(systemName: "popcorn")
-
+    
     var body: some View {
-        if let posterPath = media.mainPosterURLString, let URL = URL(string: posterPath) {
-            AsyncImage(url: URL) { image in
-                image
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 80, height: 120)
-                    .clipShape(RoundedRectangle(cornerRadius: 6))
-            } placeholder: {
-                placeHolderImage
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 80, height: 120)
-                    .clipShape(RoundedRectangle(cornerRadius: 6))
-                    .tint(.white)
-            }
-
+        CachedAsyncImage(url: URL(string: media.mainPosterURLString ?? "")) { image in
+            image
+                .resizable()
+                .scaledToFit()
+                .frame(width: 80, height: 120)
+                .clipShape(RoundedRectangle(cornerRadius: 6))
+        } placeholder: {
+            placeHolderImage
+                .resizable()
+                .scaledToFit()
+                .frame(width: 80, height: 120)
+                .clipShape(RoundedRectangle(cornerRadius: 6))
+                .tint(.white)
         }
     }
 }
@@ -58,17 +55,18 @@ struct MediaCellGridView: View {
 struct MediaCellListView: View {
     
     var media: MediaViewModel
-    private let placeHolderImage: Image = Image(systemName: "popcorn")
+    private let placeHolderImage: Image = Image(.placeholder300W)
     
     var body: some View {
         HStack(alignment: .top) {
-            AsyncImage(url: URL(string: media.mainPosterURLString ?? ""), content: { image in
+            CachedAsyncImage(url: URL(string: media.mainPosterURLString ?? ""), content: { image in
                 image
                     .resizable()
-                    .frame(width: 80, height: 120)
                     .scaledToFit()
+                    .frame(width: 80, height: 120)
                     .padding(.all, 0)
                     .foregroundColor(Color(uiColor: UIColor.prussianBlue))
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
             }, placeholder: {
                 placeHolderImage
                     .resizable()
