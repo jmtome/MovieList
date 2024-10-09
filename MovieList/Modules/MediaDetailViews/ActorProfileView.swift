@@ -121,23 +121,22 @@ struct PhotoAndBioTile: View {
             .navigationTitle("Biography")
         } label: {
             HStack(alignment: .center) {
-                if let profilePath = profilePicturePath, let URL = URL(string: profilePath) {
-                    AsyncImage(url: URL) { image in
-                        image.resizable()
-                    } placeholder: {
-                        ZStack {
-                            Image(.image)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: UIScreen.main.bounds.width / 2.5)
-                            ProgressView()
-                                .tint(.black)
-                        }
+                CachedAsyncImage(url: URL(string: profilePicturePath ?? "")) { image in
+                    image.resizable()
+                } placeholder: {
+                    ZStack {
+                        Image(.image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: UIScreen.main.bounds.width / 2.5)
+                        ProgressView()
+                            .tint(.black)
                     }
-                    .scaledToFit()
-                    .frame(width: UIScreen.main.bounds.width / 2.5)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
+                .scaledToFit()
+                .frame(width: UIScreen.main.bounds.width / 2.5)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                
                 VStack(alignment: .leading, spacing: 14) {
                     Text(biography)
                         .font(.body)
@@ -170,8 +169,7 @@ struct ProfileGalleryView: View {
                 HStack(alignment: .top) {
                     ForEach(images.indices, id:\.self) { index in
                         if let url = URL(string: images[index].fullImagePath) {
-                            var currentImage: Image
-                            AsyncImage(url: url) { image in
+                            CachedAsyncImage(url: url) { image in
                                 image.resizable()
                                     .onTapGesture {
                                         onTapImageClosure(image)
@@ -191,7 +189,7 @@ struct ProfileGalleryView: View {
                             .frame(width: 100)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             .padding(.bottom, 0)
-
+                            
                         }
                     }
                 }
