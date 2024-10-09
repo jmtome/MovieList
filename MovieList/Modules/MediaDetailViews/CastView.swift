@@ -28,7 +28,6 @@ struct CastAndCrewView: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
                         .buttonStyle(.plain)
-
                     }
                 }
             }
@@ -45,18 +44,63 @@ struct CastAndCrewView: View {
     }
 }
 
+struct CrewListView: View {
+    let media: MediaViewModel
+    let buildActorStoreClosure: ((Int) -> ActorProfileStore)!
+    var body: some View {
+        VStack {
+            Text("Crew")
+                .font(.headline)
+                .foregroundStyle(Color(uiColor: .white.withAlphaComponent(0.95)))
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(alignment: .top) {
+                    ForEach(getCrew(), id: \.id) { cast in
+                        NavigationLink {
+                            ActorProfileView(store: buildActorStoreClosure(cast.id))
+                        } label: {
+                            CrewView(cast: cast)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(Color.prussianBlue)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+    
+    
+    private func getCrew() -> [Crew] {
+        return media.credits?.crew ?? []
+    }
+}
+
 #Preview {
     let mock = MediaCredits.loadMockData()!
     let media = MediaViewModel(mock)
-    NavigationStack {
-        CastAndCrewView(media: media, buildActorStoreClosure: { id in
-            let interactor = ActorProfileInteractor(networkingService: TMDBNetworkingService())
-            let presenter = ActorProfilePresenter(interactor: interactor)
-            let store = ActorProfileStore(presenter: presenter, actorId: id)
-            presenter.output = store
-            return store
-            
-        })
+    VStack {
+        NavigationStack {
+            CastAndCrewView(media: media, buildActorStoreClosure: { id in
+                let interactor = ActorProfileInteractor(networkingService: TMDBNetworkingService())
+                let presenter = ActorProfilePresenter(interactor: interactor)
+                let store = ActorProfileStore(presenter: presenter, actorId: id)
+                presenter.output = store
+                return store
+            })
+        }
+        NavigationStack {
+            CrewListView(media: media, buildActorStoreClosure: { id in
+                let interactor = ActorProfileInteractor(networkingService: TMDBNetworkingService())
+                let presenter = ActorProfilePresenter(interactor: interactor)
+                let store = ActorProfileStore(presenter: presenter, actorId: id)
+                presenter.output = store
+                return store
+            })
+        }
     }
 }
 
@@ -64,15 +108,16 @@ struct CastView: View {
     let cast: Cast
     var body: some View {
         VStack(alignment: .center) {
-            if let profilePath = cast.profilePicturePath, let URL = URL(string: profilePath) {
-                AsyncImage(url: URL) { image in
+                CachedAsyncImage(url: URL(string: cast.profilePicturePath  ?? "")) { image in
                     image.resizable()
                 } placeholder: {
                     ZStack {
-                        Image(.image)
+                        Image(.placeholder300W)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 100)
+                            .frame(width: 95)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+
                         ProgressView()
                             .tint(.black)
                     }
@@ -88,14 +133,42 @@ struct CastView: View {
                     Text(cast.character)
                         .font(.caption2)
                 }
+            
+        }
+        .frame(width: 100)
+    }
+}
+
+struct CrewView: View {
+    let cast: Crew
+    var body: some View {
+        VStack(alignment: .center) {
+            CachedAsyncImage(url: URL(string: cast.profilePicturePath ?? "")) { image in
+                image.resizable()
+            } placeholder: {
+                ZStack {
+                    Image(.placeholder300W)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 95)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    ProgressView()
+                        .tint(.black)
+                }
+            }
+            .scaledToFit()
+            .frame(width: 100)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .padding(.bottom, 0)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(cast.name)
+                    .font(.body.bold())
+                Text(cast.job)
+                    .font(.caption2)
             }
         }
         .frame(width: 100)
-        .onAppear {
-            let personMock = Person.loadMockData()
-            print("person mock")
-            print(personMock)
-        }
     }
 }
 
@@ -117,7 +190,6 @@ private extension MediaCredits {
             
             // Decode the JSON data
             let decoder = JSONDecoder()
-//            decoder.keyDecodingStrategy = .convertFromSnakeCase
             let mediaCredits = try decoder.decode(MediaCredits.self, from: data)
             
             return mediaCredits
