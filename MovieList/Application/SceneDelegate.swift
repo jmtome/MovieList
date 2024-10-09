@@ -47,6 +47,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         tabBarController.viewControllers = [mainScreenNavigationController, favoritesNavigationController]
         
         configureNavigationBarAppearance()
+        configureTabBar()
+        fetchAndSaveCountryCode()
         window.rootViewController = tabBarController
         window.makeKeyAndVisible()
     }
@@ -62,6 +64,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UINavigationBar.appearance().compactAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         
+    }
+    
+    func configureTabBar() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .prussianBlue
+        
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = UITabBar().standardAppearance
+        UITabBar.appearance().tintColor = .systemTeal
     }
 
     class MLTabBarController: UITabBarController {
