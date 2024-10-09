@@ -97,7 +97,7 @@ class MediaViewStore: ObservableObject {
         
         presenter.sortMedia(with: sortOption)
     }
-
+    
     func buildStoreForDetails(with media: MediaViewModel) -> MediaDetailStore {
         let mediaDetails = MediaTypeID(media.type, media.id)
         let interactor = MediaDetailInteractor(networkingService: TMDBNetworkingService())
@@ -191,8 +191,6 @@ struct MainScreenView: View {
                 .pickerStyle(.segmented)
                 
                 TabView(selection: $tabSelection) {
-                    // First tab
-                    
                     if homeMode == .list {
                         MainScreenList(newVM: newVM, filteredData: filteredData)
                             .transition(.slide) // Add a sliding transition
