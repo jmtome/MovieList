@@ -37,6 +37,7 @@ protocol Media: Codable, Hashable {
 
 struct MovieCredits: Codable {
     let cast: [Movie]
+    let crew: [Movie]
 }
 
 struct Response<T: Codable>: Codable {
