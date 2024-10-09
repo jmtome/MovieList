@@ -201,28 +201,52 @@ struct ProfileGalleryView: View {
     }
 }
 
+enum MediaJob {
+    case cast
+    case crew
+}
+
 struct MediaAppearances: View {
     let movies: [Movie]
+    let job: MediaJob
     @State var sortOption: SortingOption = .date
     @State var isAscending: Bool = true
     
     @State var moviesVM: [MediaViewModel] = []
+
+
+    @State private var isExpanded = false
+    @State private var itemsToShow = 0
+
+    @State private var titleText: String = "Starring in:"
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Starring in")
+            HStack(alignment: .center) {
+                Text(titleText)
                     .font(.headline)
                     .padding([.leading, .top])
+                Button {
+                    withAnimation {
+                        isExpanded.toggle()
+                        itemsToShow = isExpanded ? moviesVM.count : 0
+                    }
+                } label: {
+                    Image(systemName: isExpanded ? "chevron.down.circle" : "chevron.right.circle")
+                        .resizable()
+                        .frame(width: 25, height: 25)
+                }
+                .tint(.primary)
+                .padding(.top)
                 Spacer()
                 SortMenuView(sortOption: $sortOption, isAscending: $isAscending)
                     .padding(.top)
                     .tint(.white)
             }
-            
-            ForEach(moviesVM.indices, id:\.self) { index in
+            let displayedVideos = Array(moviesVM.prefix(itemsToShow))
+
+            ForEach(displayedVideos.indices, id:\.self) { index in
                 NavigationLink(destination: MediaDetailView(store: buildStoreForDetails(with: moviesVM[index]), media: moviesVM[index])) {
                     MediaCellListView(media: moviesVM[index])
-
                 }
             }
             
@@ -231,8 +255,7 @@ struct MediaAppearances: View {
         .frame(maxWidth: .infinity)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .onAppear {
-            self.moviesVM = movies.map { MediaViewModel(movie: $0) }
-            sortMedia(with: .date)
+            updateMoviesVM()
         }
         .onChange(of: sortOption) { sortMedia(with: sortOption) }
         .onChange(of: isAscending) { sortMedia(with: sortOption) }
@@ -242,8 +265,41 @@ struct MediaAppearances: View {
         }
     }
     func updateMoviesVM() {
-          self.moviesVM = movies.map { MediaViewModel(movie: $0) }
-      }
+        print("#### movies are \(movies.count)")
+        
+        var jobCounts: [String: [Movie]] = [:]
+        let jobTitles = ["director", "original music composer", "writer", "screenwriter"]
+
+        for job in jobTitles {
+            let filteredMovies = movies.filter { $0.job?.lowercased() == job }
+            jobCounts[job] = filteredMovies
+        }
+
+        // Determine the job with the most movies
+        if job == .crew {
+            var selectedArea: [Movie] = []
+            var maxCount = 0
+            var primaryJob = ""
+
+            for (job, filteredMovies) in jobCounts {
+                if filteredMovies.count > maxCount {
+                    maxCount = filteredMovies.count
+                    primaryJob = job
+                    selectedArea = filteredMovies
+                }
+            }
+
+            titleText = "\(primaryJob.capitalized) in:"
+            print("#### movies filtered is \(selectedArea.count)")
+            
+            self.moviesVM = selectedArea.map { MediaViewModel(movie: $0) }
+        } else if job == .cast {
+            self.moviesVM = movies.map { MediaViewModel(movie: $0) }
+        }
+
+        sortMedia(with: .date)
+    }
+
     func sortMedia(with option: SortingOption) {
         switch sortOption {
         case .relevance:
@@ -275,9 +331,11 @@ struct MediaAppearances: View {
     let interactor = ActorProfileInteractor(networkingService: TMDBNetworkingService())
     let presenter = ActorProfilePresenter(interactor: interactor)
     let store = ActorProfileStore(presenter: presenter, actorId: actor.id)
-    NavigationStack {
-        ActorProfileView(store: store)
-            .navigationBarTitleDisplayMode(.inline)
+    VStack {
+        NavigationStack {
+            ActorProfileView(store: store)
+                .navigationBarTitleDisplayMode(.inline)
+        }
     }
     .preferredColorScheme(.dark)
 }
