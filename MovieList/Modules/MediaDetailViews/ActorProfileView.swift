@@ -59,7 +59,11 @@ struct ActorProfileView: View {
                     ProfileGalleryView(images: store.actor?.images.profiles ?? [], onTapImageClosure: maximizeImage)
                         .padding(.horizontal, 4)
                     
-                    MediaAppearances(movies: store.actor?.movieCredits.cast ?? [])
+                    MediaAppearances(movies: store.actor?.movieCredits.cast ?? [], job: .cast)//
+                        .padding(.horizontal, 4)
+                        .padding(.top, 10)
+                    
+                    MediaAppearances(movies: store.actor?.movieCredits.crew ?? [], job: .crew)//
                         .padding(.horizontal, 4)
                         .padding(.top, 10)
                 }
