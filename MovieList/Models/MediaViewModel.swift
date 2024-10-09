@@ -123,7 +123,7 @@ extension MediaViewModel {
         
         seasons = tvshow.numberOfSeasons
         
-        genres = tvshow.genres ?? []
+        genres = tvshow.genreIds?.compactMap({ genreID in Genre(id: genreID, name: nil) }) ?? []
         videos = tvshow.videos?.results ?? []
     }
 }
@@ -157,7 +157,7 @@ extension MediaViewModel {
         
         seasons = nil
         
-        genres = movie.genres ?? []
+        genres = movie.genreIds?.compactMap({ genreID in Genre(id: genreID, name: nil) }) ?? []
         videos = movie.videos?.results ?? []
     }
 }
