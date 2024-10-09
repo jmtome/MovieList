@@ -11,7 +11,7 @@ struct Person: Codable {
     let adult: Bool
     let alsoKnownAs: [String]
     let biography: String
-    let birthday: String
+    let birthday: String?
     let deathday: String?
     let gender: Int
     let homepage: String?
