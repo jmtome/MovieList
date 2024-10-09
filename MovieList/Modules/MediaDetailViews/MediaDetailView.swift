@@ -54,6 +54,7 @@ extension MediaDetailStore: MediaDetailPresenterOutputProtocol {
 struct MediaDetailView: View {
     @StateObject var store: MediaDetailStore
     
+    @State private var wasCoveredByTopView = false // Tracks if a view was hidden by another view
     let media: MediaViewModel
     var body: some View {
         VStack(spacing: 20) {
@@ -76,6 +77,7 @@ struct MediaDetailView: View {
                 
                 CastAndCrewView(media: store.media, buildActorStoreClosure: store.buildStoreForActor)
                     .padding(.horizontal, 4)
+                CrewListView(media: store.media, buildActorStoreClosure: store.buildStoreForActor)
                 
                 VideosView(videos: store.media.videos)
                     .padding(.horizontal, 4)
@@ -94,10 +96,13 @@ struct MediaDetailView: View {
             }
         }
         .onAppear {
-            store.fetchMediaDetails()
+            if !wasCoveredByTopView { store.fetchMediaDetails() }
+            else { print("$$$$ appeared from an upper dismissal")}
         }
         .onDisappear {
             store.onDismiss()
+            wasCoveredByTopView = true
+            print("$$$$ dissapearing")
         }
     }
 }
@@ -121,7 +126,7 @@ struct PostersCarouselView: View {
         TabView {
             ForEach(0..<media.backdrops.count, id: \.self) { index in
                 if let URL = URL(string: media.backdrops[index].fullImagePath) {
-                    AsyncImage(url: URL) { image in
+                    CachedAsyncImage(url: URL) { image in
                         image
                             .resizable()
                             .scaledToFill()
