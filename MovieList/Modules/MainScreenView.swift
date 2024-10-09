@@ -8,7 +8,7 @@
 import SwiftUI
 import MovieListFramework
 
-private enum HomeMode {
+enum HomeMode {
     case list, grid
     
     func icon() -> String {
