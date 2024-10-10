@@ -491,3 +491,97 @@ struct MainScreenFavoritesList: View {
 
 
 
+/*
+ struct MainScreenGrid: View {
+     @ObservedObject var newVM: MediaViewStore
+     let filteredData: [MediaViewModel]
+     @State var isPressed: Bool = false
+     
+     private let impactFeedback = UIImpactFeedbackGenerator(style: .heavy)
+
+     let columns = [
+         GridItem(.adaptive(minimum: 80))
+     ]
+     @State private var scrollViewPosition: Int? = 0
+
+     var body: some View {
+         VStack {
+             Text("\(scrollViewPosition)")
+             ScrollView(.vertical, showsIndicators: false) {
+                 LazyVGrid(columns: columns, alignment: .center, spacing: 20) {
+                     ForEach(filteredData.indices, id: \.self) { mediaItemIndex in
+                         NavigationLink(destination: MediaDetailView(store: newVM.buildStoreForDetails(with: filteredData[mediaItemIndex]), media: filteredData[mediaItemIndex])) {
+                             MediaCellGridView(media: filteredData[mediaItemIndex])
+                                 .onAppear {
+                                     impactFeedback.prepare()
+                                     print("$ number of items: \(filteredData.count)")
+                                     print("$ number of current index: \(mediaItemIndex)")
+ //                                    if mediaItemIndex == filteredData.count - 20 {
+ //                                        print("$ fetching new page")
+ //
+ //                                        newVM.fetchNewPage()
+ //                                    }
+                                 }
+                                 .scaleEffect(isPressed ? 5 : 1.0) // Adjust the scale value for a more dramatic effect
+                                 .animation(.spring(response: 0.4, dampingFraction: 0.5), value: isPressed) // Control the speed and bounce of the animation
+                                 .gesture(
+                                     LongPressGesture(minimumDuration: 1.5) // Adjust the duration if needed
+                                         .onChanged { _ in
+                                             withAnimation {
+                                                 isPressed = true
+                                             }
+                                             impactFeedback.impactOccurred()
+                                         }
+                                         .onEnded { _ in
+                                             withAnimation {
+                                                 isPressed = false
+                                             }
+                                         }
+                                 )
+                                 .contextMenu {
+                                     Button(action: {
+                                         // Handle Favorite action
+                                         newVM.handleFavorite(filteredData[mediaItemIndex])
+                                     }) {
+                                         let isFavorite = newVM.isFavorite(filteredData[mediaItemIndex])
+                                         Label(isFavorite ? "Unfavorite" : "Favorite", systemImage: isFavorite ? "star.fill" : "star")
+                                     }
+                                     Button(action: {
+                                         // Handle Bookmark action
+                                     }) {
+                                         Label("Bookmark", systemImage: "bookmark")
+                                     }
+                                 }
+                             // Trigger fetching more items when scrolling near the bottom
+                             GeometryReader { geo in
+                                 Color.clear
+ //                                    .task {
+ //                                        newVM.fetchNewPage()
+ //                                    }
+                                     .onAppear {
+                                         if geo.frame(in: .global).maxY < UIScreen.main.bounds.height {
+                                             newVM.fetchNewPage()
+                                         }
+                                     }
+                             }
+                         }
+                     }
+                 }
+             }
+         }
+     }
+ }
+ */
+
+
+/*.scrollTargetLayout()*/
+/*.scrollPosition(id: $scrollViewPosition)*/
+//        .onChange(of: scrollViewPosition) {
+//            if let scrollPosition = scrollViewPosition {
+//                let modulo = scrollPosition % 8
+//                print("$ modulo is: \(modulo)")
+//                if modulo == 0 {
+//                    newVM.fetchNewPage()
+//                }
+//            }
+//        }
