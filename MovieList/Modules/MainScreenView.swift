@@ -365,7 +365,7 @@ struct MainScreenGrid: View {
                     }
                 }
             }
-            //                            .transition(.scale) // Add a scaling transition
+            .padding(.top, 20)
         }
         
     }
