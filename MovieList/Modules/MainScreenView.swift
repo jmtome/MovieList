@@ -190,12 +190,8 @@ struct MainScreenView: View {
                     Text("Movies").tag(0)
                     Text("Series").tag(1)
                 }
-                .onChange(of: segmentedScope) {
-                    let generator = UIImpactFeedbackGenerator(style: .heavy)
-                    generator.impactOccurred()
-                    changedSearchOrScope()
-                }
                 .pickerStyle(.segmented)
+                .onChange(of: segmentedScope) { changedSearchOrScope() }
                 
                 TabView(selection: $tabSelection) {
                     MainTabView(newVM: newVM, filteredData: filteredData, homeMode: homeMode)
@@ -214,7 +210,6 @@ struct MainScreenView: View {
                         }
                         .tag(2)
                 }
-                .tableStyle(.inset)
                 .onChange(of: tabSelection) { print("#### onChange of tabSelection: \(tabSelection)")}
             }
             .navigationTitle(tabSelection == 0 ? "MovieList" : (tabSelection == 1 ? "Favorites" : "Watch Later"))
@@ -227,8 +222,7 @@ struct MainScreenView: View {
                     Button(action: {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             self.homeMode = self.homeMode == .grid ? .list : .grid
-                            let generator = UIImpactFeedbackGenerator(style: .heavy)
-                            generator.impactOccurred()
+                            impactFeedback.impactOccurred()
                         }
                     }) {
                         HStack {
@@ -246,25 +240,20 @@ struct MainScreenView: View {
         //            Text("Series").tag(1)
         //        }
         .onChange(of: tabSelection) {
-            let generator = UIImpactFeedbackGenerator(style: .heavy)
-            generator.impactOccurred()
+            impactFeedback.impactOccurred()
             newVM.fetchFavorites()
         }
         .onChange(of: searchText) { changedSearchOrScope() }
-        .onChange(of: selectedSortingOption) {
-            let generator = UIImpactFeedbackGenerator(style: .heavy)
-            generator.impactOccurred()
-            newVM.sortMedia(sortOption: selectedSortingOption)
-        }
-        .onChange(of: isAscending) {
-            let generator = UIImpactFeedbackGenerator(style: .heavy)
-            generator.impactOccurred()
-            newVM.sortMedia(sortOption: selectedSortingOption)
-        }
+        .onChange(of: selectedSortingOption) { sortingChanged() }
+        .onChange(of: isAscending) { sortingChanged() }
         .onAppear { newVM.fetchMedia() }
     }
-    
+    private func sortingChanged() {
+        impactFeedback.impactOccurred()
+        newVM.sortMedia(sortOption: selectedSortingOption)
+    }
     private func changedSearchOrScope() {
+        impactFeedback.impactOccurred()
         guard let scope = SearchScope(rawValue: segmentedScope) else { return }
         newVM.updateSearchResults(with: searchText, scope: scope)
     }
