@@ -40,12 +40,15 @@ class MediaViewStore: ObservableObject {
     
     //ViewModel (Store) Methods
     func fetchMedia() {
-        presenter.viewDidLoad()
+        if !isLoadingPage() {
+            presenter.viewDidLoad()
+        }
         favoritesPresenter.viewDidLoad()
     }
     func fetchFavorites() {
         favoritesPresenter.viewDidLoad()
     }
+    @MainActor
     func getMedia() {
         self.mediaVM = presenter.getMedia()
     }
@@ -62,10 +65,14 @@ class MediaViewStore: ObservableObject {
         self.searchTitle = presenter.searchBarTitle
     }
     func fetchNewPage() {
-        loadPresenter.viewShouldFetchNewPage()
+        if !isLoadingPage() {
+            self.loadPresenter.viewShouldFetchNewPage()
+        }
     }
     func isLoadingPage() -> Bool {
-        loadPresenter.isLoadingPage()
+        let isLoading = loadPresenter.isLoadingPage()
+        print("#### is loading: \(isLoading)")
+        return isLoading
     }
     var sortOption: SortingOption {
         get {
