@@ -89,6 +89,22 @@ enum MovieDBEndpoint {
             return ApiDict.tvShowDetailsPath + "\(id)" + "/images"
         case .imageWithPath(let filePath):
             return ApiDict.imgBaseURL + filePath
+        case .nowPlayingMovies(page: let page):
+            return ApiDict.nowPlayingMoviesPath
+        case .nowPlayingTodayTV(page: let page):
+            return ApiDict.nowPlayingTVPath
+        case .popularMovies(page: let page):
+            return ApiDict.popularMoviesPath
+        case .popularTV(page: let page):
+            return ApiDict.popularTVPath
+        case .airingTodayTV(page: let page):
+            return ApiDict.airingTodayTVPath
+        case .topRatedMovies(page: let page):
+            return ApiDict.topRatedMoviesPath
+        case .topRatedTV(page: let page):
+            return ApiDict.topRatedTVPath
+        case .upcomingMovies(page: let page):
+            return ApiDict.upcomingMoviesPath
         }
     }
     
@@ -101,11 +117,10 @@ enum MovieDBEndpoint {
                 URLQueryItem(name: "query", value: query),
                 URLQueryItem(name: "page", value: String(page))
             ]
-        case .trendingMovies(let page),
-             .trendingTV(let page):
+        case .trendingMovies,
+             .trendingTV:
             return [
                 URLQueryItem(name: "api_key", value: ApiDict.apiKey),
-                URLQueryItem(name: "page", value: String(page))
             ]
         case .movieDetails, .tvShowDetails:
             return [
@@ -121,6 +136,46 @@ enum MovieDBEndpoint {
             return [
                 URLQueryItem(name: "api_key", value: ApiDict.apiKey),
                 URLQueryItem(name: "append_to_response", value: "movie_credits,images")
+            ]
+        case .nowPlayingMovies(language: let language, page: let page, region: let region):
+            return [
+                URLQueryItem(name: "api_key", value: ApiDict.apiKey),
+                URLQueryItem(name: "page", value: String(page))
+            ]
+        case .nowPlayingTodayTV(language: let language, page: let page, timezone: let timezone):
+            return [
+                URLQueryItem(name: "api_key", value: ApiDict.apiKey),
+                URLQueryItem(name: "page", value: String(page))
+            ]
+        case .popularMovies(language: let language, page: let page, region: let region):
+            return [
+                URLQueryItem(name: "api_key", value: ApiDict.apiKey),
+                URLQueryItem(name: "page", value: String(page))
+            ]
+        case .popularTV(language: let language, page: let page):
+            return [
+                URLQueryItem(name: "api_key", value: ApiDict.apiKey),
+                URLQueryItem(name: "page", value: String(page))
+            ]
+        case .airingTodayTV(language: let language, page: let page, timezone: let timezone):
+            return [
+                URLQueryItem(name: "api_key", value: ApiDict.apiKey),
+                URLQueryItem(name: "page", value: String(page))
+            ]
+        case .topRatedMovies(language: let language, page: let page, region: let region):
+            return [
+                URLQueryItem(name: "api_key", value: ApiDict.apiKey),
+                URLQueryItem(name: "page", value: String(page))
+            ]
+        case .topRatedTV(language: let language, page: let page):
+            return [
+                URLQueryItem(name: "api_key", value: ApiDict.apiKey),
+                URLQueryItem(name: "page", value: String(page))
+            ]
+        case .upcomingMovies(language: let language, page: let page, region: let region):
+            return [
+                URLQueryItem(name: "api_key", value: ApiDict.apiKey),
+                URLQueryItem(name: "page", value: String(page))
             ]
         }
     }
