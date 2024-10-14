@@ -24,8 +24,20 @@ enum ApiDict {
     
     static let movieSearchPath = "/search/movie"
     static let tvSearchPath = "/search/tv"
-    static let trendingMoviesPath = "/trending/movie/day"
-    static let trendingTVPath = "/trending/tv/day"
+    
+    static let nowPlayingMoviesPath = "/movie/now_playing" //#
+    static let popularMoviesPath = "/movie/popular" //#
+    static let topRatedMoviesPath = "/movie/top_rated" //#
+    static let trendingMoviesPath = "/trending/movie/week"//#
+
+    static let upcomingMoviesPath = "/movie/upcoming" //#
+
+    static let nowPlayingTVPath = "/tv/on_the_air" //#
+    static let popularTVPath = "/tv/popular" //#
+    static let topRatedTVPath = "/tv/top_rated" //#
+    static let trendingTVPath = "/trending/tv/week"//#
+    
+    static let airingTodayTVPath = "/tv/airing_today" //#
     
     static let movieDetailsPath = "/movie/"
     static let tvShowDetailsPath = "/tv/"
@@ -37,8 +49,22 @@ enum MovieDBEndpoint {
     case movieSearch(query: String, page: Int)
     case tvSearch(query: String, page: Int)
     
-    case trendingMovies(page: Int)
-    case trendingTV(page: Int)
+    case nowPlayingMovies(language: String = "en-US", page: Int = 1, region: String) //now playing
+    case nowPlayingTodayTV(language: String = "en-US", page: Int = 1, timezone: String) //on the air
+
+    case popularMovies(language: String = "en-US", page: Int = 1, region: String) //popular movies
+    case popularTV(language: String = "en-US", page: Int = 1) //popular tv
+    
+    case airingTodayTV(language: String = "en-US", page: Int = 1, timezone: String) //airing_today// tiene timezone, page y language
+    case upcomingMovies(language: String = "en-US", page: Int = 1, region: String) //upcoming
+    
+    case topRatedMovies(language: String = "en-US", page: Int = 1, region: String) //top rated movies //tiene region, page y language
+    case topRatedTV(language: String = "en-US", page: Int = 1)// top rated tv
+    
+    
+    case trendingMovies// trending movies week
+    case trendingTV// trending tv week
+    
     
     case personDetails(id: Int)
     case movieDetails(id: Int)
