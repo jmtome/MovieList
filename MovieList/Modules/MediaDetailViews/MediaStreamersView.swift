@@ -15,15 +15,17 @@ struct MediaStreamersView: View {
                 .foregroundStyle(Color(uiColor: .white.withAlphaComponent(0.95)))
             
             if let streamers = streamers, let streamingProviders = streamers.flatrate {
-                HStack(alignment: .top) {
-                    ForEach(streamingProviders.indices, id:\.self) { index in
-                        StreamingProviderView(provider: streamingProviders[index])
-                            .frame(maxWidth: .infinity)
-                            .onTapGesture {
-                                if let URL = URL(string: streamers.link) {
-                                    UIApplication.shared.open(URL)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(alignment: .top) {
+                        ForEach(streamingProviders.indices, id:\.self) { index in
+                            StreamingProviderView(provider: streamingProviders[index])
+                                .frame(maxWidth: .infinity)
+                                .onTapGesture {
+                                    if let URL = URL(string: streamers.link) {
+                                        UIApplication.shared.open(URL)
+                                    }
                                 }
-                            }
+                        }
                     }
                 }
             } else {
