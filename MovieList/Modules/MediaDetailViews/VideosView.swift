@@ -45,11 +45,6 @@ struct VideosView: View {
                             .padding(.vertical)
                         }
                     }
-                    .onAppear {
-                        videos.forEach { video in
-                            print("#### Video type is: \(video.type)")
-                        }
-                    }
 
                     // Button to show more videos or collapse
                     Button(action: {
