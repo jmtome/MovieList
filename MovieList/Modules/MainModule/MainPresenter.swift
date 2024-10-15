@@ -67,13 +67,13 @@ protocol MainScreenPresenterLoadingInputProtocol: AnyObject {
 //MARK: - MainScreenPresenter
 class MainScreenPresenter {
     private var currentQuery: String = ""
-    private var currentScope: SearchScope = .movies
+    private var currentScope: SearchScope = .series
     private var currentPage: Int = 1
     private var isLoading: Bool = false
 
     // State variables related to the sorting of the table
     private var _sortOption = SortingOption.relevance
-    private var _isAscending = false
+    private var _isAscending = true
 
     //output of the presenter, which in this case would be the view
     weak var output: MainScreenPresenterOutputProtocol?
@@ -90,6 +90,77 @@ class MainScreenPresenter {
         didSet {
             output?.updateUIList()
         }
+    }
+    
+    private var nowPlayingViewModel: [MediaViewModel] = [] {
+        didSet {
+            output?.updateUINowPlaying()
+        }
+    }
+    
+    private var popularMediaViewModel: [MediaViewModel] = [] {
+        didSet {
+            output?.updateUIPopular()
+        }
+    }
+    
+    private var upcomingMediaViewModel: [MediaViewModel] = [] {
+        didSet {
+            output?.updateUIUpcoming()
+        }
+    }
+    
+    private var topRatedMediaViewModel: [MediaViewModel] = [] {
+        didSet {
+            output?.updateUITopRated()
+        }
+    }
+    
+    private var trendingMediaViewModel: [MediaViewModel] = [] {
+        didSet {
+            output?.updateUITrending()
+        }
+    }
+}
+
+extension MainScreenPresenter {
+    func fetchAllCategories(_ scope: SearchScope) {
+        guard currentScope != scope else { return }
+        currentScope = scope
+        // Launch all the interactor calls concurrently without waiting
+        Task {
+            interactor.getNowPlayingMedia(scope: currentScope, page: currentPage)
+            interactor.getPopularMedia(scope: currentScope, page: currentPage)
+            interactor.getUpcomingMedia(scope: currentScope, page: currentPage)
+            interactor.getTrendingMedia(scope: currentScope, page: currentPage)
+            interactor.getTopRatedMedia(scope: currentScope, page: currentPage)
+            viewDidLoad()
+        }
+    }
+    func fetchNowPlayingMedia() {
+        guard !isLoading else { print( "#### cant fetch now playing media, already fetching"); return }
+        isLoading = true
+        interactor.getNowPlayingMedia(scope: currentScope, page: currentPage)
+    }
+    func fetchpopularMedia() {
+        guard !isLoading else { print( "#### cant fetch popular media, already fetching"); return }
+        isLoading = true
+        interactor.getPopularMedia(scope: currentScope, page: currentPage)
+    }
+    func fetchUpcomingMedia() {
+        guard !isLoading else { print( "#### cant fetch upcoming media, already fetching"); return }
+        isLoading = true
+        interactor.getUpcomingMedia(scope: currentScope, page: currentPage)
+    }
+    func fetchTopRatedMedia() {
+        guard !isLoading else { print( "#### cant fetch top rated media, already fetching"); return }
+        isLoading = true
+        interactor.getTopRatedMedia(scope: currentScope, page: currentPage)
+    }
+    func fetchtrendingsMedia() {
+        guard !isLoading else { print( "#### cant fetch trending media, already fetching"); return }
+        isLoading = true
+        interactor.getTrendingMedia(scope: currentScope, page: currentPage)
     }
 }
 
