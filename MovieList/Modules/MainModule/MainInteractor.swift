@@ -44,6 +44,103 @@ class MainScreenInteractor {
     }
 }
 
+extension MainScreenInteractor {
+    func getNowPlayingMedia(scope: SearchScope, page: Int) {
+        Task {
+            do {
+                let data = try await networkingService.getNowPlayingMedia(language: "", page: page, region: "", timezone: "", searchScope: scope)
+                
+                switch scope {
+                case .movies:
+                    let moviesResponse = try JSONDecoder().decode(Response<Movie>.self, from: data)
+                    output?.didReceiveMovies(moviesResponse.results.map { MediaViewModel(movie: $0) }, with: page, category: .nowPlaying)
+                case .series:
+                    let seriesResponse = try JSONDecoder().decode(Response<TVShow>.self, from: data)
+                    output?.didReceiveMovies(seriesResponse.results.map { MediaViewModel(tvshow: $0) }, with: page, category: .nowPlaying)
+                }
+            } catch let error {
+                print("error decoding now-playing media for scope: \(scope), page: \(page), error: \(error)")
+                output?.didEncounterError(error)
+            }
+        }
+    }
+    func getPopularMedia(scope: SearchScope, page: Int) {
+        Task {
+            do {
+                let data = try await networkingService.getPopularMedia(language: "", page: page, region: "", searchScope: scope)
+                
+                switch scope {
+                case .movies:
+                    let moviesResponse = try JSONDecoder().decode(Response<Movie>.self, from: data)
+                    output?.didReceiveMovies(moviesResponse.results.map { MediaViewModel(movie: $0) }, with: page, category: .popular)
+                case .series:
+                    let seriesResponse = try JSONDecoder().decode(Response<TVShow>.self, from: data)
+                    output?.didReceiveMovies(seriesResponse.results.map { MediaViewModel(tvshow: $0) }, with: page, category: .popular)
+                }
+            } catch let error {
+                print("error decoding get-popular media for scope: \(scope), page: \(page), error: \(error)")
+                output?.didEncounterError(error)
+            }
+        }
+    }
+    func getUpcomingMedia(scope: SearchScope, page: Int) {
+        Task {
+            do {
+                let data = try await networkingService.getUpcomingMedia(language: "", page: page, region: "", timezone: "", searchScope: scope)
+                
+                switch scope {
+                case .movies:
+                    let moviesResponse = try JSONDecoder().decode(Response<Movie>.self, from: data)
+                    output?.didReceiveMovies(moviesResponse.results.map { MediaViewModel(movie: $0) }, with: page, category: .upcoming)
+                case .series:
+                    let seriesResponse = try JSONDecoder().decode(Response<TVShow>.self, from: data)
+                    output?.didReceiveMovies(seriesResponse.results.map { MediaViewModel(tvshow: $0) }, with: page, category: .upcoming)
+                }
+            } catch let error {
+                print("error decoding get-upcoming media for scope: \(scope), page: \(page), error: \(error)")
+                output?.didEncounterError(error)
+            }
+        }
+    }
+    func getTopRatedMedia(scope: SearchScope, page: Int) {
+        Task {
+            do {
+                let data = try await networkingService.getTopRatedMedia(language: "", page: page, region: "", searchScope: scope)
+                
+                switch scope {
+                case .movies:
+                    let moviesResponse = try JSONDecoder().decode(Response<Movie>.self, from: data)
+                    output?.didReceiveMovies(moviesResponse.results.map { MediaViewModel(movie: $0) }, with: page, category: .topRated)
+                case .series:
+                    let seriesResponse = try JSONDecoder().decode(Response<TVShow>.self, from: data)
+                    output?.didReceiveMovies(seriesResponse.results.map { MediaViewModel(tvshow: $0) }, with: page, category: .topRated)
+                }
+            } catch let error {
+                print("error decoding get-top-rated media for scope: \(scope), page: \(page), error: \(error)")
+                output?.didEncounterError(error)
+            }
+        }
+    }
+    func getTrendingMedia(scope: SearchScope, page: Int) {
+        Task {
+            do {
+                let data = try await networkingService.getTrendingMedia(page: page, searchScope: scope)
+                
+                switch scope {
+                case .movies:
+                    let moviesResponse = try JSONDecoder().decode(Response<Movie>.self, from: data)
+                    output?.didReceiveMovies(moviesResponse.results.map { MediaViewModel(movie: $0) }, with: page, category: .trending)
+                case .series:
+                    let seriesResponse = try JSONDecoder().decode(Response<TVShow>.self, from: data)
+                    output?.didReceiveMovies(seriesResponse.results.map { MediaViewModel(tvshow: $0) }, with: page, category: .trending)
+                }
+            } catch let error {
+                print("error decoding get-trending media for scope: \(scope), page: \(page), error: \(error)")
+                output?.didEncounterError(error)
+            }
+        }
+    }
+}
 //MARK: - MainScreenInteractorProtocol (Input) Conformance
 // Called by Presenter, Implemented by Interactor
 extension MainScreenInteractor: MainScreenInteractorProtocol {
