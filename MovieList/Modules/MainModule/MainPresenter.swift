@@ -11,6 +11,13 @@ import Foundation
 //Called by Presenter, Implemented by MainScreenViewController
 protocol MainScreenPresenterOutputProtocol: AnyObject {
     func updateUIList()
+    
+    func updateUINowPlaying()
+    func updateUIPopular()
+    func updateUIUpcoming()
+    func updateUITopRated()
+    func updateUITrending()
+
     func showError(_ error: Error)
     func showAlertFavoritedMedia()
     func showAlertUnfavoritedMedia()
@@ -29,7 +36,7 @@ protocol MainScreenPresenterInputProtocol: AnyObject {
     func viewDidLoad()
     func viewWillAppear()
     
-    func getMedia() -> [MediaViewModel]
+    func getMedia(_ category: MediaCategory) -> [MediaViewModel]
     func getSections() -> [Section]
     
     func sortMedia(with option: SortingOption)
@@ -41,7 +48,15 @@ protocol MainScreenPresenterInputProtocol: AnyObject {
     
     func didSelectCell(at index: Int)
     
-    func updateSearchResults(with query: String, scope: SearchScope) 
+    func updateSearchResults(with query: String, scope: SearchScope)
+    
+    //
+    func fetchAllCategories(_ scope: SearchScope)
+    func fetchNowPlayingMedia()
+    func fetchpopularMedia()
+    func fetchUpcomingMedia()
+    func fetchTopRatedMedia()
+    func fetchtrendingsMedia()
 }
 
 protocol MainScreenPresenterLoadingInputProtocol: AnyObject {
