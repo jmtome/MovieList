@@ -204,8 +204,25 @@ extension MainScreenPresenter: MainScreenPresenterInputProtocol {
     
     func viewWillAppear() {}
     
-    func getMedia() -> [MediaViewModel] {
-        return viewModel
+    func getMedia(_ category: MediaCategory = .search) -> [MediaViewModel] {
+        switch category {
+        case .search:
+            return viewModel
+        case .nowPlaying:
+            return nowPlayingViewModel
+        case .popular:
+            return popularMediaViewModel
+        case .upcoming:
+            return upcomingMediaViewModel
+        case .topRated:
+            return topRatedMediaViewModel
+        case .trending:
+            return trendingMediaViewModel
+        case .recentlyViewed:
+            return []
+        case .lastSearch:
+            return []
+        }
     }
     func getSections() -> [Section] {
         switch currentScope {
