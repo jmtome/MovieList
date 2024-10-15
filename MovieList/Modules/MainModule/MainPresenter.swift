@@ -302,12 +302,55 @@ extension MainScreenPresenter: MainScreenInteractorOutputProtocol {
         output?.showAlertUnfavoritedMedia()
     }
     
-    func didReceiveMovies(_ movies: [MediaViewModel], with page: Int) {
-        self.isLoading = false
+    func didReceiveMovies(_ movies: [MediaViewModel], with page: Int, category: MediaCategory) {
+        self.isLoading = true
+        print("#### receive current page: \(currentPage), page to fetch: \(page), category: \(category), scope: \(currentScope)")
+
+        guard page >= currentPage else {
+            print("#### tried to load page that was lower than current")
+            return
+        }
+                
+        
         if page == 1 {
-            self.viewModel = movies
+            switch category {
+            case .search:
+                self.viewModel = movies
+                sortMedia(with: .relevance)
+            case .nowPlaying:
+                self.nowPlayingViewModel = movies
+            case .popular:
+                self.popularMediaViewModel = movies
+            case .upcoming:
+                self.upcomingMediaViewModel = movies
+            case .topRated:
+                self.topRatedMediaViewModel = movies
+            case .trending:
+                self.trendingMediaViewModel = movies
+            case .recentlyViewed:
+                break
+            case .lastSearch:
+                break
+            }
         } else {
-            self.viewModel.append(contentsOf: movies)
+            switch category {
+            case .search:
+                self.viewModel.append(contentsOf: movies)
+            case .nowPlaying:
+                self.nowPlayingViewModel.append(contentsOf: movies)
+            case .popular:
+                self.popularMediaViewModel.append(contentsOf: movies)
+            case .upcoming:
+                self.upcomingMediaViewModel.append(contentsOf: movies)
+            case .topRated:
+                self.topRatedMediaViewModel.append(contentsOf: movies)
+            case .trending:
+                self.trendingMediaViewModel.append(contentsOf: movies)
+            case .recentlyViewed:
+                break
+            case .lastSearch:
+                break
+            }
         }
     }
     
