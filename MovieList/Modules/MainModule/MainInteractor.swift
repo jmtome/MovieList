@@ -153,10 +153,10 @@ extension MainScreenInteractor: MainScreenInteractorProtocol {
                 switch scope {
                 case .movies:
                     let moviesResponse = try JSONDecoder().decode(Response<Movie>.self, from: data)
-                    output?.didReceiveMovies(moviesResponse.results.map { MediaViewModel(movie: $0) }, with: page)
+                    output?.didReceiveMovies(moviesResponse.results.map { MediaViewModel(movie: $0) }, with: page, category: .search)
                 case .series:
                     let seriesResponse = try JSONDecoder().decode(Response<TVShow>.self, from: data)
-                    output?.didReceiveMovies(seriesResponse.results.map { MediaViewModel(tvshow: $0) }, with: page)
+                    output?.didReceiveMovies(seriesResponse.results.map { MediaViewModel(tvshow: $0) }, with: page, category: .search)
                 }
             } catch let error {
                 print("error decoding popular media for scope: \(scope), page: \(page), error: \(error)")
