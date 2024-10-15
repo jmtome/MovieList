@@ -224,6 +224,7 @@ extension MainScreenPresenter: MainScreenPresenterInputProtocol {
             return []
         }
     }
+    
     func getSections() -> [Section] {
         switch currentScope {
         case .movies:
