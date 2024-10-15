@@ -10,9 +10,9 @@ import Foundation
 //MARK: - MainScreenInteractorOutputProtocol
 // Called by Interactor, Implemented by Presenter
 protocol MainScreenInteractorOutputProtocol: AnyObject {
-    func presentMediaAddedToFavorites()
-    func presentMediaRemovedFromFavorites()
-    func didReceiveMovies(_ movies: [MediaViewModel], with page: Int)
+    func presentMediaAddedToFavorites(mediaId: Int)
+    func presentMediaRemovedFromFavorites(mediaId: Int)
+    func didReceiveMovies(_ movies: [MediaViewModel], with page: Int, category: MediaCategory)
     func didEncounterError(_ error: Error)
 }
 
@@ -23,6 +23,12 @@ protocol MainScreenInteractorProtocol: AnyObject {
 
     func isMovieInFavorites(media: MediaViewModel) -> Bool
     func handleFavoriteAction(with media: MediaViewModel)
+    
+    func getNowPlayingMedia(scope: SearchScope, page: Int)
+    func getPopularMedia(scope: SearchScope, page: Int)
+    func getUpcomingMedia(scope: SearchScope, page: Int)
+    func getTopRatedMedia(scope: SearchScope, page: Int)
+    func getTrendingMedia(scope: SearchScope, page: Int)
 }
 
 //MARK: - MainScreenInteractor
