@@ -20,24 +20,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.overrideUserInterfaceStyle = .dark
         configureNavigationBarAppearance()
         configureTabBar()
-        
+        fetchAndSaveCountryCode()
+
         // Create favorites resource
         let favoritesRepo = FavoritesRepository()
-        
         // Create network resource
         let networkingResource = TMDBNetworkingService()
         
+        //Uncomment to test flows.
+//        window.rootViewController = setupAndCreateUIKitFlow(networkingService: networkingResource, favoritesRepository: favoritesRepo)
+        window.rootViewController = setupAndCreateSwiftUIFlow(networkingService: networkingResource, favoritesRepository: favoritesRepo)
+        window.makeKeyAndVisible()
+    }
+    
+    //Mark: - Create UIKit Flow TabBar Setup.
+    private func setupAndCreateUIKitFlow(networkingService: NetworkingService, favoritesRepository: FavoritesRepository) -> UIViewController {
         // Create the main view controller
-        let mainScreenViewController = MainScreenBuilder.build(favoritesRepository: favoritesRepo, networkRepository: networkingResource)
+        let mainScreenViewController = MainScreenBuilder.build(favoritesRepository: favoritesRepository, networkRepository: networkingService)
         let mainScreenNavigationController = UINavigationController(rootViewController: mainScreenViewController)
         
         // Create tab bar items
         let mainScreenItem = UITabBarItem(title: "Main", image: UIImage(systemName: "film"), selectedImage: UIImage(systemName: "film.fill"))
         let favoritesItem = UITabBarItem(title: "Favorites", image: UIImage(systemName: "star"), selectedImage: UIImage(systemName: "star.fill"))
         
-        
         // Create the favorites view controller
-        let favoritesViewController = FavBuilder.build(favoritesRepository: favoritesRepo, networkRepository: networkingResource)
+        let favoritesViewController = FavBuilder.build(favoritesRepository: favoritesRepository, networkRepository: networkingService)
         let favoritesNavigationController = UINavigationController(rootViewController: favoritesViewController)
         
         // Set the tab bar items for each view controller
@@ -48,14 +55,39 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let tabBarController = MLTabBarController()
         tabBarController.viewControllers = [mainScreenNavigationController, favoritesNavigationController]
-        
-        configureNavigationBarAppearance()
-        configureTabBar()
-        fetchAndSaveCountryCode()
-        window.rootViewController = tabBarController
-        window.makeKeyAndVisible()
+
+        return tabBarController
     }
     
+    //Mark: - Create SwiftUI Flow TabBar Setup.
+    private func setupAndCreateSwiftUIFlow(networkingService: NetworkingService, favoritesRepository: FavoritesRepository) -> UIViewController {
+        //SwiftUI of the Main Tab
+        let viewController = HostingController()
+        viewController.dataSource = createDummyData()
+        viewController.favoritesRepository = favoritesRepository
+        viewController.networkingService = networkingService
+        return viewController
+    }
+    
+    private func createDummyData() -> [MediaViewModel] {
+        var myData: [MediaViewModel] = []
+        for index in 0..<20 {
+            myData.append(MediaViewModel.viewModelFrom(mediaItem: MocchyItems.expectedItems(at: index)))
+        }
+        return myData
+    }
+    private func fetchAndSaveCountryCode() {
+        Task {
+            let countryCode = await CountryService.fetchCountryCodeAsync()
+            
+            if let countryCode = countryCode {
+                UserDefaults.standard.set(countryCode, forKey: "savedCountryCode")
+                print("Country code saved to UserDefaults: \(countryCode)")
+            } else {
+                print("Failed to retrieve country code.")
+            }
+        }
+    }
     func configureNavigationBarAppearance() {
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = .prussianBlue
