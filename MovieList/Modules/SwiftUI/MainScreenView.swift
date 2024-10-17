@@ -557,3 +557,13 @@ struct FavoritesTabView: View {
         }
     }
 }
+
+// For future reference
+
+/*
+ //        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: searchTitle)
+         //        .searchScopes($segmentedScope, activation: .onSearchPresentation) {
+         //            Text("Movies").tag(0)
+         //            Text("Series").tag(1)
+         //        }
+ */
