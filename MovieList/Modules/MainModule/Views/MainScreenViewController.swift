@@ -55,7 +55,7 @@ class MainScreenViewController: UIViewController {
         var currentSnapshot = NSDiffableDataSourceSnapshot<Section, MediaViewModel>()
         
         let sections = presenter.getSections()
-        let updatedMedia = presenter.getMedia()
+        let updatedMedia = presenter.getMedia(.search)
         
         currentSnapshot.appendSections(sections)
         currentSnapshot.appendItems(updatedMedia, toSection: sections.first)
