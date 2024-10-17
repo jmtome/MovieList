@@ -29,9 +29,6 @@ struct Person: Codable {
         guard let profilePath = profilePath else {
             return nil
         }
-        print("#### posterpath person: \(profilePath)")
-
-//        return profilePath
         return "https://image.tmdb.org/t/p/w300/\(profilePath)"
     }
     

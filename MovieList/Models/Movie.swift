@@ -50,10 +50,13 @@ struct Movie: Media, Codable, Hashable  {
     
     var fullPosterPath: String? {
         guard let posterPath = posterPath else {
+            print("$ returning nil fullPosterPath Movie Init")
             return nil
         }
-        print("#### posterpath movie: \(posterPath)")
-        return "https://image.tmdb.org/t/p/w154/\(posterPath)"
+        print("$ posterpath movie: \(posterPath)")
+        let joined = "https://image.tmdb.org/t/p/w154/\(posterPath)"
+        print("$ posterPath movie joined: \(joined)")
+        return joined
     }
     
     internal init(adult: Bool? = nil, backdropPath: String? = nil, id: Int? = nil, mediaType: String? = nil, genreIds: [Int]? = nil, originalLanguage: String? = nil, originalTitle: String? = nil, overview: String? = nil, posterPath: String? = nil, releaseDate: String? = nil, title: String? = nil, video: Bool? = nil, voteAverage: Double? = nil, voteCount: Int? = nil, firstAirDate: String? = nil, originCountry: [String]? = nil, popularity: Double? = nil, credits: MediaCredits? = nil, videos: VideoResults? = nil, department: String? = nil, job: String? = nil) {
@@ -189,8 +192,6 @@ struct Cast: Codable, Hashable {
         guard let profilePath = profilePath else {
             return nil
         }
-        print("#### posterpath cast: \(profilePath)")
-
         return "https://image.tmdb.org/t/p/w300/\(profilePath)"
     }
     
@@ -221,9 +222,7 @@ struct Crew: Codable, Hashable {
         guard let profilePath = profilePath else {
             return nil
         }
-        print("#### posterpath crew: \(profilePath)")
 
-//        return profilePath
         return "https://image.tmdb.org/t/p/w300/\(profilePath)"
     }
     
