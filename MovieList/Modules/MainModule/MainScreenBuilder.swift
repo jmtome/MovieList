@@ -10,30 +10,18 @@ import MovieListFramework
 
 class MainScreenBuilder {
     static func build(favoritesRepository: FavoritesRepository, networkRepository: NetworkingService) -> UIViewController {
-//        let viewController = MainScreenViewController()
-        let dummyData: [MediaViewModel] = {
-            var myData: [MediaViewModel] = []
-            for index in 0..<20 {
-                myData.append(MediaViewModel.viewModelFrom(mediaItem: MocchyItems.expectedItems(at: index)))
-            }
-            return myData
-        }()
-        let viewController = HostingController()
-        viewController.dataSource = dummyData
-        viewController.favoritesRepository = favoritesRepository
-        viewController.networkingService = networkRepository
+        let viewController = MainScreenViewController()
+
+        let interactor = MainScreenInteractor(networkingService: networkRepository, favoritesRepository: favoritesRepository)
+        let router = MainScreenRouter(viewController)
         
+        let presenter = MainScreenPresenter(interactor: interactor, router: router)
         
-//        let interactor = MainScreenInteractor(networkingService: networkRepository, favoritesRepository: favoritesRepository)
-//        let router = MainScreenRouter(viewController)
+        interactor.output = presenter
+        presenter.output = viewController
         
-//        let presenter = MainScreenPresenter(interactor: interactor, router: router)
-        
-//        interactor.output = presenter
-//        presenter.output = viewController
-//        
-//        viewController.presenter = presenter
-//        viewController.loadingPresenter = presenter
+        viewController.presenter = presenter
+        viewController.loadingPresenter = presenter
         
         return viewController
     }
