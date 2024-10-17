@@ -392,9 +392,6 @@ struct MainScreenView: View {
 //                        }
 //                        .tag(3)
                 }
-                .onChange(of: tabSelection) {
-                    print("#### onChange of tabSelection: \(tabSelection)")
-                }
             }
 //            .navigationTitle(tabSelection == 0 ? "" : (tabSelection == 1 ? "Search" : (tabSelection == 2 ? "Favorites" : "Lists")))
             .navigationBarTitleDisplayMode(.inline)
