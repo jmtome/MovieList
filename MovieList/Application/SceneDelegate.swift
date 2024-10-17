@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MovieListFramework
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
