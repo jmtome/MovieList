@@ -17,9 +17,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: windowScene)
         self.window = window
+        
+        // Configure Appearance both in UIKit and SwiftUI
         window.overrideUserInterfaceStyle = .dark
         configureNavigationBarAppearance()
         configureTabBar()
+        
         // Fetch and Save user IP to get User Country Code For Streaming Suggestions
         fetchAndSaveCountryCode()
 
