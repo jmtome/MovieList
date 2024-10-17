@@ -433,11 +433,6 @@ struct MainScreenView: View {
                 }
             }
         }
-//        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: searchTitle)
-        //        .searchScopes($segmentedScope, activation: .onSearchPresentation) {
-        //            Text("Movies").tag(0)
-        //            Text("Series").tag(1)
-        //        }
         .onChange(of: tabSelection) {
             impactFeedback.impactOccurred()
             if tabSelection == 2 {
