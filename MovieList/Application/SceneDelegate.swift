@@ -20,6 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.overrideUserInterfaceStyle = .dark
         configureNavigationBarAppearance()
         configureTabBar()
+        // Fetch and Save user IP to get User Country Code For Streaming Suggestions
         fetchAndSaveCountryCode()
 
         // Create favorites resource
