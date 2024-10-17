@@ -25,14 +25,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // Fetch and Save user IP to get User Country Code For Streaming Suggestions
         fetchAndSaveCountryCode()
-
+        
         // Create favorites resource
         let favoritesRepo = FavoritesRepository()
         // Create network resource
         let networkingResource = TMDBNetworkingService()
         
         //Uncomment to test flows.
-//        window.rootViewController = setupAndCreateUIKitFlow(networkingService: networkingResource, favoritesRepository: favoritesRepo)
+        //        window.rootViewController = setupAndCreateUIKitFlow(networkingService: networkingResource, favoritesRepository: favoritesRepo)
         window.rootViewController = setupAndCreateSwiftUIFlow(networkingService: networkingResource, favoritesRepository: favoritesRepo)
         window.makeKeyAndVisible()
     }
@@ -59,7 +59,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let tabBarController = MLTabBarController()
         tabBarController.viewControllers = [mainScreenNavigationController, favoritesNavigationController]
-
+        
         return tabBarController
     }
     
@@ -114,13 +114,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UITabBar.appearance().scrollEdgeAppearance = UITabBar().standardAppearance
         UITabBar.appearance().tintColor = .systemTeal
     }
-
+    
     class MLTabBarController: UITabBarController {
         override func viewDidLoad() {
             super.viewDidLoad()
             configureTabBar()
         }
-
+        
         private func configureTabBar() {
             let appearance = UITabBarAppearance()
             appearance.configureWithOpaqueBackground()
@@ -130,11 +130,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             tabBar.tintColor = .systemTeal
         }
         
-//        override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-//            guard let indexOfNewTab = tabBar.items?.firstIndex(of: item) else { return }
-//            
-//            print("item is :\(item)")
-//        }
+        //        override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+        //            guard let indexOfNewTab = tabBar.items?.firstIndex(of: item) else { return }
+        //
+        //            print("item is :\(item)")
+        //        }
         
     }
     
