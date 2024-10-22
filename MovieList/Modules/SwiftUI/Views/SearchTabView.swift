@@ -62,18 +62,11 @@ struct SearchTabView: View {
     @State private var viewIsPresented: Bool = false
     var body: some View {
         VStack {
-            // Custom Search Bar
-            CustomSearchBar(searchText: $searchText, onSearch: {
-                performSearch()
-            }, onCancel: {
-                searchText = ""
-            })
-            .padding(.top, 8)
             Picker("Select Scope", selection: $searchScope) {
                 Text("Movies").tag(0)
                 Text("Series").tag(1)
             }
-            .padding(.top, 2)
+            .padding(.top, 4)
             .pickerStyle(.segmented)
             .onChange(of: searchScope) {
                 guard viewIsPresented else {
@@ -82,6 +75,13 @@ struct SearchTabView: View {
                 }
                 performSearch()
             }
+            // Custom Search Bar
+            CustomSearchBar(searchText: $searchText, onSearch: {
+                performSearch()
+            }, onCancel: {
+                searchText = ""
+            })
+            .padding(.top, 8)
             
             // Display search results (example)
             if searchResults.isEmpty {
