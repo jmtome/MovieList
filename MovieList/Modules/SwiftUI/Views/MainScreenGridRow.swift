@@ -66,26 +66,21 @@ struct MainScreenGridRow: View {
                 LazyHGrid(rows: rows, alignment: .center, spacing: 20) {
                     ForEach(mediaData, id: \.id) { mediaItem in
                         NavigationLink(destination: MediaDetailView(store: newVM.buildStoreForDetails(with: mediaItem), media: mediaItem)) {
-                            MediaCellGridView(media: mediaItem)
-                                .onAppear {
-                                    impactFeedback.prepare()
-                                }
-                                .scaleEffect(isPressed ? 5 : 1.0) // Adjust the scale value for a more dramatic effect
-                                .animation(.spring(response: 0.4, dampingFraction: 0.5), value: isPressed) // Control the speed and bounce of the animation
-                                .gesture(
-                                    LongPressGesture(minimumDuration: 1.5) // Adjust the duration if needed
-                                        .onChanged { _ in
-                                            withAnimation {
-                                                isPressed = true
-                                            }
-                                            impactFeedback.impactOccurred()
+                            MediaCellGridView(media: mediaItem, isFavorite: newVM.isFavorite(mediaItem))
+                                .scaleEffect(isPressed ? 1.1 : 1.0)
+                                .animation(.spring(response: 0.4, dampingFraction: 0.5), value: isPressed)
+                                .onLongPressGesture(minimumDuration: 1.2, perform: {
+                                    impactFeedback.impactOccurred()
+                                    withAnimation {
+                                        isPressed = true
+                                    }
+                                    // Reset after a moment
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                                        withAnimation {
+                                            isPressed = false
                                         }
-                                        .onEnded { _ in
-                                            withAnimation {
-                                                isPressed = false
-                                            }
-                                        }
-                                )
+                                    }
+                                })
                                 .contextMenu {
                                     Button(action: {
                                         // Handle Favorite action
