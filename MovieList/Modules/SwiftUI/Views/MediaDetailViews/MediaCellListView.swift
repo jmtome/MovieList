@@ -10,22 +10,41 @@ import MovieListFramework
 
 struct MediaCellGridView: View {
     var media: MediaViewModel
+    var isFavorite: Bool
     private let placeHolderImage: Image = Image(systemName: "popcorn")
     
     var body: some View {
-        CachedAsyncImage(url: URL(string: media.mainPosterURLString ?? "")) { image in
-            image
-                .resizable()
-                .scaledToFit()
-                .frame(width: 80, height: 120)
-                .clipShape(RoundedRectangle(cornerRadius: 6))
-        } placeholder: {
-            placeHolderImage
-                .resizable()
-                .scaledToFit()
-                .frame(width: 80, height: 120)
-                .clipShape(RoundedRectangle(cornerRadius: 6))
-                .tint(.white)
+        ZStack(alignment: .topTrailing) {
+            CachedAsyncImage(url: URL(string: media.mainPosterURLString ?? "")) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 80, height: 120)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+            } placeholder: {
+                placeHolderImage
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 80, height: 120)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .tint(.white)
+            }
+            if isFavorite {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Color.purple)
+                    Image(systemName: "bookmark.fill")
+                        .foregroundColor(.white)
+                        .font(.system(size: 10, weight: .bold))
+                        .padding(0)
+                }
+                .frame(width: 20, height: 20)
+                .padding(0)
+            }
+
+        }
+        .onAppear {
+            print("### MediaCellView.onAppear is fav: \(media.isFavorite)")
         }
     }
 }
@@ -44,7 +63,7 @@ struct MediaCellGridView: View {
     ScrollView {
         LazyVGrid(columns: columns, alignment: .center, spacing: 20) {
             ForEach(dummyData, id: \.id) { mediaItem in
-                MediaCellGridView(media: MediaViewModel.viewModelFrom(mediaItem: mediaItem))
+                MediaCellGridView(media: MediaViewModel.viewModelFrom(mediaItem: mediaItem), isFavorite:  Bool.random())
             }
         }
     }
