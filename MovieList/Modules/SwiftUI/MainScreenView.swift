@@ -335,7 +335,8 @@ struct MainScreenView: View {
     private var searchTitle: String {
         newVM.searchTitle
     }
-    
+    @State private var start = CFAbsoluteTimeGetCurrent()
+
     private var filteredData: [MediaViewModel] {
         if searchText.isEmpty {
             return newVM.mediaVM.isEmpty ? dataSource : newVM.mediaVM
@@ -376,16 +377,31 @@ struct MainScreenView: View {
                             Label("Main", systemImage: "film")
                         }
                         .tag(0)
+                        .onAppear {
+                            print("#### Tab \(tabSelection) appeared at \(Date())")
+                            let diff = CFAbsoluteTimeGetCurrent() - start
+                            print("### Tab \(tabSelection) Render took: \(diff) seconds")
+                        }
                     SearchTabView(viewModel: newVM, searchScope: $segmentedScope, homeMode: homeMode)
                         .tabItem {
                             Label("Search", systemImage: "magnifyingglass")
                         }
                         .tag(1)
+                        .onAppear {
+                            print("#### Tab \(tabSelection) appeared at \(Date())")
+                            let diff = CFAbsoluteTimeGetCurrent() - start
+                            print("### Tab \(tabSelection) Render took: \(diff) seconds")
+                        }
                     FavoritesTabView(newVM: newVM, filteredFavoriteData: filteredFavoriteData, homeMode: homeMode)
                         .tabItem {
                             Label("Favorites", systemImage: "star.fill")
                         }
                         .tag(2)
+                        .onAppear {
+                            print("#### Tab \(tabSelection) appeared at \(Date())")
+                            let diff = CFAbsoluteTimeGetCurrent() - start
+                            print("### Tab \(tabSelection) Render took: \(diff) seconds")
+                        }
 //                    ListsTabView()
 //                        .tabItem {
 //                            Label("Lists", systemImage: "list.bullet")
@@ -431,6 +447,9 @@ struct MainScreenView: View {
             }
         }
         .onChange(of: tabSelection) {
+            print("#### Tab change ocurred to \(tabSelection) at \(Date())")
+            self.start = CFAbsoluteTimeGetCurrent()
+            
             impactFeedback.impactOccurred()
             if tabSelection == 2 {
                 newVM.fetchFavorites()

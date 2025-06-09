@@ -171,12 +171,11 @@ extension MainScreenInteractor: MainScreenInteractorProtocol {
     func handleFavoriteAction(with media: MediaViewModel) {
         if isMovieInFavorites(media: media) {
             favoritesRepository.removeFavorite(media: media)
-            output?.presentMediaRemovedFromFavorites()
+            output?.presentMediaRemovedFromFavorites(mediaId: media.id)
         } else {
             favoritesRepository.saveFavorite(media: media)
-            output?.presentMediaAddedToFavorites()
+            output?.presentMediaAddedToFavorites(mediaId: media.id)
         }
     }
-
 }
 

@@ -23,6 +23,10 @@ protocol MainScreenPresenterOutputProtocol: AnyObject {
     func showAlertUnfavoritedMedia()
 }
 
+actor SomeClass {
+    
+}
+
 //MARK: - MainScreen Presenter Input Protocol
 //Called by MainScreenViewController, Implemented by Presenter
 protocol MainScreenPresenterInputProtocol: AnyObject {
@@ -285,6 +289,7 @@ extension MainScreenPresenter: MainScreenPresenterLoadingInputProtocol {
     }
     
     func viewShouldFetchNewPage() {
+        print("#### current page: \(currentPage), page to fetch: \(currentPage + 1)")
         currentPage += 1
         
         self.isLoading = true
@@ -295,10 +300,16 @@ extension MainScreenPresenter: MainScreenPresenterLoadingInputProtocol {
 //MARK: - MainScreenInteractorOutputProtocol Conformance
 // Called by Interactor, implemented by Presenter
 extension MainScreenPresenter: MainScreenInteractorOutputProtocol {
-    func presentMediaAddedToFavorites() {
+    func presentMediaAddedToFavorites(mediaId: Int) {
+        if let index = viewModel.firstIndex(where: { $0.id == mediaId }) {
+            viewModel[index].isFavorite = true
+        }
         output?.showAlertFavoritedMedia()
     }
-    func presentMediaRemovedFromFavorites() {
+    func presentMediaRemovedFromFavorites(mediaId: Int) {
+        if let index = viewModel.firstIndex(where: { $0.id == mediaId }) {
+            viewModel[index].isFavorite = false
+        }
         output?.showAlertUnfavoritedMedia()
     }
     
