@@ -11,7 +11,7 @@ import MovieListFramework
 func uniqueItem() -> MediaItem {
     return MediaItem(adult: false,
                      backdropPath: anyURL().absoluteString,
-                     genreIds: [],
+                     genreIds: [Int.random(in: 0...9), Int.random(in: 0...9), Int.random(in: 0...9)],
                      id: UUID().hashValue,
                      mediaType: "any media",
                      originalLanguage: "any language",

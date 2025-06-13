@@ -11,11 +11,11 @@ import MovieListFramework
 extension MediaStoreSpecs where Self: XCTestCase {
     
     func assertThatRetrieveDeliversEmptyOnEmptyCache(on sut: MediaStore, file: StaticString = #file, line: UInt = #line) {
-        expect(sut, toRetrieve: .empty, file: file, line: line)
+        expect(sut, toRetrieve: .success(.none), file: file, line: line)
     }
     
     func assertThatRetrieveHasNoSideEffectsOnEmptyCache(on sut: MediaStore, file: StaticString = #file, line: UInt = #line) {
-        expect(sut, toRetrieveTwice: .empty, file: file, line: line)
+        expect(sut, toRetrieveTwice: .success(.none), file: file, line: line)
     }
     
     func assertThatRetrieveDeliversFoundValuesOnNonEmptyCache(on sut: MediaStore, file: StaticString = #file, line: UInt = #line) {
@@ -24,7 +24,7 @@ extension MediaStoreSpecs where Self: XCTestCase {
         
         insert((items, timestamp), to: sut)
         
-        expect(sut, toRetrieve: .found(items: items, timestamp: timestamp), file: file, line: line)
+        expect(sut, toRetrieve: .success(CachedItems(items: items, timestamp: timestamp)), file: file, line: line)
     }
     
     func assertThatRetrieveHasNoSideEffectsOnNonEmptyCache(on sut: MediaStore, file: StaticString = #file, line: UInt = #line) {
@@ -33,7 +33,7 @@ extension MediaStoreSpecs where Self: XCTestCase {
         
         insert((items, timestamp), to: sut)
         
-        expect(sut, toRetrieveTwice: .found(items: items, timestamp: timestamp), file: file, line: line)
+        expect(sut, toRetrieveTwice: .success(CachedItems(items: items, timestamp: timestamp)), file: file, line: line)
     }
     
     func assertThatInsertDeliversNoErrorOnEmptyCache(on sut: MediaStore, file: StaticString = #file, line: UInt = #line) {
@@ -57,7 +57,7 @@ extension MediaStoreSpecs where Self: XCTestCase {
         let latestTimestamp = Date()
         insert((latestFeed, latestTimestamp), to: sut)
         
-        expect(sut, toRetrieve: .found(items: latestFeed, timestamp: latestTimestamp), file: file, line: line)
+        expect(sut, toRetrieve: .success(CachedItems(items: latestFeed, timestamp: latestTimestamp)), file: file, line: line)
     }
     
     func assertThatDeleteDeliversNoErrorOnEmptyCache(on sut: MediaStore, file: StaticString = #file, line: UInt = #line) {
@@ -69,7 +69,7 @@ extension MediaStoreSpecs where Self: XCTestCase {
     func assertThatDeleteHasNoSideEffectsOnEmptyCache(on sut: MediaStore, file: StaticString = #file, line: UInt = #line) {
         deleteCache(from: sut)
         
-        expect(sut, toRetrieve: .empty, file: file, line: line)
+        expect(sut, toRetrieve: .success(.none), file: file, line: line)
     }
     
     func assertThatDeleteDeliversNoErrorOnNonEmptyCache(on sut: MediaStore, file: StaticString = #file, line: UInt = #line) {
@@ -85,7 +85,7 @@ extension MediaStoreSpecs where Self: XCTestCase {
         
         deleteCache(from: sut)
         
-        expect(sut, toRetrieve: .empty, file: file, line: line)
+        expect(sut, toRetrieve: .success(.none), file: file, line: line)
     }
     
     func assertThatSideEffectsRunSerially(on sut: MediaStore, file: StaticString = #file, line: UInt = #line) {
@@ -120,8 +120,10 @@ extension MediaStoreSpecs where Self: XCTestCase {
     func insert(_ cache: (items: [LocalMediaItem], timestamp: Date), to sut: MediaStore) -> Error? {
         let exp = expectation(description: "Wait for cache insertion")
         var insertionError: Error?
-        sut.insert(cache.items, timestamp: cache.timestamp) { receivedInsertionError in
-            insertionError = receivedInsertionError
+        sut.insert(cache.items, timestamp: cache.timestamp) { insertionResult in
+            if case let Result.failure(receivedInsertionError) = insertionResult {
+                insertionError = receivedInsertionError
+            }
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
@@ -132,30 +134,32 @@ extension MediaStoreSpecs where Self: XCTestCase {
     func deleteCache(from sut: MediaStore) -> Error? {
         let exp = expectation(description: "Wait for cache deletion")
         var deletionError: Error?
-        sut.deleteCachedMedia { receivedDeletionError in
-            deletionError = receivedDeletionError
+        sut.deleteCachedMedia { deletionResult in
+            if case let Result.failure(receivedDeletionError) = deletionResult {                
+                deletionError = receivedDeletionError
+            }
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
         return deletionError
     }
  
-    func expect(_ sut: MediaStore, toRetrieveTwice expectedResult: RetrieveCachedMediaItemsResult, file: StaticString = #file, line: UInt = #line) {
+    func expect(_ sut: MediaStore, toRetrieveTwice expectedResult: MediaStore.RetrievalResult, file: StaticString = #file, line: UInt = #line) {
         expect(sut, toRetrieve: expectedResult, file: file, line: line)
         expect(sut, toRetrieve: expectedResult, file: file, line: line)
     }
     
-    func expect(_ sut: MediaStore, toRetrieve expectedResult: RetrieveCachedMediaItemsResult, file: StaticString = #file, line: UInt = #line) {
+    func expect(_ sut: MediaStore, toRetrieve expectedResult: MediaStore.RetrievalResult, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Wait for cache retrieval")
         
         sut.retrieve { retrievedResult in
             switch (expectedResult, retrievedResult) {
-            case (.empty, .empty), (.failure, .failure):
+            case (.success(.none), .success(.none)), (.failure, .failure):
                 break
                 
-            case let (.found(expectedItems, expectedTimestamp), .found(retrievedItems, retrievedTimestamp)):
-                XCTAssertEqual(expectedItems, retrievedItems, file: file, line: line)
-                XCTAssertEqual(expectedTimestamp, retrievedTimestamp, file: file, line: line)
+            case let (.success(.some(expectedCache)), .success(.some(retrievedCache))):
+                XCTAssertEqual(expectedCache.items, retrievedCache.items, file: file, line: line)
+                XCTAssertEqual(expectedCache.timestamp, retrievedCache.timestamp, file: file, line: line)
                 
             default:
                 XCTFail("Expected to retrieve \(expectedResult), got \(retrievedResult) instead", file: file, line: line)

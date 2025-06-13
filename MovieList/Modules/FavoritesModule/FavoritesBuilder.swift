@@ -13,15 +13,15 @@ class FavBuilder {
         //Reuse of this VC because its the exact same screen, but with a different Presenter and Interactor.
         let viewController = MainScreenViewController()
         
-        let interactor = FavoritesScreenInteractor(favoritesRepository: favoritesRepository)
-        let router = MainScreenRouter(viewController)
+        let favoritesInteractor = FavoritesScreenInteractor(favoritesRepository: favoritesRepository)
+        let favoritesRouter = MainScreenRouter(viewController)
         
-        let presenter = FavoritesScreenPresenter(interactor: interactor, router: router)
+        let favoritesPresenter = FavoritesScreenPresenter(interactor: favoritesInteractor, router: favoritesRouter)
         
-        interactor.output = presenter
-        presenter.output = viewController
+        favoritesInteractor.output = favoritesPresenter
+        favoritesPresenter.output = viewController
         
-        viewController.presenter = presenter
+        viewController.presenter = favoritesPresenter
         viewController.loadingPresenter = nil
         
         return viewController

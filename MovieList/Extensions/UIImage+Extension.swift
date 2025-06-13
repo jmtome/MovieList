@@ -35,6 +35,26 @@ extension UIImage {
 
         return image
     }
+    func addBackgroundCircle2(_ color: UIColor?) -> UIImage? {
+        let circleDiameter = max(size.width * 2, size.height * 2)
+        let circleRadius = circleDiameter * 0.5
+        let circleSize = CGSize(width: circleDiameter, height: circleDiameter)
+        let imageFrame = CGRect(x: circleRadius - (size.width * 0.5), y: circleRadius - (size.height * 0.5), width: size.width, height: size.height)
+        
+        let renderer = UIGraphicsImageRenderer(size: circleSize)
+        let image = renderer.image { context in
+            // Draw the circle background
+            let circlePath = UIBezierPath(ovalIn: CGRect(origin: .zero, size: circleSize))
+            (color ?? .systemRed).setFill()
+            circlePath.fill()
+            
+            // Draw the original image on top of the circle
+            draw(in: imageFrame)
+        }
+        
+        return image
+    }
+
     
     func addBackgroundCircleWithLabel(_ color: UIColor?, labelText: String) -> UIImage? {
         let circleDiameter = max(size.width * 2, size.height * 2)

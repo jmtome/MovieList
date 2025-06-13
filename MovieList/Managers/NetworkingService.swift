@@ -13,7 +13,17 @@ protocol NetworkingService {
     
     func getMediaDetails(for mediaTypeId: MediaTypeID) async throws -> Data
     func getMediaCredits(for mediaTypeId: MediaTypeID) async throws -> Data
+    func getMediaStreamers(for mediaTypeId: MediaTypeID) async throws -> Data
     func getImagesForMedia(for mediaTypeId: MediaTypeID) async throws -> Data
+    func getActorDetails(for actorId: Int) async throws -> Data
+    
+    
+    //
+    func getNowPlayingMedia(language: String, page: Int, region: String, timezone: String, searchScope: SearchScope) async throws -> Data
+    func getPopularMedia(language: String, page: Int, region: String, searchScope: SearchScope) async throws -> Data
+    func getUpcomingMedia(language: String, page: Int, region: String, timezone: String, searchScope: SearchScope) async throws -> Data
+    func getTopRatedMedia(language: String, page: Int, region: String, searchScope: SearchScope) async throws -> Data
+    func getTrendingMedia(page: Int, searchScope: SearchScope) async throws -> Data
 }
 
 //ver lo de page para el metodo searchMEdia
@@ -58,6 +68,25 @@ class TMDBNetworkingService {
         return try await makeNetworkCall(with: mediaCreditsEndpoint)
     }
     
+    func getMediaStreamers(for mediaTypeId: MediaTypeID) async throws -> Data {
+        let mediaStreamersEndpoint: MovieDBEndpoint
+        
+        switch mediaTypeId.type {
+        case .movie:
+            mediaStreamersEndpoint = .movieStreamers(id: mediaTypeId.id)
+        case .tvshow:
+            mediaStreamersEndpoint = .tvStreamers(id: mediaTypeId.id)
+        }
+        
+        return try await makeNetworkCall(with: mediaStreamersEndpoint)
+    }
+    
+    func getActorDetails(for actorId: Int) async throws -> Data {
+        let actorDetailsEndpoint: MovieDBEndpoint = .personDetails(id: actorId)
+        
+        return try await makeNetworkCall(with: actorDetailsEndpoint)
+    }
+    
     func getImagesForMedia(for mediaTypeId: MediaTypeID) async throws -> Data {
         let mediaImagesEndpoint: MovieDBEndpoint
         
@@ -92,13 +121,62 @@ extension TMDBNetworkingService: NetworkingService {
         return try await makeNetworkCall(with: searchEndpoint)
     }
 
-    private func getTrendingMedia(page: Int, searchScope: SearchScope) async throws -> Data {
+    func getNowPlayingMedia(language: String = "en-US", page: Int = 1, region: String = "", timezone: String = "", searchScope: SearchScope) async throws -> Data {
+        let endpoint: MovieDBEndpoint
+        
+        switch searchScope {
+        case .movies:
+            endpoint = .nowPlayingMovies(language: language, page: page, region: region)
+        case .series:
+            endpoint = .nowPlayingTodayTV(language: language, page: page, timezone: timezone)
+           }
+        return try await makeNetworkCall(with: endpoint)
+    }
+    
+    func getPopularMedia(language: String = "en-US", page: Int = 1, region: String, searchScope: SearchScope) async throws -> Data {
+        let endpoint: MovieDBEndpoint
+        
+        switch searchScope {
+        case .movies:
+            endpoint = .popularMovies(language: language, page: page, region: region)
+        case .series:
+            endpoint = .popularTV(language: language, page: page)
+        }
+        return try await makeNetworkCall(with: endpoint)
+    }
+    
+    func getUpcomingMedia(language: String = "en-US", page: Int = 1, region: String = "", timezone: String = "", searchScope: SearchScope) async throws -> Data {
+        let endpoint: MovieDBEndpoint
+        
+        switch searchScope {
+        case .movies:
+            endpoint = .upcomingMovies(language: language, page: page, region: region)
+        case .series:
+            endpoint = .airingTodayTV(language: language, page: page, timezone: timezone)
+        }
+        return try await makeNetworkCall(with: endpoint)
+    }
+    
+    func getTopRatedMedia(language: String = "en-US", page: Int = 1, region: String = "", searchScope: SearchScope) async throws -> Data {
+        let endpoint: MovieDBEndpoint
+        
+        switch searchScope {
+        case .movies:
+            endpoint = .topRatedMovies(language: language, page: page, region: region)
+        case .series:
+            endpoint = .topRatedTV(language: language, page: page)
+        }
+        return try await makeNetworkCall(with: endpoint)
+    }
+    
+
+    func getTrendingMedia(page: Int, searchScope: SearchScope) async throws -> Data {
         let endpoint: MovieDBEndpoint
         switch searchScope {
         case .movies:
-            endpoint = .trendingMovies(page: page)
+            endpoint = .trendingMovies
         case .series:
-            endpoint = .trendingTV(page: page)
+            endpoint = .trendingTV
         }
         return try await makeNetworkCall(with: endpoint)
     }
@@ -136,4 +214,22 @@ extension TMDBNetworkingService {
     }
 }
 
+struct CountryService {
+    static func fetchCountryCodeAsync() async -> String? {
+        guard let url = URL(string: "https://api.country.is/") else { return nil }
 
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let country = try JSONDecoder().decode(Country.self, from: data)
+            return country.country
+        } catch {
+            print("Error fetching country code: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    private struct Country: Codable {
+        let ip: String
+        let country: String
+    }
+}

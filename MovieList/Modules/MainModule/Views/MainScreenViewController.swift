@@ -55,7 +55,7 @@ class MainScreenViewController: UIViewController {
         var currentSnapshot = NSDiffableDataSourceSnapshot<Section, MediaViewModel>()
         
         let sections = presenter.getSections()
-        let updatedMedia = presenter.getMedia()
+        let updatedMedia = presenter.getMedia(.search)
         
         currentSnapshot.appendSections(sections)
         currentSnapshot.appendItems(updatedMedia, toSection: sections.first)
@@ -163,6 +163,26 @@ extension MainScreenViewController {
 //MARK: - Presenter Output Protocol Conformance
 //Called by Presenter, Instantiated by MainScreenViewController
 extension MainScreenViewController: MainScreenPresenterOutputProtocol {
+    func updateUINowPlaying() {
+        
+    }
+    
+    func updateUIPopular() {
+        
+    }
+    
+    func updateUIUpcoming() {
+        
+    }
+    
+    func updateUITopRated() {
+        
+    }
+    
+    func updateUITrending() {
+        
+    }
+    
     func showAlertFavoritedMedia() {
         presentFavoriteAction(added: true)
     }

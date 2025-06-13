@@ -10,6 +10,7 @@ import Foundation
 
 
 protocol MediaDetailInteractorOutputProtocol: AnyObject {
+    func didReceiveMediaStreamingDetails(providers: CountryWatchProviders?)
     func didReceiveMediaDetails(_ media: MediaViewModel)
     func didReceiveMediaCredits(_ credits: MediaCredits)
     func didReceiveMediaImages(backdrops: [MediaImage], posters: [MediaImage])
@@ -21,6 +22,7 @@ protocol MediaDetailInteractorInputProtocol: AnyObject {
     func fetchMediaImages(for mediaTypeId: MediaTypeID)
     func fetchMediaCredits(for mediaTypeId: MediaTypeID)
     func fetchMediaDetails(for mediaTypeId: MediaTypeID)
+    func fetchMediaStreamers(for mediaTypeId: MediaTypeID)
 }
 
 //Called by Presenter, Implemented by MediaDetailFavoritesInteractor
@@ -99,6 +101,23 @@ extension MediaDetailInteractor: MediaDetailInteractorInputProtocol {
                     viewModel = MediaViewModel(tvshow: seriesDetailResponse)
                     output?.didReceiveMediaDetails(viewModel)
                 }
+            } catch let error {
+                print("There was an error caught trying to fetch the MediaDetails for mediaTypeId: \(mediaTypeId)\n error: \(error)")
+                output?.didReceiveError(error)
+            }
+        }
+    }
+    
+    func fetchMediaStreamers(for mediaTypeId: MediaTypeID) {
+        Task {
+            do {
+                let streamingServicesData = try await networkingService.getMediaStreamers(for: mediaTypeId)
+                let response = try JSONDecoder().decode(WatchProviderResponse.self, from: streamingServicesData)
+                
+                let providers = response.getProviders()
+                
+                output?.didReceiveMediaStreamingDetails(providers: providers)
+                
             } catch let error {
                 print("There was an error caught trying to fetch the MediaDetails for mediaTypeId: \(mediaTypeId)\n error: \(error)")
                 output?.didReceiveError(error)

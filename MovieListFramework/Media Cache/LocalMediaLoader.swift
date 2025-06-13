@@ -18,30 +18,31 @@ public final class LocalMediaLoader {
 }
 
 extension LocalMediaLoader {
-    public typealias SaveResult = Error?
+    public typealias SaveResult = Result<Void, Error>
     
     public func save(_ items: [MediaItem], completion: @escaping (SaveResult) -> Void) {
-        store.deleteCachedMedia { [weak self] error in
+        store.deleteCachedMedia { [weak self] deletionResult in
             guard let self = self else { return }
             
-            if let cacheDeletionError = error {
-                completion(cacheDeletionError)
-            } else {
+            switch deletionResult {
+            case .success:
                 self.cache(items, with: completion)
+            case let .failure(deletionError):
+                completion(.failure(deletionError))
             }
         }
     }
     
     private func cache(_ items: [MediaItem], with completion: @escaping (SaveResult) -> Void) {
-        store.insert(items.toLocal(), timestamp: self.currentDate()) { [weak self] error in
+        store.insert(items.toLocal(), timestamp: self.currentDate()) { [weak self] insertionResult in
             guard self != nil else { return }
-            completion(error)
+            completion(insertionResult)
         }
     }
 }
 
 extension LocalMediaLoader: MediaLoader {
-    public typealias LoadResult = LoadMediaResult
+    public typealias LoadResult = MediaLoader.Result
 
     public func load(completion: @escaping (LoadResult) -> Void) {
         store.retrieve { [weak self] result in
@@ -51,10 +52,10 @@ extension LocalMediaLoader: MediaLoader {
             case let .failure(error):
                 completion(.failure(error))
                 
-            case let .found(items: localItems, timestamp: timestamp) where MediaCachePolicy.validate(timestamp, against: self.currentDate()):
-                completion(.success(localItems.toModels()))
+            case let .success(.some(cache)) where MediaCachePolicy.validate(cache.timestamp, against: self.currentDate()):
+                completion(.success(cache.items.toModels()))
                 
-            case .found, .empty:
+            case .success:
                 completion(.success([]))
             }
         }
@@ -69,10 +70,10 @@ extension LocalMediaLoader {
             case .failure:
                 self.store.deleteCachedMedia { _ in }
                 
-            case let .found(items: _, timestamp: timestamp) where !MediaCachePolicy.validate(timestamp, against: self.currentDate()):
+            case let .success(.some(cache)) where !MediaCachePolicy.validate(cache.timestamp, against: self.currentDate()):
                 self.store.deleteCachedMedia { _ in }
                 
-            case .empty, .found: break
+            case .success: break
             }
         }
     }

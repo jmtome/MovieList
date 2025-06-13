@@ -41,6 +41,39 @@ final class FavoritesScreenPresenter {
 }
 
 extension FavoritesScreenPresenter: MainScreenPresenterInputProtocol {
+ 
+    func fetchAllCategories(_ scope: SearchScope) {
+        
+    }
+    
+    func fetchNowPlayingMedia() {
+        
+    }
+    
+    func fetchpopularMedia() {
+        
+    }
+    
+    func fetchUpcomingMedia() {
+        
+    }
+    
+    func fetchTopRatedMedia() {
+        
+    }
+    
+    func fetchtrendingsMedia() {
+        
+    }
+    
+    func isFavorite(viewModel: MediaViewModel) -> Bool {
+        interactor.isMovieInFavorites(media: viewModel)
+    }
+    
+    func handleFavoriteAction(viewModel: MediaViewModel) {
+        interactor.handleFavoriteAction(with: viewModel)
+    }
+    
     var title: String {
         return "Favorite Media"
     }
@@ -79,7 +112,7 @@ extension FavoritesScreenPresenter: MainScreenPresenterInputProtocol {
         interactor.getFavoriteMedia(for: currentMediaType, matching: currentQuery)
     }
     
-    func getMedia() -> [MediaViewModel] {
+    func getMedia(_ category: MediaCategory) -> [MediaViewModel] {
         viewModel
     }
     

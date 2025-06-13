@@ -44,14 +44,22 @@ struct Movie: Media, Codable, Hashable  {
     var tagline: String? = nil
     var credits: MediaCredits? = nil
     
+    var videos: VideoResults? = nil
+    var department: String? = nil
+    var job: String? = nil
+    
     var fullPosterPath: String? {
         guard let posterPath = posterPath else {
+            print("$ returning nil fullPosterPath Movie Init")
             return nil
         }
-        return "https://image.tmdb.org/t/p/w500/\(posterPath)"
+        print("$ posterpath movie: \(posterPath)")
+        let joined = "https://image.tmdb.org/t/p/w154/\(posterPath)"
+        print("$ posterPath movie joined: \(joined)")
+        return joined
     }
     
-    internal init(adult: Bool? = nil, backdropPath: String? = nil, id: Int? = nil, mediaType: String? = nil, genreIds: [Int]? = nil, originalLanguage: String? = nil, originalTitle: String? = nil, overview: String? = nil, posterPath: String? = nil, releaseDate: String? = nil, title: String? = nil, video: Bool? = nil, voteAverage: Double? = nil, voteCount: Int? = nil, firstAirDate: String? = nil, originCountry: [String]? = nil, popularity: Double? = nil, credits: MediaCredits? = nil) {
+    internal init(adult: Bool? = nil, backdropPath: String? = nil, id: Int? = nil, mediaType: String? = nil, genreIds: [Int]? = nil, originalLanguage: String? = nil, originalTitle: String? = nil, overview: String? = nil, posterPath: String? = nil, releaseDate: String? = nil, title: String? = nil, video: Bool? = nil, voteAverage: Double? = nil, voteCount: Int? = nil, firstAirDate: String? = nil, originCountry: [String]? = nil, popularity: Double? = nil, credits: MediaCredits? = nil, videos: VideoResults? = nil, department: String? = nil, job: String? = nil) {
         self.adult = adult
         self.backdropPath = backdropPath
         self.id = id
@@ -70,6 +78,9 @@ struct Movie: Media, Codable, Hashable  {
         self.originCountry = originCountry
         self.popularity = popularity
         self.credits = credits
+        self.videos = videos
+        self.department = department
+        self.job = job
     }
     
     init() {
@@ -77,7 +88,7 @@ struct Movie: Media, Codable, Hashable  {
     }
     
     enum CodingKeys: String, CodingKey {
-        case adult, id, overview, video, title, genreIds, popularity
+        case adult, id, overview, video, videos, title, genreIds, popularity, department, job
         case backdropPath = "backdrop_path"
         case mediaType = "media_type"
         case originalLanguage = "original_language"
@@ -181,7 +192,7 @@ struct Cast: Codable, Hashable {
         guard let profilePath = profilePath else {
             return nil
         }
-        return "https://image.tmdb.org/t/p/w500/\(profilePath)"
+        return "https://image.tmdb.org/t/p/w300/\(profilePath)"
     }
     
     enum CodingKeys: String, CodingKey {
@@ -211,7 +222,8 @@ struct Crew: Codable, Hashable {
         guard let profilePath = profilePath else {
             return nil
         }
-        return "https://image.tmdb.org/t/p/w500/\(profilePath)"
+
+        return "https://image.tmdb.org/t/p/w300/\(profilePath)"
     }
     
     enum CodingKeys: String, CodingKey {

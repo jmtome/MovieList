@@ -50,15 +50,21 @@ struct TVShow: Media, Codable, Hashable {
     let tagline: String?
     
     let credits: MediaCredits?
+    let videos: VideoResults?
     
     var fullPosterPath: String? {
         guard let posterPath = posterPath else {
+            print("$ returning nil fullPosterPath TV Init")
             return nil
         }
-        return "https://image.tmdb.org/t/p/w500/\(posterPath)"
+        print("$ posterpath tvshow: \(posterPath)")
+
+        let joined = "https://image.tmdb.org/t/p/w154/\(posterPath)"
+        print("$ posterPath tvshow joined: \(joined)")
+        return joined
     }
     
-    init(mediaType: String? = nil, adult: Bool? = nil, backdropPath: String? = nil, genreIds: [Int]? = nil, id: Int? = nil, originalLanguage: String? = nil, originalName: String? = nil, overview: String? = nil, popularity: Double? = nil, posterPath: String? = nil, releaseDate: String? = nil, name: String? = nil, voteAverage: Double? = nil, voteCount: Int? = nil, createdBy: [Creator]? = nil, episodeRunTime: [Int]? = nil, firstAirDate: String? = nil, genres: [Genre]? = nil, homepage: String? = nil, inProduction: Bool? = nil, languages: [String]? = nil, lastAirDate: String? = nil, lastEpisodeToAir: Episode? = nil, networks: [Network]? = nil, numberOfEpisodes: Int? = nil, numberOfSeasons: Int? = nil, originCountry: [String]? = nil, productionCompanies: [ProductionCompany]? = nil, productionCountries: [ProductionCountry]? = nil, seasons: [Season]? = nil, spokenLanguages: [SpokenLanguage]? = nil, status: String? = nil, tagline: String? = nil, credits: MediaCredits? = nil) {
+    init(mediaType: String? = nil, adult: Bool? = nil, backdropPath: String? = nil, genreIds: [Int]? = nil, id: Int? = nil, originalLanguage: String? = nil, originalName: String? = nil, overview: String? = nil, popularity: Double? = nil, posterPath: String? = nil, releaseDate: String? = nil, name: String? = nil, voteAverage: Double? = nil, voteCount: Int? = nil, createdBy: [Creator]? = nil, episodeRunTime: [Int]? = nil, firstAirDate: String? = nil, genres: [Genre]? = nil, homepage: String? = nil, inProduction: Bool? = nil, languages: [String]? = nil, lastAirDate: String? = nil, lastEpisodeToAir: Episode? = nil, networks: [Network]? = nil, numberOfEpisodes: Int? = nil, numberOfSeasons: Int? = nil, originCountry: [String]? = nil, productionCompanies: [ProductionCompany]? = nil, productionCountries: [ProductionCountry]? = nil, seasons: [Season]? = nil, spokenLanguages: [SpokenLanguage]? = nil, status: String? = nil, tagline: String? = nil, credits: MediaCredits? = nil, videos: VideoResults? = nil) {
         self.mediaType = mediaType
         self.adult = adult
         self.backdropPath = backdropPath
@@ -92,6 +98,7 @@ struct TVShow: Media, Codable, Hashable {
         self.status = status
         self.tagline = tagline
         self.credits = credits
+        self.videos = videos
     }
     
     //    init() {
@@ -132,6 +139,7 @@ struct TVShow: Media, Codable, Hashable {
         case status
         case tagline
         case credits
+        case videos 
     }
 }
 

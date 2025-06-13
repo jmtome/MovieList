@@ -11,9 +11,20 @@ import Foundation
 //Called by Presenter, Implemented by MainScreenViewController
 protocol MainScreenPresenterOutputProtocol: AnyObject {
     func updateUIList()
+    
+    func updateUINowPlaying()
+    func updateUIPopular()
+    func updateUIUpcoming()
+    func updateUITopRated()
+    func updateUITrending()
+
     func showError(_ error: Error)
     func showAlertFavoritedMedia()
     func showAlertUnfavoritedMedia()
+}
+
+actor SomeClass {
+    
 }
 
 //MARK: - MainScreen Presenter Input Protocol
@@ -29,17 +40,27 @@ protocol MainScreenPresenterInputProtocol: AnyObject {
     func viewDidLoad()
     func viewWillAppear()
     
-    func getMedia() -> [MediaViewModel]
+    func getMedia(_ category: MediaCategory) -> [MediaViewModel]
     func getSections() -> [Section]
     
     func sortMedia(with option: SortingOption)
     
     func isFavorite(at index: Int) -> Bool
+    func isFavorite(viewModel: MediaViewModel) -> Bool
     func handleFavoriteAction(at index: Int)
+    func handleFavoriteAction(viewModel: MediaViewModel)
     
     func didSelectCell(at index: Int)
     
-    func updateSearchResults(with query: String, scope: SearchScope) 
+    func updateSearchResults(with query: String, scope: SearchScope)
+    
+    //
+    func fetchAllCategories(_ scope: SearchScope)
+    func fetchNowPlayingMedia()
+    func fetchpopularMedia()
+    func fetchUpcomingMedia()
+    func fetchTopRatedMedia()
+    func fetchtrendingsMedia()
 }
 
 protocol MainScreenPresenterLoadingInputProtocol: AnyObject {
@@ -50,13 +71,13 @@ protocol MainScreenPresenterLoadingInputProtocol: AnyObject {
 //MARK: - MainScreenPresenter
 class MainScreenPresenter {
     private var currentQuery: String = ""
-    private var currentScope: SearchScope = .movies
+    private var currentScope: SearchScope = .series
     private var currentPage: Int = 1
     private var isLoading: Bool = false
 
     // State variables related to the sorting of the table
     private var _sortOption = SortingOption.relevance
-    private var _isAscending = false
+    private var _isAscending = true
 
     //output of the presenter, which in this case would be the view
     weak var output: MainScreenPresenterOutputProtocol?
@@ -73,6 +94,77 @@ class MainScreenPresenter {
         didSet {
             output?.updateUIList()
         }
+    }
+    
+    private var nowPlayingViewModel: [MediaViewModel] = [] {
+        didSet {
+            output?.updateUINowPlaying()
+        }
+    }
+    
+    private var popularMediaViewModel: [MediaViewModel] = [] {
+        didSet {
+            output?.updateUIPopular()
+        }
+    }
+    
+    private var upcomingMediaViewModel: [MediaViewModel] = [] {
+        didSet {
+            output?.updateUIUpcoming()
+        }
+    }
+    
+    private var topRatedMediaViewModel: [MediaViewModel] = [] {
+        didSet {
+            output?.updateUITopRated()
+        }
+    }
+    
+    private var trendingMediaViewModel: [MediaViewModel] = [] {
+        didSet {
+            output?.updateUITrending()
+        }
+    }
+}
+
+extension MainScreenPresenter {
+    func fetchAllCategories(_ scope: SearchScope) {
+        guard currentScope != scope else { return }
+        currentScope = scope
+        // Launch all the interactor calls concurrently without waiting
+        Task {
+            interactor.getNowPlayingMedia(scope: currentScope, page: currentPage)
+            interactor.getPopularMedia(scope: currentScope, page: currentPage)
+            interactor.getUpcomingMedia(scope: currentScope, page: currentPage)
+            interactor.getTrendingMedia(scope: currentScope, page: currentPage)
+            interactor.getTopRatedMedia(scope: currentScope, page: currentPage)
+            viewDidLoad()
+        }
+    }
+    func fetchNowPlayingMedia() {
+        guard !isLoading else { print( "#### cant fetch now playing media, already fetching"); return }
+        isLoading = true
+        interactor.getNowPlayingMedia(scope: currentScope, page: currentPage)
+    }
+    func fetchpopularMedia() {
+        guard !isLoading else { print( "#### cant fetch popular media, already fetching"); return }
+        isLoading = true
+        interactor.getPopularMedia(scope: currentScope, page: currentPage)
+    }
+    func fetchUpcomingMedia() {
+        guard !isLoading else { print( "#### cant fetch upcoming media, already fetching"); return }
+        isLoading = true
+        interactor.getUpcomingMedia(scope: currentScope, page: currentPage)
+    }
+    func fetchTopRatedMedia() {
+        guard !isLoading else { print( "#### cant fetch top rated media, already fetching"); return }
+        isLoading = true
+        interactor.getTopRatedMedia(scope: currentScope, page: currentPage)
+    }
+    func fetchtrendingsMedia() {
+        guard !isLoading else { print( "#### cant fetch trending media, already fetching"); return }
+        isLoading = true
+        interactor.getTrendingMedia(scope: currentScope, page: currentPage)
     }
 }
 
@@ -110,14 +202,33 @@ extension MainScreenPresenter: MainScreenPresenterInputProtocol {
     }
     
     func viewDidLoad() {
+        isLoading = true 
         interactor.searchMedia(with: currentQuery, scope: currentScope, page: currentPage)
     }
     
     func viewWillAppear() {}
     
-    func getMedia() -> [MediaViewModel] {
-        return viewModel
+    func getMedia(_ category: MediaCategory = .search) -> [MediaViewModel] {
+        switch category {
+        case .search:
+            return viewModel
+        case .nowPlaying:
+            return nowPlayingViewModel
+        case .popular:
+            return popularMediaViewModel
+        case .upcoming:
+            return upcomingMediaViewModel
+        case .topRated:
+            return topRatedMediaViewModel
+        case .trending:
+            return trendingMediaViewModel
+        case .recentlyViewed:
+            return []
+        case .lastSearch:
+            return []
+        }
     }
+    
     func getSections() -> [Section] {
         switch currentScope {
         case .movies:
@@ -144,8 +255,14 @@ extension MainScreenPresenter: MainScreenPresenterInputProtocol {
     func isFavorite(at index: Int) -> Bool {
         return interactor.isMovieInFavorites(media: viewModel[index])
     }
+    func isFavorite(viewModel: MediaViewModel) -> Bool {
+        interactor.isMovieInFavorites(media: viewModel)
+    }
     func handleFavoriteAction(at index: Int) {
         interactor.handleFavoriteAction(with: viewModel[index])
+    }
+    func handleFavoriteAction(viewModel: MediaViewModel) {
+        interactor.handleFavoriteAction(with: viewModel)
     }
     
     func didSelectCell(at index: Int) {
@@ -172,6 +289,7 @@ extension MainScreenPresenter: MainScreenPresenterLoadingInputProtocol {
     }
     
     func viewShouldFetchNewPage() {
+        print("#### current page: \(currentPage), page to fetch: \(currentPage + 1)")
         currentPage += 1
         
         self.isLoading = true
@@ -182,19 +300,68 @@ extension MainScreenPresenter: MainScreenPresenterLoadingInputProtocol {
 //MARK: - MainScreenInteractorOutputProtocol Conformance
 // Called by Interactor, implemented by Presenter
 extension MainScreenPresenter: MainScreenInteractorOutputProtocol {
-    func presentMediaAddedToFavorites() {
+    func presentMediaAddedToFavorites(mediaId: Int) {
+        if let index = viewModel.firstIndex(where: { $0.id == mediaId }) {
+            viewModel[index].isFavorite = true
+        }
         output?.showAlertFavoritedMedia()
     }
-    func presentMediaRemovedFromFavorites() {
+    func presentMediaRemovedFromFavorites(mediaId: Int) {
+        if let index = viewModel.firstIndex(where: { $0.id == mediaId }) {
+            viewModel[index].isFavorite = false
+        }
         output?.showAlertUnfavoritedMedia()
     }
     
-    func didReceiveMovies(_ movies: [MediaViewModel], with page: Int) {
-        self.isLoading = false
+    func didReceiveMovies(_ movies: [MediaViewModel], with page: Int, category: MediaCategory) {
+        self.isLoading = true
+        print("#### receive current page: \(currentPage), page to fetch: \(page), category: \(category), scope: \(currentScope)")
+
+        guard page >= currentPage else {
+            print("#### tried to load page that was lower than current")
+            return
+        }
+                
+        
         if page == 1 {
-            self.viewModel = movies
+            switch category {
+            case .search:
+                self.viewModel = movies
+                sortMedia(with: .relevance)
+            case .nowPlaying:
+                self.nowPlayingViewModel = movies
+            case .popular:
+                self.popularMediaViewModel = movies
+            case .upcoming:
+                self.upcomingMediaViewModel = movies
+            case .topRated:
+                self.topRatedMediaViewModel = movies
+            case .trending:
+                self.trendingMediaViewModel = movies
+            case .recentlyViewed:
+                break
+            case .lastSearch:
+                break
+            }
         } else {
-            self.viewModel.append(contentsOf: movies)
+            switch category {
+            case .search:
+                self.viewModel.append(contentsOf: movies)
+            case .nowPlaying:
+                self.nowPlayingViewModel.append(contentsOf: movies)
+            case .popular:
+                self.popularMediaViewModel.append(contentsOf: movies)
+            case .upcoming:
+                self.upcomingMediaViewModel.append(contentsOf: movies)
+            case .topRated:
+                self.topRatedMediaViewModel.append(contentsOf: movies)
+            case .trending:
+                self.trendingMediaViewModel.append(contentsOf: movies)
+            case .recentlyViewed:
+                break
+            case .lastSearch:
+                break
+            }
         }
     }
     
